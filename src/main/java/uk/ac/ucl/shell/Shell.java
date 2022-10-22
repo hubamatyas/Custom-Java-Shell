@@ -29,16 +29,28 @@ public class Shell {
 
     private static String currentDirectory = System.getProperty("user.dir");
 
+    /*
+    TODO:
+        Decompose eval function into sub-components
+        Comment on unclear functionality
+    */
+
     public static void eval(String cmdline, OutputStream output) throws IOException {
+
+        // Output writer
         OutputStreamWriter writer = new OutputStreamWriter(output);
 
+        // Parsing input
         CharStream parserInput = CharStreams.fromString(cmdline); 
         ShellGrammarLexer lexer = new ShellGrammarLexer(parserInput);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);        
         ShellGrammarParser parser = new ShellGrammarParser(tokenStream);
         ParseTree tree = parser.command();
+
+        // Store commands entered
         ArrayList<String> rawCommands = new ArrayList<String>();
         String lastSubcommand = "";
+
         for (int i=0; i<tree.getChildCount(); i++) {
             if (!tree.getChild(i).getText().equals(";")) {
                 lastSubcommand += tree.getChild(i).getText();
@@ -48,7 +60,12 @@ public class Shell {
             }
         }
         rawCommands.add(lastSubcommand);
+
+        // Iterate through commands and execute equivalent application
+        // TODO: needs heavy decomposition and compartmentalisation
         for (String rawCommand : rawCommands) {
+
+            // Shell functionality?
             String spaceRegex = "[^\\s\"']+|\"([^\"]*)\"|'([^']*)'";
             ArrayList<String> tokens = new ArrayList<String>();
             Pattern regex = Pattern.compile(spaceRegex);
@@ -74,6 +91,9 @@ public class Shell {
             }
             String appName = tokens.get(0);
             ArrayList<String> appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
+
+            // Applications
+            // TODO: compartmentalise each application
             switch (appName) {
             case "cd":
                 if (appArgs.isEmpty()) {
@@ -295,20 +315,29 @@ public class Shell {
     }
 
     public static void main(String[] args) {
+
         if (args.length > 0) {
+
+            // When running in non-interactive mode
             if (args.length != 2) {
                 System.out.println("COMP0010 shell: wrong number of arguments");
                 return;
             }
             if (!args[0].equals("-c")) {
                 System.out.println("COMP0010 shell: " + args[0] + ": unexpected argument");
+                // TODO: return should be added here?
             }
+
+            // Attempt to evaluate command
             try {
+                // TODO: need to ensure quotes commands work?
                 eval(args[1], System.out);
             } catch (Exception e) {
                 System.out.println("COMP0010 shell: " + e.getMessage());
             }
         } else {
+
+            // When running in interactive mode
             Scanner input = new Scanner(System.in);
             try {
                 while (true) {
