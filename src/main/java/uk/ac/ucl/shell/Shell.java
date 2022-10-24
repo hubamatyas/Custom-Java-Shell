@@ -29,6 +29,7 @@ public class Shell {
 
     private static String currentDirectory = System.getProperty("user.dir");
 
+
     /*
     TODO:
         Decompose eval function into sub-components - done (Matt)
@@ -36,7 +37,6 @@ public class Shell {
     */
 
     // Note: everything is static so all variables must be static too unless local to a function.
-
     public static void eval(String cmdline, OutputStream output) throws IOException {
 
         // Output writer
@@ -78,7 +78,8 @@ public class Shell {
         }
     }
 
-    private static ArrayList<String> produceTokens(String rawCommand){
+    private static ArrayList<String> produceTokens(String rawCommand)
+            throws IOException{
 
         String spaceRegex = "[^\\s\"']+|\"([^\"]*)\"|'([^']*)'";
         ArrayList<String> tokens = new ArrayList<String>();
@@ -105,6 +106,21 @@ public class Shell {
         }
         return tokens;
 
+    }
+
+    private static void executeApp(String appName, ArrayList<String> appArgs, OutputStreamWriter writer)
+            throws IOException {
+        switch (appName) {
+            case "cd" -> cd(appArgs);
+            case "pwd" -> pwd(appArgs, writer);
+            case "ls" -> ls(appArgs, writer);
+            case "cat" -> cat(appArgs, writer);
+            case "echo" -> echo(appArgs, writer);
+            case "head" -> head(appArgs, writer);
+            case "tail" -> tail(appArgs, writer);
+            case "grep" -> grep(appArgs, writer);
+            default -> throw new RuntimeException(appName + ": unknown application");
+        }
     }
 
     private static void cd(ArrayList<String> appArgs) throws IOException {
@@ -328,21 +344,6 @@ public class Shell {
             } catch (IOException e) {
                 throw new RuntimeException("grep: cannot open " + appArgs.get(j + 1));
             }
-        }
-    }
-
-    private static void executeApp(String appName, ArrayList<String> appArgs, OutputStreamWriter writer)
-            throws IOException {
-        switch (appName) {
-            case "cd" -> cd(appArgs);
-            case "pwd" -> pwd(appArgs, writer);
-            case "ls" -> ls(appArgs, writer);
-            case "cat" -> cat(appArgs, writer);
-            case "echo" -> echo(appArgs, writer);
-            case "head" -> head(appArgs, writer);
-            case "tail" -> tail(appArgs, writer);
-            case "grep" -> grep(appArgs, writer);
-            default -> throw new RuntimeException(appName + ": unknown application");
         }
     }
 
