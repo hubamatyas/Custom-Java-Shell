@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import uk.ac.ucl.shell.Evaluator;
 
 public class Tail extends Application {
-    
-    public void exec(ArrayList<String> appArgs, OutputStreamWriter writer) {
+
+    public void exec(ArrayList<String> appArgs, Evaluator evaluator) {
         if (appArgs.isEmpty()) {
             throw new RuntimeException("tail: missing arguments");
         }
@@ -37,7 +37,7 @@ public class Tail extends Application {
         } else {
             tailArg = appArgs.get(0);
         }
-        String currentDirectory = Evaluator.getInstance().getDirectory();
+        String currentDirectory = evaluator.getDirectory();
         File tailFile = new File(currentDirectory + File.separator + tailArg);
         if (tailFile.exists()) {
             Charset encoding = StandardCharsets.UTF_8;
@@ -54,6 +54,7 @@ public class Tail extends Application {
                 } else {
                     index = storage.size() - tailLines;
                 }
+                OutputStreamWriter writer = evaluator.getWriter();
                 for (int i = index; i < storage.size(); i++) {
                     writer.write(storage.get(i) + System.getProperty("line.separator"));
                     writer.flush();

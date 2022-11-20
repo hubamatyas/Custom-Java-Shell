@@ -22,18 +22,21 @@ public class Shell {
             // Attempt to evaluate command
             try {
                 // TODO: need to ensure quotes commands work?
-                Evaluator.getInstance().eval(args[1]);
+                eval(args[1], System.out);
             } catch (Exception e) {
                 System.out.println("COMP0010 shell: " + e.getMessage());
             }
         } else {
-            Evaluator.getInstance().run();
+            try {
+                new Evaluator(System.out).run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
     public static void eval(String input, OutputStream output) throws IOException{
-        Evaluator.getInstance().setOutputStream(output);
-        Evaluator.getInstance().eval(input);
+        new Evaluator(output).eval(input);
     }
 
 }

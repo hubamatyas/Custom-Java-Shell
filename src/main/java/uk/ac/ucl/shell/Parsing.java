@@ -18,7 +18,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import uk.ac.ucl.shell.ShellGrammarLexer;
 import uk.ac.ucl.shell.ShellGrammarParser;
 
-public class Parser {
+public class Parsing {
     
     public static ArrayList<String> parse(String input){
         // Parsing input

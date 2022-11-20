@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import uk.ac.ucl.shell.Evaluator;
 
 public class Pwd extends Application {
-    
-    public void exec(ArrayList<String> appArgs, OutputStreamWriter writer) throws IOException {
-        writer.write(Evaluator.getInstance().getDirectory());
+
+    public void exec(ArrayList<String> appArgs, Evaluator evaluator) throws IOException {
+        OutputStreamWriter writer = evaluator.getWriter();
+        writer.write(evaluator.getDirectory());
         writer.write(System.getProperty("line.separator"));
         writer.flush();
     }

@@ -15,7 +15,7 @@ import uk.ac.ucl.shell.Evaluator;
 
 public class Head extends Application {
     
-    public void exec(ArrayList<String> appArgs, OutputStreamWriter writer) {
+    public void exec(ArrayList<String> appArgs, Evaluator evaluator) {
         if (appArgs.isEmpty()) {
             throw new RuntimeException("head: missing arguments");
         }
@@ -37,7 +37,8 @@ public class Head extends Application {
         } else {
             headArg = appArgs.get(0);
         }
-        String currentDirectory = Evaluator.getInstance().getDirectory();
+        String currentDirectory = evaluator.getDirectory();
+        OutputStreamWriter writer = evaluator.getWriter();
         File headFile = new File(currentDirectory + File.separator + headArg);
         if (headFile.exists()) {
             Charset encoding = StandardCharsets.UTF_8;

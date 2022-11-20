@@ -22,6 +22,7 @@ public class ShellTest {
         Shell.eval("echo foo", out);
         Scanner scn = new Scanner(in);
         assertEquals(scn.next(),"foo");
+        scn.close();
     }
 
 }

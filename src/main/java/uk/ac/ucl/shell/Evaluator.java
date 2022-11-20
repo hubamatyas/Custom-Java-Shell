@@ -5,33 +5,27 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import uk.ac.ucl.shell.Apps.ApplicationFactory;
+
 public class Evaluator {
 
-    private static volatile Evaluator instance;
-
-    public static synchronized Evaluator getInstance(){
-        if(instance == null){
-            instance = new Evaluator();
-        }
-        return instance;
-    }
-
     private String currentDirectory; 
-    private OutputStream output;
-    private ApplicationFactory apps;
+    OutputStreamWriter writer;
+    private ApplicationFactory appFactory;
     private boolean running;
 
-    public Evaluator(){
+    public Evaluator(OutputStream output){
         currentDirectory = System.getProperty("user.dir");  
-        output = System.out;
-        apps = new ApplicationFactory();
+        writer = new OutputStreamWriter(output);
+        appFactory = new ApplicationFactory();
     }
 
-    public void setOutputStream(OutputStream output){
-        this.output = output;
-    }
 
-    public void run(){
+
+    public void run() throws Exception{
+        if(writer == null){
+            throw new Exception("No output stream has been setup");
+        }
         running = true;
         Scanner scanner = new Scanner(System.in);
         try{
@@ -51,21 +45,19 @@ public class Evaluator {
     }
 
     public void eval(String input) throws IOException{
-        OutputStreamWriter writer = new OutputStreamWriter(output);
-        ArrayList<String> rawCommands = Parser.parse(input);
+
+        ArrayList<String> rawCommands = Parsing.parse(input);
 
         for (String rawCommand : rawCommands) {
-
             // Shell functionality?
-            ArrayList<String> tokens = Parser.produceTokens(currentDirectory, rawCommand);
+            ArrayList<String> tokens = Parsing.produceTokens(currentDirectory, rawCommand);
             String appName = tokens.get(0);
             ArrayList<String> appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
 
             // Applications
             // TODO: compartmentalise each application
-            apps.execApp(appName, appArgs, writer);
+            appFactory.buildApplication(appName).exec(appArgs, this);
         }
-        writer.close();
     }
 
     public void setDirectory(String dir){
@@ -74,6 +66,14 @@ public class Evaluator {
 
     public String getDirectory(){
         return currentDirectory;
+    }
+
+    public OutputStreamWriter getWriter(){
+        return writer;
+    }
+
+    public void exitProgram(){
+        running = false;
     }
 
 }

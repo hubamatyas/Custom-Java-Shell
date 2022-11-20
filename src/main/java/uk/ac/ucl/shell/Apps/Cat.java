@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import uk.ac.ucl.shell.Evaluator;
 
 public class Cat extends Application {
-    public void exec(ArrayList<String> appArgs, OutputStreamWriter writer) {
+
+    public void exec(ArrayList<String> appArgs, Evaluator evaluator) {
+        OutputStreamWriter writer =  evaluator.getWriter();
         if (appArgs.isEmpty()) {
             throw new RuntimeException("cat: missing arguments");
         } else {
-            String currentDirectory = Evaluator.getInstance().getDirectory();
+            String currentDirectory = evaluator.getDirectory();
             for (String arg : appArgs) {
                 Charset encoding = StandardCharsets.UTF_8;
                 File currFile = new File(currentDirectory + File.separator + arg);

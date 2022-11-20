@@ -16,7 +16,7 @@ import uk.ac.ucl.shell.Evaluator;
 
 public class Grep extends Application {
     
-    public void exec(ArrayList<String> appArgs, OutputStreamWriter writer) {
+    public void exec(ArrayList<String> appArgs, Evaluator evaluator) {
         if (appArgs.size() < 2) {
             throw new RuntimeException("grep: wrong number of arguments");
         }
@@ -24,7 +24,7 @@ public class Grep extends Application {
         int numOfFiles = appArgs.size() - 1;
         Path filePath;
         Path[] filePathArray = new Path[numOfFiles];
-        Path currentDir = Paths.get(Evaluator.getInstance().getDirectory());
+        Path currentDir = Paths.get(evaluator.getDirectory());
         for (int i = 0; i < numOfFiles; i++) {
             filePath = currentDir.resolve(appArgs.get(i + 1));
             if (Files.notExists(filePath) || Files.isDirectory(filePath) ||
@@ -33,6 +33,7 @@ public class Grep extends Application {
             }
             filePathArray[i] = filePath;
         }
+        OutputStreamWriter writer = evaluator.getWriter();
         for (int j = 0; j < filePathArray.length; j++) {
             Charset encoding = StandardCharsets.UTF_8;
             try (BufferedReader reader = Files.newBufferedReader(filePathArray[j], encoding)) {
