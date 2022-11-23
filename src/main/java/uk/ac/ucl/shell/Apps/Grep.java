@@ -12,8 +12,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import uk.ac.ucl.shell.Evaluator;
 import uk.ac.ucl.shell.Shell;
 
 public class Grep implements Application {
@@ -43,12 +41,12 @@ public class Grep implements Application {
                     Matcher matcher = grepPattern.matcher(line);
                     if (matcher.find()) {
                         if (numOfFiles > 1) {
-                            writer.write(args.get(j+1));
-                            writer.write(":");
+                            output.write(args.get(j+1));
+                            output.write(":");
                         }
-                        writer.write(line);
-                        writer.write(System.getProperty("line.separator"));
-                        writer.flush();
+                        output.write(line);
+                        output.write(System.getProperty("line.separator"));
+                        output.flush();
                     }
                 }
             } catch (IOException e) {

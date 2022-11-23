@@ -12,7 +12,7 @@ public class Pipe implements Command {
 
     @Override
     public void eval(String cmdLine, InputStream input, OutputStream output) {
-        // TODO Auto-generated method stub
+        /*
         command, rest = splitatpipe(cmdLine)
 
         input = command.parseforinputrederict;
@@ -36,8 +36,9 @@ public class Pipe implements Command {
             return new Pipe()
         else:
         return enw Call()
+        */
 
 
     }
-    
+
 }

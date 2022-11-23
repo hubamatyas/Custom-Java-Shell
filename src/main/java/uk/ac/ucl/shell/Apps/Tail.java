@@ -1,5 +1,7 @@
 package uk.ac.ucl.shell.Apps;
 
+import uk.ac.ucl.shell.Shell;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,28 +17,28 @@ import java.util.ArrayList;
 public class Tail implements Application {
 
     public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        if (appArgs.isEmpty()) {
+        if (args.isEmpty()) {
             throw new RuntimeException("tail: missing arguments");
         }
-        if (appArgs.size() != 1 && appArgs.size() != 3) {
+        if (args.size() != 1 && args.size() != 3) {
             throw new RuntimeException("tail: wrong arguments");
         }
-        if (appArgs.size() == 3 && !appArgs.get(0).equals("-n")) {
-            throw new RuntimeException("tail: wrong argument " + appArgs.get(0));
+        if (args.size() == 3 && !args.get(0).equals("-n")) {
+            throw new RuntimeException("tail: wrong argument " + args.get(0));
         }
         int tailLines = 10;
         String tailArg;
-        if (appArgs.size() == 3) {
+        if (args.size() == 3) {
             try {
-                tailLines = Integer.parseInt(appArgs.get(1));
+                tailLines = Integer.parseInt(args.get(1));
             } catch (Exception e) {
-                throw new RuntimeException("tail: wrong argument " + appArgs.get(1));
+                throw new RuntimeException("tail: wrong argument " + args.get(1));
             }
-            tailArg = appArgs.get(2);
+            tailArg = args.get(2);
         } else {
-            tailArg = appArgs.get(0);
+            tailArg = args.get(0);
         }
-        String currentDirectory = evaluator.getDirectory();
+        String currentDirectory = Shell.getDirectory();
         File tailFile = new File(currentDirectory + File.separator + tailArg);
         if (tailFile.exists()) {
             Charset encoding = StandardCharsets.UTF_8;
@@ -47,15 +49,15 @@ public class Tail implements Application {
                 while ((line = reader.readLine()) != null) {
                     storage.add(line);
                 }
-                int index = 0;
+                int index;
                 if (tailLines > storage.size()) {
                     index = 0;
                 } else {
                     index = storage.size() - tailLines;
                 }
                 for (int i = index; i < storage.size(); i++) {
-                    writer.write(storage.get(i) + System.getProperty("line.separator"));
-                    writer.flush();
+                    output.write(storage.get(i) + System.getProperty("line.separator"));
+                    output.flush();
                 }
             } catch (IOException e) {
                 throw new RuntimeException("tail: cannot open " + tailArg);

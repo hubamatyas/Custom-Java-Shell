@@ -12,11 +12,11 @@ import uk.ac.ucl.shell.Shell;
 
 public class Cat implements Application {
 
-    public void exec(ArrayList<String> appArgs, InputStream input, OutputStreamWriter writer) {
-        if (appArgs.isEmpty()) {
+    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        if (args.isEmpty()) {
             throw new RuntimeException("cat: missing arguments");
         } else {
-            for (String arg : appArgs) {
+            for (String arg : args) {
                 Charset encoding = StandardCharsets.UTF_8;
                 File currFile = new File(Shell.getDirectory() + File.separator + arg);
                 if (currFile.exists()) {
