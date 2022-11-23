@@ -2,14 +2,15 @@ package uk.ac.ucl.shell.Apps;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import uk.ac.ucl.shell.Evaluator;
 
-public class Ls extends Application{
+public class Ls implements Application{
 
-    public void exec(ArrayList<String> appArgs, Evaluator evaluator)
+    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output)
         throws IOException{
         File currDir;
         if (appArgs.isEmpty()) {
@@ -19,7 +20,6 @@ public class Ls extends Application{
         } else {
             throw new RuntimeException("ls: too many arguments");
         }
-        OutputStreamWriter writer = evaluator.getWriter();
         try {
             File[] listOfFiles = currDir.listFiles();
             boolean atLeastOnePrinted = false;

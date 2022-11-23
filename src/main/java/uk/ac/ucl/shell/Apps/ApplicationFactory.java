@@ -1,15 +1,11 @@
 package uk.ac.ucl.shell.Apps;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 
 public class ApplicationFactory {
     
     public ApplicationFactory(){}
 
-    public Application buildApplication(String appName) throws IOException{
+    public static Application getApp(String appName) throws IOException{
         return switch(appName){
             case "cd" -> new Cd();
             case "pwd" -> new Pwd();

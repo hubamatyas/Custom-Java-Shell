@@ -5,6 +5,34 @@ import java.io.OutputStream;
 
 
 public class Shell {
+    
+    private static String currentDirectory; 
+
+    public static String getDirectory(){
+        return currentDirectory;
+    }
+
+    public static void setDirectory(String dir){
+        currentDirectory = dir;
+    }
+
+
+    public static void eval(String input) throws IOException{
+
+        OutputStreamWriter standardWriter = new OutputStreamWriter(outputStream);
+        ArrayList<String> rawCommands = Parsing.parse(input);
+
+        for (String rawCommand : rawCommands) {
+            // Shell functionality?
+            ArrayList<String> tokens = Parsing.produceTokens(currentDirectory, rawCommand);
+            String appName = tokens.get(0);
+            ArrayList<String> appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
+
+            // Applications
+            // TODO: compartmentalise each application
+            ApplicationFactory.getApp(appName).exec(appArgs, this, standardWriter);
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -27,10 +55,20 @@ public class Shell {
                 System.out.println("COMP0010 shell: " + e.getMessage());
             }
         } else {
-            try {
-                new Evaluator(System.out).run();
-            } catch (Exception e) {
-                e.printStackTrace();
+            Scanner scanner = new Scanner(System.in);
+            try{
+                while(running){
+                    String prompt = currentDirectory + "> ";
+                    System.out.print(prompt);
+                    try {
+                        String cmdline = scanner.nextLine();
+                        eval(cmdline);
+                    } catch (Exception e) {
+                        System.out.println("COMP0010 shell: " + e.getMessage());
+                    }
+                }
+            } finally {
+                scanner.close();
             }
         }
     }

@@ -1,9 +1,6 @@
 package uk.ac.ucl.shell.Apps;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -11,21 +8,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import uk.ac.ucl.shell.Evaluator;
+import uk.ac.ucl.shell.Shell;
 
-public class Cat extends Application {
+public class Cat implements Application {
 
-    public void exec(ArrayList<String> appArgs, Evaluator evaluator) {
-        OutputStreamWriter writer =  evaluator.getWriter();
+    public void exec(ArrayList<String> appArgs, InputStream input, OutputStreamWriter writer) {
         if (appArgs.isEmpty()) {
             throw new RuntimeException("cat: missing arguments");
         } else {
-            String currentDirectory = evaluator.getDirectory();
             for (String arg : appArgs) {
                 Charset encoding = StandardCharsets.UTF_8;
-                File currFile = new File(currentDirectory + File.separator + arg);
+                File currFile = new File(Shell.getDirectory() + File.separator + arg);
                 if (currFile.exists()) {
-                    Path filePath = Paths.get(currentDirectory + File.separator + arg);
+                    Path filePath = Paths.get(Shell.getDirectory() + File.separator + arg);
                     try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
                         String line = null;
                         while ((line = reader.readLine()) != null) {

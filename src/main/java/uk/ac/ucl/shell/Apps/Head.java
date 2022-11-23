@@ -3,6 +3,7 @@ package uk.ac.ucl.shell.Apps;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -13,9 +14,9 @@ import java.util.ArrayList;
 
 import uk.ac.ucl.shell.Evaluator;
 
-public class Head extends Application {
+public class Head implements Application {
     
-    public void exec(ArrayList<String> appArgs, Evaluator evaluator) {
+    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         if (appArgs.isEmpty()) {
             throw new RuntimeException("head: missing arguments");
         }
@@ -38,7 +39,6 @@ public class Head extends Application {
             headArg = appArgs.get(0);
         }
         String currentDirectory = evaluator.getDirectory();
-        OutputStreamWriter writer = evaluator.getWriter();
         File headFile = new File(currentDirectory + File.separator + headArg);
         if (headFile.exists()) {
             Charset encoding = StandardCharsets.UTF_8;

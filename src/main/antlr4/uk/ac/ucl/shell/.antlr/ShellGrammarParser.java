@@ -1,5 +1,4 @@
-// Generated from uk\ac\u005Cucl\shell\ShellGrammar.g4 by ANTLR 4.7
-package uk.ac.ucl.shell;
+// Generated from c:\Users\Lucas\Programming\Java\shell\java-shell-j3\src\main\antlr4\u005Cuk\ac\u005Cucl\shell\ShellGrammar.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class ShellGrammarParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -20,16 +19,25 @@ public class ShellGrammarParser extends Parser {
 		T__0=1, NONSPECIAL=2, DOUBLEQUOTED=3, SINGLEQUOTED=4, APPS=5;
 	public static final int
 		RULE_command = 0, RULE_atomicCommand = 1;
-	public static final String[] ruleNames = {
-		"command", "atomicCommand"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"command", "atomicCommand"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "';'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, "NONSPECIAL", "DOUBLEQUOTED", "SINGLEQUOTED", "APPS"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, "';'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, null, "NONSPECIAL", "DOUBLEQUOTED", "SINGLEQUOTED", "APPS"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -79,6 +87,7 @@ public class ShellGrammarParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class CommandContext extends ParserRuleContext {
 		public List<AtomicCommandContext> atomicCommand() {
 			return getRuleContexts(AtomicCommandContext.class);
@@ -90,11 +99,6 @@ public class ShellGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_command; }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShellGrammarVisitor ) return ((ShellGrammarVisitor<? extends T>)visitor).visitCommand(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final CommandContext command() throws RecognitionException {
@@ -152,11 +156,6 @@ public class ShellGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_atomicCommand; }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShellGrammarVisitor ) return ((ShellGrammarVisitor<? extends T>)visitor).visitAtomicCommand(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final AtomicCommandContext atomicCommand() throws RecognitionException {

@@ -3,6 +3,7 @@ package uk.ac.ucl.shell.Apps;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -11,11 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import uk.ac.ucl.shell.Evaluator;
+public class Tail implements Application {
 
-public class Tail extends Application {
-
-    public void exec(ArrayList<String> appArgs, Evaluator evaluator) {
+    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         if (appArgs.isEmpty()) {
             throw new RuntimeException("tail: missing arguments");
         }
@@ -54,7 +53,6 @@ public class Tail extends Application {
                 } else {
                     index = storage.size() - tailLines;
                 }
-                OutputStreamWriter writer = evaluator.getWriter();
                 for (int i = index; i < storage.size(); i++) {
                     writer.write(storage.get(i) + System.getProperty("line.separator"));
                     writer.flush();

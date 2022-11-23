@@ -1,15 +1,11 @@
 package uk.ac.ucl.shell.Apps;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-import uk.ac.ucl.shell.Evaluator;
+public interface Application {
 
-public abstract class Application {
-    
-    public Application(){};
-
-    protected Evaluator evaluator;
-
-    public abstract void exec(ArrayList<String> appArgs, Evaluator evaluator) throws IOException;
+    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException;
 
 }

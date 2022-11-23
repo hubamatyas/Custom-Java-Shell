@@ -11,7 +11,8 @@ atomicCommand : (NONSPECIAL | DOUBLEQUOTED | SINGLEQUOTED)+;
 /*
  * Lexer Rules
  */
-
 NONSPECIAL : ~['";]+;
 DOUBLEQUOTED : '"' (~'"')* '"';
 SINGLEQUOTED : '\'' (~'\'')* '\'';
+
+APPS : 'cat' | 'ls' | 'cd' ;
