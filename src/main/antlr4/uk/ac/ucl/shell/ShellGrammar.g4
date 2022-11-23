@@ -4,15 +4,32 @@ grammar ShellGrammar;
  * Parser Rules
  */
 
-command : atomicCommand (';' atomicCommand)*;
+//commands
 
-atomicCommand : (NONSPECIAL | DOUBLEQUOTED | SINGLEQUOTED)+;
+seq :  atomicCommand ';'? | atomicCommand ';' seq*; 
+
+atomicCommand : pipe | call;
+
+pipe : pipe '|' call | call '|' call  ;
+
+// call 
+
+call : redirection* argument atom*;
+
+atom : redirection | argument;
+
+redirection : '<' argument | '>' argument;
+
+argument : (UNQUOTED | DOUBLEQUOTED | SINGLEQUOTED | BACKQUOTE)+;
+
 
 /*
  * Lexer Rules
  */
-NONSPECIAL : ~['";]+;
-DOUBLEQUOTED : '"' (~'"')* '"';
-SINGLEQUOTED : '\'' (~'\'')* '\'';
 
-APPS : 'cat' | 'ls' | 'cd' ;
+fragment BACKQUOTE_fragment : '`' (~[\n`])* '`';
+
+UNQUOTED : ~[\n'"`;|]+;
+SINGLEQUOTED : '\'' (~[\n"])* '\'';
+BACKQUOTE : BACKQUOTE_fragment;
+DOUBLEQUOTED : '"' ( BACKQUOTE_fragment | ~[\n"])* '"';
