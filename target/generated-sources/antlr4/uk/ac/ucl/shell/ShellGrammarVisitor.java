@@ -11,6 +11,12 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface ShellGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link ShellGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCommand(ShellGrammarParser.CommandContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ShellGrammarParser#seq}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

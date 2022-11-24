@@ -6,6 +6,8 @@ grammar ShellGrammar;
 
 //commands
 
+command : seq;
+
 seq :  atomicCommand ';'? | atomicCommand ';' seq*; 
 
 atomicCommand : pipe | call;
