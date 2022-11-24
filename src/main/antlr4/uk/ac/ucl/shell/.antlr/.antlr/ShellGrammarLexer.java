@@ -1,5 +1,4 @@
-// Generated from uk\ac\u005Cucl\shell\ShellGrammar.g4 by ANTLR 4.7
-package uk.ac.ucl.shell;
+// Generated from c:\Users\Lucas\Programming\Java\shell\java-shell-j3\src\main\antlr4\u005Cuk\ac\u005Cucl\shell\.antlr\ShellGrammar.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -11,14 +10,13 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class ShellGrammarLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		SEMICOLON=1, PIPEOP=2, REDIRECTIN=3, REDIRECTOUT=4, UNQUOTED=5, SINGLEQUOTED=6, 
-		BACKQUOTE=7, DOUBLEQUOTED=8;
+		T__0=1, PIPEOP=2, NONSPECIAL=3, DOUBLEQUOTED=4, SINGLEQUOTED=5, APPS=6;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -27,18 +25,25 @@ public class ShellGrammarLexer extends Lexer {
 		"DEFAULT_MODE"
 	};
 
-	public static final String[] ruleNames = {
-		"SEMICOLON", "PIPEOP", "REDIRECTIN", "REDIRECTOUT", "BACKQUOTE_fragment", 
-		"UNQUOTED", "SINGLEQUOTED", "BACKQUOTE", "DOUBLEQUOTED"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"T__0", "PIPEOP", "NONSPECIAL", "DOUBLEQUOTED", "SINGLEQUOTED", "APPS"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "';'", "'|'", "'<'", "'>'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, "SEMICOLON", "PIPEOP", "REDIRECTIN", "REDIRECTOUT", "UNQUOTED", 
-		"SINGLEQUOTED", "BACKQUOTE", "DOUBLEQUOTED"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, "';'", "'|'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, null, "PIPEOP", "NONSPECIAL", "DOUBLEQUOTED", "SINGLEQUOTED", "APPS"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -97,24 +102,21 @@ public class ShellGrammarLexer extends Lexer {
 	public ATN getATN() { return _ATN; }
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\n@\b\1\4\2\t\2\4"+
-		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2"+
-		"\3\3\3\3\3\4\3\4\3\5\3\5\3\6\3\6\7\6 \n\6\f\6\16\6#\13\6\3\6\3\6\3\7\6"+
-		"\7(\n\7\r\7\16\7)\3\b\3\b\7\b.\n\b\f\b\16\b\61\13\b\3\b\3\b\3\t\3\t\3"+
-		"\n\3\n\3\n\7\n:\n\n\f\n\16\n=\13\n\3\n\3\n\2\2\13\3\3\5\4\7\5\t\6\13\2"+
-		"\r\7\17\b\21\t\23\n\3\2\5\4\2\f\fbb\b\2\f\f$$))==bb~~\4\2\f\f$$\2C\2\3"+
-		"\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2"+
-		"\2\21\3\2\2\2\2\23\3\2\2\2\3\25\3\2\2\2\5\27\3\2\2\2\7\31\3\2\2\2\t\33"+
-		"\3\2\2\2\13\35\3\2\2\2\r\'\3\2\2\2\17+\3\2\2\2\21\64\3\2\2\2\23\66\3\2"+
-		"\2\2\25\26\7=\2\2\26\4\3\2\2\2\27\30\7~\2\2\30\6\3\2\2\2\31\32\7>\2\2"+
-		"\32\b\3\2\2\2\33\34\7@\2\2\34\n\3\2\2\2\35!\7b\2\2\36 \n\2\2\2\37\36\3"+
-		"\2\2\2 #\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"$\3\2\2\2#!\3\2\2\2$%\7b\2\2"+
-		"%\f\3\2\2\2&(\n\3\2\2\'&\3\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*\16\3"+
-		"\2\2\2+/\7)\2\2,.\n\4\2\2-,\3\2\2\2.\61\3\2\2\2/-\3\2\2\2/\60\3\2\2\2"+
-		"\60\62\3\2\2\2\61/\3\2\2\2\62\63\7)\2\2\63\20\3\2\2\2\64\65\5\13\6\2\65"+
-		"\22\3\2\2\2\66;\7$\2\2\67:\5\13\6\28:\n\4\2\29\67\3\2\2\298\3\2\2\2:="+
-		"\3\2\2\2;9\3\2\2\2;<\3\2\2\2<>\3\2\2\2=;\3\2\2\2>?\7$\2\2?\24\3\2\2\2"+
-		"\b\2!)/9;\2";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\b\63\b\1\4\2\t\2"+
+		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\3\3\3\3\4\6\4\25\n"+
+		"\4\r\4\16\4\26\3\5\3\5\7\5\33\n\5\f\5\16\5\36\13\5\3\5\3\5\3\6\3\6\7\6"+
+		"$\n\6\f\6\16\6\'\13\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7\62\n\7\2"+
+		"\2\b\3\3\5\4\7\5\t\6\13\7\r\b\3\2\5\5\2$$))==\3\2$$\3\2))\2\67\2\3\3\2"+
+		"\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\3\17"+
+		"\3\2\2\2\5\21\3\2\2\2\7\24\3\2\2\2\t\30\3\2\2\2\13!\3\2\2\2\r\61\3\2\2"+
+		"\2\17\20\7=\2\2\20\4\3\2\2\2\21\22\7~\2\2\22\6\3\2\2\2\23\25\n\2\2\2\24"+
+		"\23\3\2\2\2\25\26\3\2\2\2\26\24\3\2\2\2\26\27\3\2\2\2\27\b\3\2\2\2\30"+
+		"\34\7$\2\2\31\33\n\3\2\2\32\31\3\2\2\2\33\36\3\2\2\2\34\32\3\2\2\2\34"+
+		"\35\3\2\2\2\35\37\3\2\2\2\36\34\3\2\2\2\37 \7$\2\2 \n\3\2\2\2!%\7)\2\2"+
+		"\"$\n\4\2\2#\"\3\2\2\2$\'\3\2\2\2%#\3\2\2\2%&\3\2\2\2&(\3\2\2\2\'%\3\2"+
+		"\2\2()\7)\2\2)\f\3\2\2\2*+\7e\2\2+,\7c\2\2,\62\7v\2\2-.\7n\2\2.\62\7u"+
+		"\2\2/\60\7e\2\2\60\62\7f\2\2\61*\3\2\2\2\61-\3\2\2\2\61/\3\2\2\2\62\16"+
+		"\3\2\2\2\7\2\26\34%\61\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

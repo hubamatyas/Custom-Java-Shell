@@ -1,349 +1,41 @@
 package uk.ac.ucl.shell;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
+import uk.ac.ucl.shell.Apps.ApplicationFactory;
 
-import uk.ac.ucl.shell.ShellGrammarLexer;
-import uk.ac.ucl.shell.ShellGrammarParser;
 
 public class Shell {
+    
+    private static String currentDirectory; 
 
-    private static String currentDirectory = System.getProperty("user.dir");
+    public static String getDirectory(){
+        return currentDirectory;
+    }
+
+    public static void setDirectory(String dir){
+        currentDirectory = dir;
+    }
 
 
-    /*
-    TODO:
-        Decompose eval function into sub-components - done (Matt)
-        Comment on unclear functionality
-    */
+    public static void eval(String input, OutputStream output) throws IOException{
 
-    // Note: everything is static so all variables must be static too unless local to a function.
-    public static void eval(String cmdline, OutputStream output) throws IOException {
+        OutputStreamWriter standardWriter = new OutputStreamWriter(output);
+        ArrayList<String> rawCommands = Parsing.parse(input);
 
-        // Output writer
-        OutputStreamWriter writer = new OutputStreamWriter(output);
-
-        // Parsing input
-        CharStream parserInput = CharStreams.fromString(cmdline);
-        ShellGrammarLexer lexer = new ShellGrammarLexer(parserInput);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        ShellGrammarParser parser = new ShellGrammarParser(tokenStream);
-        ParseTree tree = parser.command();
-
-        // Store commands entered
-        ArrayList<String> rawCommands = new ArrayList<String>();
-        String lastSubcommand = "";
-
-        for (int i=0; i<tree.getChildCount(); i++) {
-            if (!tree.getChild(i).getText().equals(";")) {
-                lastSubcommand += tree.getChild(i).getText();
-            } else {
-                rawCommands.add(lastSubcommand);
-                lastSubcommand = "";
-            }
-        }
-        rawCommands.add(lastSubcommand);
-
-        // Iterate through commands and execute equivalent application
-        // TODO: needs heavy decomposition and compartmentalisation
         for (String rawCommand : rawCommands) {
-
             // Shell functionality?
-            ArrayList<String> tokens = produceTokens(rawCommand);
+            ArrayList<String> tokens = Parsing.produceTokens(currentDirectory, rawCommand);
             String appName = tokens.get(0);
             ArrayList<String> appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
 
             // Applications
             // TODO: compartmentalise each application
-            executeApp(appName, appArgs, writer);
-        }
-    }
-
-    private static ArrayList<String> produceTokens(String rawCommand)
-            throws IOException{
-
-        String spaceRegex = "[^\\s\"']+|\"([^\"]*)\"|'([^']*)'";
-        ArrayList<String> tokens = new ArrayList<String>();
-        Pattern regex = Pattern.compile(spaceRegex);
-        Matcher regexMatcher = regex.matcher(rawCommand);
-        String nonQuote;
-        while (regexMatcher.find()) {
-            if (regexMatcher.group(1) != null || regexMatcher.group(2) != null) {
-                String quoted = regexMatcher.group(0).trim();
-                tokens.add(quoted.substring(1,quoted.length()-1));
-            } else {
-                nonQuote = regexMatcher.group().trim();
-                ArrayList<String> globbingResult = new ArrayList<String>();
-                Path dir = Paths.get(currentDirectory);
-                DirectoryStream<Path> stream = Files.newDirectoryStream(dir, nonQuote);
-                for (Path entry : stream) {
-                    globbingResult.add(entry.getFileName().toString());
-                }
-                if (globbingResult.isEmpty()) {
-                    globbingResult.add(nonQuote);
-                }
-                tokens.addAll(globbingResult);
-            }
-        }
-        return tokens;
-
-    }
-
-    private static void executeApp(String appName, ArrayList<String> appArgs, OutputStreamWriter writer)
-            throws IOException {
-        switch (appName) {
-            case "cd" -> cd(appArgs);
-            case "pwd" -> pwd(appArgs, writer);
-            case "ls" -> ls(appArgs, writer);
-            case "cat" -> cat(appArgs, writer);
-            case "echo" -> echo(appArgs, writer);
-            case "head" -> head(appArgs, writer);
-            case "tail" -> tail(appArgs, writer);
-            case "grep" -> grep(appArgs, writer);
-            default -> throw new RuntimeException(appName + ": unknown application");
-        }
-    }
-
-    private static void cd(ArrayList<String> appArgs) throws IOException {
-        if (appArgs.isEmpty()) {
-            throw new RuntimeException("cd: missing argument");
-        } else if (appArgs.size() > 1) {
-            throw new RuntimeException("cd: too many arguments");
-        }
-        String dirString = appArgs.get(0);
-        File dir = new File(currentDirectory, dirString);
-        if (!dir.exists() || !dir.isDirectory()) {
-            throw new RuntimeException("cd: " + dirString + " is not an existing directory");
-        }
-        currentDirectory = dir.getCanonicalPath();
-    }
-
-    private static void pwd(ArrayList<String> appArgs, OutputStreamWriter writer)
-            throws IOException {
-        writer.write(currentDirectory);
-        writer.write(System.getProperty("line.separator"));
-        writer.flush();
-    }
-
-    private static void ls(ArrayList<String> appArgs, OutputStreamWriter writer)
-            throws IOException{
-        File currDir;
-        if (appArgs.isEmpty()) {
-            currDir = new File(currentDirectory);
-        } else if (appArgs.size() == 1) {
-            currDir = new File(appArgs.get(0));
-        } else {
-            throw new RuntimeException("ls: too many arguments");
-        }
-        try {
-            File[] listOfFiles = currDir.listFiles();
-            boolean atLeastOnePrinted = false;
-            for (File file : listOfFiles) {
-                if (!file.getName().startsWith(".")) {
-                    writer.write(file.getName());
-                    writer.write("\t");
-                    writer.flush();
-                    atLeastOnePrinted = true;
-                }
-            }
-            if (atLeastOnePrinted) {
-                writer.write(System.getProperty("line.separator"));
-                writer.flush();
-            }
-        } catch (NullPointerException e) {
-            throw new RuntimeException("ls: no such directory");
-        }
-    }
-
-    private static void cat(ArrayList<String> appArgs, OutputStreamWriter writer) {
-        if (appArgs.isEmpty()) {
-            throw new RuntimeException("cat: missing arguments");
-        } else {
-            for (String arg : appArgs) {
-                Charset encoding = StandardCharsets.UTF_8;
-                File currFile = new File(currentDirectory + File.separator + arg);
-                if (currFile.exists()) {
-                    Path filePath = Paths.get(currentDirectory + File.separator + arg);
-                    try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            writer.write(String.valueOf(line));
-                            writer.write(System.getProperty("line.separator"));
-                            writer.flush();
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException("cat: cannot open " + arg);
-                    }
-                } else {
-                    throw new RuntimeException("cat: file does not exist");
-                }
-            }
-        }
-    }
-
-    private static void echo(ArrayList<String> appArgs, OutputStreamWriter writer)
-            throws IOException {
-        boolean atLeastOnePrinted = false;
-        for (String arg : appArgs) {
-            writer.write(arg);
-            writer.write(" ");
-            writer.flush();
-            atLeastOnePrinted = true;
-        }
-        if (atLeastOnePrinted) {
-            writer.write(System.getProperty("line.separator"));
-            writer.flush();
-        }
-    }
-
-    private static void head(ArrayList<String> appArgs, OutputStreamWriter writer) {
-        if (appArgs.isEmpty()) {
-            throw new RuntimeException("head: missing arguments");
-        }
-        if (appArgs.size() != 1 && appArgs.size() != 3) {
-            throw new RuntimeException("head: wrong arguments");
-        }
-        if (appArgs.size() == 3 && !appArgs.get(0).equals("-n")) {
-            throw new RuntimeException("head: wrong argument " + appArgs.get(0));
-        }
-        int headLines = 10;
-        String headArg;
-        if (appArgs.size() == 3) {
-            try {
-                headLines = Integer.parseInt(appArgs.get(1));
-            } catch (Exception e) {
-                throw new RuntimeException("head: wrong argument " + appArgs.get(1));
-            }
-            headArg = appArgs.get(2);
-        } else {
-            headArg = appArgs.get(0);
-        }
-        File headFile = new File(currentDirectory + File.separator + headArg);
-        if (headFile.exists()) {
-            Charset encoding = StandardCharsets.UTF_8;
-            Path filePath = Paths.get((String) currentDirectory + File.separator + headArg);
-            try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
-                for (int i = 0; i < headLines; i++) {
-                    String line = null;
-                    if ((line = reader.readLine()) != null) {
-                        writer.write(line);
-                        writer.write(System.getProperty("line.separator"));
-                        writer.flush();
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("head: cannot open " + headArg);
-            }
-        } else {
-            throw new RuntimeException("head: " + headArg + " does not exist");
-        }
-    }
-
-    private static void tail(ArrayList<String> appArgs, OutputStreamWriter writer) {
-        if (appArgs.isEmpty()) {
-            throw new RuntimeException("tail: missing arguments");
-        }
-        if (appArgs.size() != 1 && appArgs.size() != 3) {
-            throw new RuntimeException("tail: wrong arguments");
-        }
-        if (appArgs.size() == 3 && !appArgs.get(0).equals("-n")) {
-            throw new RuntimeException("tail: wrong argument " + appArgs.get(0));
-        }
-        int tailLines = 10;
-        String tailArg;
-        if (appArgs.size() == 3) {
-            try {
-                tailLines = Integer.parseInt(appArgs.get(1));
-            } catch (Exception e) {
-                throw new RuntimeException("tail: wrong argument " + appArgs.get(1));
-            }
-            tailArg = appArgs.get(2);
-        } else {
-            tailArg = appArgs.get(0);
-        }
-        File tailFile = new File(currentDirectory + File.separator + tailArg);
-        if (tailFile.exists()) {
-            Charset encoding = StandardCharsets.UTF_8;
-            Path filePath = Paths.get((String) currentDirectory + File.separator + tailArg);
-            ArrayList<String> storage = new ArrayList<>();
-            try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    storage.add(line);
-                }
-                int index = 0;
-                if (tailLines > storage.size()) {
-                    index = 0;
-                } else {
-                    index = storage.size() - tailLines;
-                }
-                for (int i = index; i < storage.size(); i++) {
-                    writer.write(storage.get(i) + System.getProperty("line.separator"));
-                    writer.flush();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("tail: cannot open " + tailArg);
-            }
-        } else {
-            throw new RuntimeException("tail: " + tailArg + " does not exist");
-        }
-    }
-
-    private static void grep(ArrayList<String> appArgs, OutputStreamWriter writer) {
-        if (appArgs.size() < 2) {
-            throw new RuntimeException("grep: wrong number of arguments");
-        }
-        Pattern grepPattern = Pattern.compile(appArgs.get(0));
-        int numOfFiles = appArgs.size() - 1;
-        Path filePath;
-        Path[] filePathArray = new Path[numOfFiles];
-        Path currentDir = Paths.get(currentDirectory);
-        for (int i = 0; i < numOfFiles; i++) {
-            filePath = currentDir.resolve(appArgs.get(i + 1));
-            if (Files.notExists(filePath) || Files.isDirectory(filePath) ||
-                    !Files.exists(filePath) || !Files.isReadable(filePath)) {
-                throw new RuntimeException("grep: wrong file argument");
-            }
-            filePathArray[i] = filePath;
-        }
-        for (int j = 0; j < filePathArray.length; j++) {
-            Charset encoding = StandardCharsets.UTF_8;
-            try (BufferedReader reader = Files.newBufferedReader(filePathArray[j], encoding)) {
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    Matcher matcher = grepPattern.matcher(line);
-                    if (matcher.find()) {
-                        if (numOfFiles > 1) {
-                            writer.write(appArgs.get(j+1));
-                            writer.write(":");
-                        }
-                        writer.write(line);
-                        writer.write(System.getProperty("line.separator"));
-                        writer.flush();
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("grep: cannot open " + appArgs.get(j + 1));
-            }
+            ApplicationFactory.getApp(appName).exec(appArgs, null , standardWriter);
         }
     }
 
@@ -360,7 +52,6 @@ public class Shell {
                 System.out.println("COMP0010 shell: " + args[0] + ": unexpected argument");
                 // TODO: return should be added here?
             }
-
             // Attempt to evaluate command
             try {
                 // TODO: need to ensure quotes commands work?
@@ -369,24 +60,23 @@ public class Shell {
                 System.out.println("COMP0010 shell: " + e.getMessage());
             }
         } else {
-
-            // When running in interactive mode
-            Scanner input = new Scanner(System.in);
-            try {
-                while (true) {
+            Scanner scanner = new Scanner(System.in);
+            try{
+                while(true){
                     String prompt = currentDirectory + "> ";
                     System.out.print(prompt);
                     try {
-                        String cmdline = input.nextLine();
+                        String cmdline = scanner.nextLine();
                         eval(cmdline, System.out);
                     } catch (Exception e) {
                         System.out.println("COMP0010 shell: " + e.getMessage());
                     }
                 }
             } finally {
-                input.close();
+                scanner.close();
             }
         }
     }
+    
 
 }
