@@ -2,16 +2,15 @@ package uk.ac.ucl.shell;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
-import uk.ac.ucl.shell.Apps.ApplicationFactory;
+public class Pipe extends Command {
 
-public class Pipe implements Command {
+    public Pipe(String inputString) {
+        super(inputString);
+    }
 
     @Override
-    public void eval(String cmdLine, InputStream input, OutputStream output) {
+    public void eval(InputStream input, OutputStream output) {
         /*
         command, rest = splitatpipe(cmdLine)
 

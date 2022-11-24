@@ -1,8 +1,15 @@
 package uk.ac.ucl.shell;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 
-public interface Command {
+public abstract class Command {
     
-    public void eval(String input, OutputStream output);
+    private String inputString;
+
+    public Command(String inputString){
+        this.inputString = inputString;
+    }
+    
+    public abstract void eval(InputStream input, OutputStream output);
 }

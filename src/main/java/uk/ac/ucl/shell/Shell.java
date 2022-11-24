@@ -2,6 +2,11 @@ package uk.ac.ucl.shell;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import uk.ac.ucl.shell.Apps.ApplicationFactory;
 
 
 public class Shell {
@@ -17,9 +22,9 @@ public class Shell {
     }
 
 
-    public static void eval(String input) throws IOException{
+    public static void eval(String input, OutputStream output) throws IOException{
 
-        OutputStreamWriter standardWriter = new OutputStreamWriter(outputStream);
+        OutputStreamWriter standardWriter = new OutputStreamWriter(output);
         ArrayList<String> rawCommands = Parsing.parse(input);
 
         for (String rawCommand : rawCommands) {
@@ -30,7 +35,7 @@ public class Shell {
 
             // Applications
             // TODO: compartmentalise each application
-            ApplicationFactory.getApp(appName).exec(appArgs, this, standardWriter);
+            ApplicationFactory.getApp(appName).exec(appArgs, null , standardWriter);
         }
     }
 
@@ -57,12 +62,12 @@ public class Shell {
         } else {
             Scanner scanner = new Scanner(System.in);
             try{
-                while(running){
+                while(true){
                     String prompt = currentDirectory + "> ";
                     System.out.print(prompt);
                     try {
                         String cmdline = scanner.nextLine();
-                        eval(cmdline);
+                        eval(cmdline, System.out);
                     } catch (Exception e) {
                         System.out.println("COMP0010 shell: " + e.getMessage());
                     }
@@ -73,8 +78,5 @@ public class Shell {
         }
     }
     
-    public static void eval(String input, OutputStream output) throws IOException{
-        new Evaluator(output).eval(input);
-    }
 
 }

@@ -16,8 +16,8 @@ public class ShellGrammarLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, UNQUOTED=5, SINGLEQUOTED=6, BACKQUOTE=7, 
-		DOUBLEQUOTED=8;
+		SEMICOLON=1, PIPEOP=2, REDIRECTIN=3, REDIRECTOUT=4, UNQUOTED=5, SINGLEQUOTED=6, 
+		BACKQUOTE=7, DOUBLEQUOTED=8;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -28,8 +28,8 @@ public class ShellGrammarLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"T__0", "T__1", "T__2", "T__3", "BACKQUOTE_fragment", "UNQUOTED", "SINGLEQUOTED", 
-			"BACKQUOTE", "DOUBLEQUOTED"
+			"SEMICOLON", "PIPEOP", "REDIRECTIN", "REDIRECTOUT", "BACKQUOTE_fragment", 
+			"UNQUOTED", "SINGLEQUOTED", "BACKQUOTE", "DOUBLEQUOTED"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -42,8 +42,8 @@ public class ShellGrammarLexer extends Lexer {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, "UNQUOTED", "SINGLEQUOTED", "BACKQUOTE", 
-			"DOUBLEQUOTED"
+			null, "SEMICOLON", "PIPEOP", "REDIRECTIN", "REDIRECTOUT", "UNQUOTED", 
+			"SINGLEQUOTED", "BACKQUOTE", "DOUBLEQUOTED"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();

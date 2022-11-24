@@ -17,8 +17,8 @@ public class ShellGrammarParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, UNQUOTED=5, SINGLEQUOTED=6, BACKQUOTE=7, 
-		DOUBLEQUOTED=8;
+		SEMICOLON=1, PIPEOP=2, REDIRECTIN=3, REDIRECTOUT=4, UNQUOTED=5, SINGLEQUOTED=6, 
+		BACKQUOTE=7, DOUBLEQUOTED=8;
 	public static final int
 		RULE_command = 0, RULE_seq = 1, RULE_atomicCommand = 2, RULE_pipe = 3, 
 		RULE_call = 4, RULE_atom = 5, RULE_redirection = 6, RULE_argument = 7;
@@ -31,8 +31,8 @@ public class ShellGrammarParser extends Parser {
 		null, "';'", "'|'", "'<'", "'>'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, "UNQUOTED", "SINGLEQUOTED", "BACKQUOTE", 
-		"DOUBLEQUOTED"
+		null, "SEMICOLON", "PIPEOP", "REDIRECTIN", "REDIRECTOUT", "UNQUOTED", 
+		"SINGLEQUOTED", "BACKQUOTE", "DOUBLEQUOTED"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -123,6 +123,7 @@ public class ShellGrammarParser extends Parser {
 		public AtomicCommandContext atomicCommand() {
 			return getRuleContext(AtomicCommandContext.class,0);
 		}
+		public TerminalNode SEMICOLON() { return getToken(ShellGrammarParser.SEMICOLON, 0); }
 		public List<SeqContext> seq() {
 			return getRuleContexts(SeqContext.class);
 		}
@@ -157,10 +158,10 @@ public class ShellGrammarParser extends Parser {
 				setState(20);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==T__0) {
+				if (_la==SEMICOLON) {
 					{
 					setState(19);
-					match(T__0);
+					match(SEMICOLON);
 					}
 				}
 
@@ -172,7 +173,7 @@ public class ShellGrammarParser extends Parser {
 				setState(22);
 				atomicCommand();
 				setState(23);
-				match(T__0);
+				match(SEMICOLON);
 				setState(27);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
@@ -263,6 +264,7 @@ public class ShellGrammarParser extends Parser {
 		public CallContext call(int i) {
 			return getRuleContext(CallContext.class,i);
 		}
+		public TerminalNode PIPEOP() { return getToken(ShellGrammarParser.PIPEOP, 0); }
 		public PipeContext pipe() {
 			return getRuleContext(PipeContext.class,0);
 		}
@@ -296,7 +298,7 @@ public class ShellGrammarParser extends Parser {
 			setState(37);
 			call();
 			setState(38);
-			match(T__1);
+			match(PIPEOP);
 			setState(39);
 			call();
 			}
@@ -315,7 +317,7 @@ public class ShellGrammarParser extends Parser {
 					setState(41);
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 					setState(42);
-					match(T__1);
+					match(PIPEOP);
 					setState(43);
 					call();
 					}
@@ -376,7 +378,7 @@ public class ShellGrammarParser extends Parser {
 			setState(52);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__2 || _la==T__3) {
+			while (_la==REDIRECTIN || _la==REDIRECTOUT) {
 				{
 				{
 				setState(49);
@@ -443,8 +445,8 @@ public class ShellGrammarParser extends Parser {
 			setState(64);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__2:
-			case T__3:
+			case REDIRECTIN:
+			case REDIRECTOUT:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(62);
@@ -477,9 +479,11 @@ public class ShellGrammarParser extends Parser {
 	}
 
 	public static class RedirectionContext extends ParserRuleContext {
+		public TerminalNode REDIRECTIN() { return getToken(ShellGrammarParser.REDIRECTIN, 0); }
 		public ArgumentContext argument() {
 			return getRuleContext(ArgumentContext.class,0);
 		}
+		public TerminalNode REDIRECTOUT() { return getToken(ShellGrammarParser.REDIRECTOUT, 0); }
 		public RedirectionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -498,20 +502,20 @@ public class ShellGrammarParser extends Parser {
 			setState(70);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__2:
+			case REDIRECTIN:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(66);
-				match(T__2);
+				match(REDIRECTIN);
 				setState(67);
 				argument();
 				}
 				break;
-			case T__3:
+			case REDIRECTOUT:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(68);
-				match(T__3);
+				match(REDIRECTOUT);
 				setState(69);
 				argument();
 				}
