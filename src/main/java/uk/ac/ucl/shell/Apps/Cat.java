@@ -24,14 +24,14 @@ public class Cat implements Application {
             File currFile = new File(rawPath);
             if (!currFile.exists()) {
                 throw new RuntimeException("cat: file does not exist");
-            } else {
-                Path filePath = Paths.get(rawPath);
-                try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
-                    printFile(reader, writer);
-                }
-                catch (IOException e) {
-                    throw new RuntimeException("cat: cannot open " + arg);
-                }
+            }
+
+            Path filePath = Paths.get(rawPath);
+            try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
+                printFile(reader, writer);
+            }
+            catch (IOException e) {
+                throw new RuntimeException("cat: cannot open " + arg);
             }
         }
     }
