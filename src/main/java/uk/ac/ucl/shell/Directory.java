@@ -5,6 +5,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Directory {
     private static Directory instance;
@@ -58,5 +61,13 @@ public class Directory {
 
     public boolean existsDirectory(String arg) {
         return new File(String.valueOf(getPathTo(arg))).isDirectory();
+    }
+
+    public ArrayList<File> getListOfFiles (String arg) {
+        if (!existsDirectory(arg)) {
+            throw new RuntimeException("Directory does not exist");
+        }
+        File directory = new File(String.valueOf(getPathTo(arg)));
+        return new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
     }
 }
