@@ -14,19 +14,17 @@ public class Pwd extends Application {
         super(args, input, output);
     }
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
-        output.write(Shell.getDirectory());
-        output.write(System.getProperty("line.separator"));
-        output.flush();
-    }
-
     @Override
     protected void checkArgs() {
-
+        if (args.size() != 0 || input != null) {
+            throw new RuntimeException("pwd: too many arguments");
+        }
     }
 
     @Override
     protected void eval() throws IOException {
-
+        writer.write(directory.getCurrentDirectory());
+        writer.write(System.getProperty("line.separator"));
+        writer.flush();
     }
 }
