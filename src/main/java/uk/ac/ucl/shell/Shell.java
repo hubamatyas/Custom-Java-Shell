@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import uk.ac.ucl.shell.Apps.ApplicationFactory;
+import uk.ac.ucl.shell.Parse.Parsing;
 
 
 public class Shell {
     
-    private static String currentDirectory; 
+    private static String currentDirectory =  System.getProperty("user.dir"); 
 
     public static String getDirectory(){
         return currentDirectory;
