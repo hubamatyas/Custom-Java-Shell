@@ -58,7 +58,6 @@ public class Grep extends Application {
                 while ((line = reader.readLine()) != null) {
                     Matcher matcher = grepPattern.matcher(line);
                     if (matcher.find()) {
-                        // why do we need write(file) and write(":")?
                         if (files.size() > 1) {
                             writer.write(file);
                             writer.write(":");

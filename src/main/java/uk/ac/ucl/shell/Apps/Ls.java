@@ -32,7 +32,7 @@ public class Ls extends Application {
 
     private void filesToOutput() {
         try {
-            ArrayList<File> listOfFiles = directory.getListOfFiles(path);
+            ArrayList<File> listOfFiles = directory.getListOfFiles("ls", path);
             System.out.println(listOfFiles);
             boolean atLeastOnePrinted = false;
             for (File file : listOfFiles) {
