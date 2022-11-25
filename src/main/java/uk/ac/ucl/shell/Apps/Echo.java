@@ -12,7 +12,11 @@ public class Echo extends Application {
     }
 
     @Override
-    protected void checkArgs() {}
+    protected void checkArgs() {
+        if (args.isEmpty() && input != null) {
+            args.add(input.toString());
+        }
+    }
 
     @Override
     protected void eval() throws IOException {
