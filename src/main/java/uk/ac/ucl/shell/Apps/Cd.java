@@ -7,19 +7,22 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import uk.ac.ucl.shell.Shell;
 
-public class Cd implements Application {
-
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
-        checkArgs(args);
-        String dirString = args.get(0);
-        File dir = new File(Shell.getDirectory(), dirString);
-        if (!dir.exists() || !dir.isDirectory()) {
-            throw new RuntimeException("cd: " + dirString + " is not an existing directory");
-        }
-        Shell.setDirectory(dir.getCanonicalPath());
+public class Cd extends Application {
+    public Cd(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(args, input, writer);
     }
 
-    private void checkArgs(ArrayList<String> args) {
+    @Override
+    protected void eval() throws IOException {
+        String subDir = args.get(0);
+        if (!directory.existsDirectory(subDir)) {
+            throw new RuntimeException("cd: " + subDir + " is not an existing directory");
+        }
+        directory.setCurrentDirectory(String.valueOf(directory.getPathTo(subDir)));
+    }
+
+    @Override
+    protected void checkArgs() {
         if (args.isEmpty()) {
             throw new RuntimeException("cd: missing argument");
         } else if (args.size() > 1) {

@@ -10,25 +10,31 @@ import java.util.ArrayList;
 
 import uk.ac.ucl.shell.Shell;
 
-public class Cat implements Application {
-
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter writer) throws IOException {
-        checkArgs(args);
-        enumerateArgs(args, writer);
+public class Cat extends Application {
+    public Cat(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(args, input, writer);
     }
 
-    private void enumerateArgs(ArrayList<String> args, OutputStreamWriter writer) {
+    @Override
+    protected void checkArgs() {
+        if (args.isEmpty() && input == null) {
+            throw new RuntimeException("cat: missing arguments");
+        }
+
+        if (args.isEmpty()) {
+            args.add(input.toString());
+        }
+    }
+
+    @Override
+    protected void eval() {
         for (String arg : args) {
-            Charset encoding = StandardCharsets.UTF_8;
-            String rawPath = Shell.getDirectory() + File.separator + arg;
-            File currFile = new File(rawPath);
-            if (!currFile.exists()) {
+            // throw exception in Directory?
+            if (!directory.existsFile(arg)) {
                 throw new RuntimeException("cat: file does not exist");
             }
-
-            Path filePath = Paths.get(rawPath);
-            try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
-                printFile(reader, writer);
+            try (BufferedReader reader = Files.newBufferedReader(directory.getPathTo(arg), directory.getEncoding())) {
+                outputFile(reader);
             }
             catch (IOException e) {
                 throw new RuntimeException("cat: cannot open " + arg);
@@ -36,18 +42,12 @@ public class Cat implements Application {
         }
     }
 
-    private void printFile(BufferedReader reader, OutputStreamWriter writer) throws IOException {
+    private void outputFile(BufferedReader reader) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
             writer.write(line);
             writer.write(System.getProperty("line.separator"));
             writer.flush();
-        }
-    }
-
-    private void checkArgs(ArrayList<String> args) {
-        if (args.isEmpty()) {
-            throw new RuntimeException("cat: missing arguments");
         }
     }
 }

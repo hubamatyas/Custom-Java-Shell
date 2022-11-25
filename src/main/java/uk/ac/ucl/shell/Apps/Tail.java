@@ -14,7 +14,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class Tail implements Application {
+// TODO refactor by using Directory and abstract Application class
+public class Tail extends Application {
+
+    public Tail(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
 
     public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         if (args.isEmpty()) {
@@ -65,5 +70,15 @@ public class Tail implements Application {
         } else {
             throw new RuntimeException("tail: " + tailArg + " does not exist");
         }
+    }
+
+    @Override
+    protected void checkArgs() {
+
+    }
+
+    @Override
+    protected void eval() throws IOException {
+
     }
 }

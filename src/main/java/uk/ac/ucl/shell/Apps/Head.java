@@ -14,8 +14,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class Head implements Application {
-    
+// TODO refactor by using Directory and abstract Application class
+public class Head extends Application {
+
+    public Head(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
+
     public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         if (args.isEmpty()) {
             throw new RuntimeException("head: missing arguments");
@@ -58,5 +63,15 @@ public class Head implements Application {
         } else {
             throw new RuntimeException("head: " + headArg + " does not exist");
         }
+    }
+
+    @Override
+    protected void checkArgs() {
+
+    }
+
+    @Override
+    protected void eval() throws IOException {
+
     }
 }

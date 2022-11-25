@@ -5,18 +5,26 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class Echo implements Application{
+public class Echo extends Application {
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
+    public Echo(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
+
+    @Override
+    protected void checkArgs() {}
+
+    @Override
+    protected void eval() throws IOException {
         for (String arg : args) {
-            output.write(arg);
-            output.write(" ");
-            output.flush();
+            writer.write(arg);
+            writer.write(" ");
+            writer.flush();
         }
 
         if (!args.isEmpty()) {
-            output.write(System.getProperty("line.separator"));
-            output.flush();
+            writer.write(System.getProperty("line.separator"));
+            writer.flush();
         }
     }
 }

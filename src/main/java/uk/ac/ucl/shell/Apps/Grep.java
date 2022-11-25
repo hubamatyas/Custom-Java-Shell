@@ -14,8 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import uk.ac.ucl.shell.Shell;
 
-public class Grep implements Application {
-    
+// TODO refactor by using Directory and abstract Application class
+public class Grep extends Application {
+
+    public Grep(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
+
     public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output){
         if (args.size() < 2) {
             throw new RuntimeException("grep: wrong number of arguments");
@@ -53,5 +58,15 @@ public class Grep implements Application {
                 throw new RuntimeException("grep: cannot open " + args.get(j + 1));
             }
         }
+    }
+
+    @Override
+    protected void checkArgs() {
+
+    }
+
+    @Override
+    protected void eval() throws IOException {
+
     }
 }

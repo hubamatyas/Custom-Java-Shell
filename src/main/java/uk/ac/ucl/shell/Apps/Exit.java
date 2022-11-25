@@ -5,16 +5,17 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class Exit implements Application{
+public class Exit extends Application {
 
+    public Exit(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
-        /* TODO: Implement exit
-        we save history to file (only if we have time)
-        means we would have to keep track of every command
-        their input and output */
+    @Override
+    protected void checkArgs() {}
+
+    @Override
+    protected void eval() throws IOException {
         System.exit(0);
     }
-    
-    
 }

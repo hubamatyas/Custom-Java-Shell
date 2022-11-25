@@ -8,7 +8,12 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class Ls implements Application{
+// TODO refactor by using Directory and abstract Application class
+public class Ls extends Application {
+
+    public Ls(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
 
     public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output)
         throws IOException{
@@ -41,4 +46,13 @@ public class Ls implements Application{
         }
     }
 
+    @Override
+    protected void checkArgs() {
+
+    }
+
+    @Override
+    protected void eval() throws IOException {
+
+    }
 }

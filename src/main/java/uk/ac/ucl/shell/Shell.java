@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import uk.ac.ucl.shell.Apps.ApplicationFactory;
+import uk.ac.ucl.shell.Directory;
 
 
 public class Shell {
     
-    private static String currentDirectory; 
+    private static String currentDirectory = System.getProperty("user.dir");
 
     public static String getDirectory(){
         return currentDirectory;
@@ -35,7 +36,8 @@ public class Shell {
 
             // Applications
             // TODO: compartmentalise each application
-            ApplicationFactory.getApp(appName).exec(appArgs, null , standardWriter);
+            // call functions in exec() and exec() itself seperately, not just one .extec() call
+            ApplicationFactory.getApp(appName, appArgs, null , standardWriter).exec();
         }
     }
 
@@ -63,7 +65,7 @@ public class Shell {
             Scanner scanner = new Scanner(System.in);
             try{
                 while(true){
-                    String prompt = currentDirectory + "> ";
+                    String prompt = Directory.getDirectory().getCurrentDirectory() + "> ";
                     System.out.print(prompt);
                     try {
                         String cmdline = scanner.nextLine();
