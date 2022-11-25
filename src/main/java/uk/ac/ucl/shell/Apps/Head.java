@@ -14,14 +14,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-// TODO refactor by using Directory and abstract Application class
 public class Head extends Application {
 
+    private int headLines;
+    private String fileName;
     public Head(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         super(args, input, output);
+        headLines = 10;
     }
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+    @Override
+    protected void checkArgs() {
+        if ((args.size() == 0 || args.size() == 2) && input != null) {
+            args.add(input.toString());
+        }
         if (args.isEmpty()) {
             throw new RuntimeException("head: missing arguments");
         }
@@ -31,47 +37,43 @@ public class Head extends Application {
         if (args.size() == 3 && !args.get(0).equals("-n")) {
             throw new RuntimeException("head: wrong argument " + args.get(0));
         }
-        int headLines = 10;
-        String headArg;
+    }
+
+    @Override
+    protected void eval() throws IOException {
+        loadArgs();
+        getHeadLines();
+    }
+
+    private void getHeadLines() {
+        if (directory.existsFile(fileName)) {
+            try (BufferedReader reader = Files.newBufferedReader(directory.getPathTo(fileName), directory.getEncoding())) {
+                for (int i = 0; i < headLines; i++) {
+                    String line;
+                    if ((line = reader.readLine()) != null) {
+                        writer.write(line);
+                        writer.write(System.getProperty("line.separator"));
+                        writer.flush();
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("head: cannot open " + fileName);
+            }
+        } else {
+            throw new RuntimeException("head: " + fileName + " does not exist");
+        }
+    }
+
+    private void loadArgs() {
         if (args.size() == 3) {
             try {
                 headLines = Integer.parseInt(args.get(1));
             } catch (Exception e) {
                 throw new RuntimeException("head: wrong argument " + args.get(1));
             }
-            headArg = args.get(2);
+            fileName = args.get(2);
         } else {
-            headArg = args.get(0);
+            fileName = args.get(0);
         }
-        String currentDirectory = Shell.getDirectory();
-        File headFile = new File(currentDirectory + File.separator + headArg);
-        if (headFile.exists()) {
-            Charset encoding = StandardCharsets.UTF_8;
-            Path filePath = Paths.get((String) currentDirectory + File.separator + headArg);
-            try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
-                for (int i = 0; i < headLines; i++) {
-                    String line = null;
-                    if ((line = reader.readLine()) != null) {
-                        output.write(line);
-                        output.write(System.getProperty("line.separator"));
-                        output.flush();
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("head: cannot open " + headArg);
-            }
-        } else {
-            throw new RuntimeException("head: " + headArg + " does not exist");
-        }
-    }
-
-    @Override
-    protected void checkArgs() {
-
-    }
-
-    @Override
-    protected void eval() throws IOException {
-
     }
 }
