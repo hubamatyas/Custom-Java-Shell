@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-// TODO refactor by using Directory and abstract Application class
 public class Ls extends Application {
 
     private String path;

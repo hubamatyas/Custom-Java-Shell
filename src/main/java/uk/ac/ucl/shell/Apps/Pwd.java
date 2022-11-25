@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-// TODO refactor by using Directory and abstract Application class
 public class Pwd extends Application {
 
     public Pwd(ArrayList<String> args, InputStream input, OutputStreamWriter output) {

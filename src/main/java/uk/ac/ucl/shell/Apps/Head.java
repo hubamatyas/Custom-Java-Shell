@@ -18,6 +18,7 @@ public class Head extends Application {
 
     private int headLines;
     private String fileName;
+
     public Head(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         super(args, input, output);
         headLines = 10;

@@ -63,11 +63,16 @@ public class Directory {
         return new File(String.valueOf(getPathTo(arg))).isDirectory();
     }
 
-    public ArrayList<File> getListOfFiles (String arg) {
+    public ArrayList<File> getListOfFiles(String arg) {
         if (!existsDirectory(arg)) {
             throw new RuntimeException("Directory does not exist");
         }
         File directory = new File(String.valueOf(getPathTo(arg)));
         return new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
+    }
+
+    public ArrayList<String> readFile(String fileName) {
+        // TODO
+        return new ArrayList<>();
     }
 }
