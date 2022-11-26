@@ -6,8 +6,6 @@ grammar ShellGrammar;
 
 //commands
 
-command : seq;
-
 seq :  atomicCommand | atomicCommand SEMICOLON seq*; 
 
 atomicCommand : pipe | call;

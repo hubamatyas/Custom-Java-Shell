@@ -1,7 +1,5 @@
 // Generated from uk\ac\u005Cucl\shell\ShellGrammar.g4 by ANTLR 4.7
 package uk.ac.ucl.shell;
-import java.io.IOException;
-
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -13,13 +11,6 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * operations with no return type.
  */
 public class ShellGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ShellGrammarVisitor<T> {
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitCommand(ShellGrammarParser.CommandContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -67,7 +58,6 @@ public class ShellGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
-	 * @throws IOException
 	 */
 	@Override public T visitArgument(ShellGrammarParser.ArgumentContext ctx) { return visitChildren(ctx); }
 }
