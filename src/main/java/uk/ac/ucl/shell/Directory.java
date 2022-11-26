@@ -18,11 +18,13 @@ public class Directory {
     private static Directory instance;
     private Charset encoding;
     private String currentDirectory;
-    private String separator;
+    private String fileSeparator;
+    private String lineSeparator;
 
     private Directory() {
         encoding = StandardCharsets.UTF_8;
-        separator = File.separator;
+        fileSeparator = File.separator;
+        lineSeparator = System.getProperty("line.separator");
         currentDirectory = System.getProperty("user.dir");
     }
 
@@ -47,7 +49,7 @@ public class Directory {
     }
 
     public Path getPathTo(String arg) {
-        return Paths.get(currentDirectory + separator + arg);
+        return Paths.get(currentDirectory + fileSeparator + arg);
     }
 
     /*
@@ -98,17 +100,25 @@ public class Directory {
         return lines;
     }
 
-    public void writeFile(String appName, String fileName, List<String> lines, OutputStreamWriter writer) throws IOException {
-        checkFileToHandle(appName, fileName);
-        writeLines(writer, lines);
-    }
-
-    private void writeLines(OutputStreamWriter writer, List<String> lines) throws IOException {
+    public void writeFile(List<String> lines, OutputStreamWriter writer) throws IOException {
         for (String line : lines) {
             writer.write(line);
-            writer.write(System.getProperty("line.separator"));
+            writer.write(lineSeparator);
             writer.flush();
         }
+    }
+
+    public void writeFile(List<String> lines, OutputStreamWriter writer, String wordSeparator) throws IOException {
+        for (String line : lines) {
+            writer.write(line);
+            writer.write(wordSeparator);
+            writer.flush();
+        }
+    }
+
+    public void writeNewLine(OutputStreamWriter writer) throws IOException {
+        writer.write(lineSeparator);
+        writer.flush();
     }
 
     private void checkFileToHandle(String appName, String fileName) {
@@ -117,9 +127,9 @@ public class Directory {
         }
     }
 
-    private void checkDirectoryToHandle(String appName, String directoryName) {
+    public void checkDirectoryToHandle(String appName, String directoryName) {
         if (!existsDirectory(directoryName)) {
-            throw new RuntimeException(appName + ": " + directoryName + " does not exist");
+            throw new RuntimeException(appName + ": " + directoryName + " directory does not exist");
         }
     }
 

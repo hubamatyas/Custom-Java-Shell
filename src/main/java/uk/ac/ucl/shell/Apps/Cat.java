@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import uk.ac.ucl.shell.Shell;
 
@@ -27,27 +28,10 @@ public class Cat extends Application {
     }
 
     @Override
-    protected void eval() {
+    protected void eval() throws IOException {
         for (String arg : args) {
-            // throw exception in Directory?
-            if (!directory.existsFile(arg)) {
-                throw new RuntimeException("cat: file does not exist");
-            }
-            try (BufferedReader reader = Files.newBufferedReader(directory.getPathTo(arg), directory.getEncoding())) {
-                outputFile(reader);
-            }
-            catch (IOException e) {
-                throw new RuntimeException("cat: cannot open " + arg);
-            }
-        }
-    }
-
-    private void outputFile(BufferedReader reader) throws IOException {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            writer.write(line);
-            writer.write(System.getProperty("line.separator"));
-            writer.flush();
+            List<String> fileLines = directory.readFile("cat", arg);
+            directory.writeFile(fileLines, writer);
         }
     }
 }

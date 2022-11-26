@@ -12,6 +12,7 @@ public class Head extends Application {
     private String fileName;
 
     public Head(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        // add name of application to super
         super(args, input, output);
         numOfLines = 10;
     }
@@ -35,10 +36,11 @@ public class Head extends Application {
     @Override
     protected void eval() throws IOException {
         loadArgs();
+        // add numOfLines parameter to readFile?
         List<String> fileLines = directory.readFile("head", fileName);
         numOfLines = Math.min(numOfLines, fileLines.size());
         List<String> headLines = fileLines.subList(0, numOfLines);
-        directory.writeFile("head", fileName, headLines, writer);
+        directory.writeFile(headLines, writer);
     }
 
     private void loadArgs() {

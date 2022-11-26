@@ -20,15 +20,9 @@ public class Echo extends Application {
 
     @Override
     protected void eval() throws IOException {
-        for (String arg : args) {
-            writer.write(arg);
-            writer.write(" ");
-            writer.flush();
-        }
-
+        directory.writeFile(args, writer, " ");
         if (!args.isEmpty()) {
-            writer.write(System.getProperty("line.separator"));
-            writer.flush();
+            directory.writeNewLine(writer);
         }
     }
 }

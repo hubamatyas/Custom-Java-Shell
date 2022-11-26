@@ -15,9 +15,7 @@ public class Cd extends Application {
     @Override
     protected void eval() throws IOException {
         String subDir = args.get(0);
-        if (!directory.existsDirectory(subDir)) {
-            throw new RuntimeException("cd: " + subDir + " is not an existing directory");
-        }
+        directory.checkDirectoryToHandle("cd", subDir);
         directory.setCurrentDirectory(String.valueOf(directory.getPathTo(subDir)));
     }
 

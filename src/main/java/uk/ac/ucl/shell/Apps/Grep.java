@@ -43,11 +43,7 @@ public class Grep extends Application {
 
     private void verifyFiles(ArrayList<String> files) {
         for (String file : files) {
-            // check if File.isReadable(filePath)?
-            // but then also check in Cat.java
-            if (directory.existsDirectory(file) || !directory.existsFile(file)) {
-                throw new RuntimeException("grep: wrong file argument");
-            }
+            directory.checkDirectoryToHandle("grep", file);
         }
     }
 
