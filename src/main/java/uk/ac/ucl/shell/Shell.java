@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import uk.ac.ucl.shell.Apps.ApplicationFactory;
+import uk.ac.ucl.shell.Commands.Seq;
 import uk.ac.ucl.shell.Parse.Parser;
 
 
@@ -24,20 +25,7 @@ public class Shell {
 
 
     public static void eval(String input, OutputStream output) throws IOException{
-
-        OutputStreamWriter standardWriter = new OutputStreamWriter(output);
-        ArrayList<String> rawCommands = Parser.parse(input);
-
-        for (String rawCommand : rawCommands) {
-            // Shell functionality?
-            ArrayList<String> tokens = Parser.produceTokens(currentDirectory, rawCommand);
-            String appName = tokens.get(0);
-            ArrayList<String> appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
-
-            // Applications
-            // TODO: compartmentalise each application
-            ApplicationFactory.getApp(appName).exec(appArgs, null , standardWriter);
-        }
+        new Seq(input).eval(null, output);
     }
 
     public static void main(String[] args) {

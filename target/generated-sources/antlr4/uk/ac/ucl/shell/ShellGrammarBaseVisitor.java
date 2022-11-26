@@ -17,6 +17,13 @@ public class ShellGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitCommand(ShellGrammarParser.CommandContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitSeq(ShellGrammarParser.SeqContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

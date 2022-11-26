@@ -10,7 +10,7 @@ import uk.ac.ucl.shell.ShellGrammarParser.CallContext;
 
 public class CommandVisitor extends ShellGrammarBaseVisitor<Void>{
     
-    ArrayList<ArrayList<String>> atomicCommands;
+    private ArrayList<ArrayList<String>> atomicCommands;
 
     @Override
     public Void visit(ParseTree tree) {
@@ -28,6 +28,10 @@ public class CommandVisitor extends ShellGrammarBaseVisitor<Void>{
     public Void visitCall(CallContext ctx) {
         atomicCommands.get(atomicCommands.size()-1).add(ctx.getText());
         return null;
+    }
+
+    public ArrayList<ArrayList<String>> getAtomicCommands(){
+        return atomicCommands;
     }
     
 }

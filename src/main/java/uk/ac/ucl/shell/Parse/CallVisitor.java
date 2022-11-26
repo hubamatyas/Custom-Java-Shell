@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import uk.ac.ucl.shell.ShellGrammarBaseVisitor;
 import uk.ac.ucl.shell.ShellGrammarParser.ArgumentContext;
+import uk.ac.ucl.shell.ShellGrammarParser.AtomContext;
 import uk.ac.ucl.shell.ShellGrammarParser.CallContext;
 import uk.ac.ucl.shell.ShellGrammarParser.RedirectionContext;
 
@@ -24,18 +25,17 @@ public class CallVisitor extends ShellGrammarBaseVisitor<Void>{
     }
 
     @Override
-    public Void visitCall(CallContext ctx) {        
-        System.out.println(ctx.getText());
+    public Void visitCall(CallContext ctx) {    
         return super.visitCall(ctx);
     }
 
     @Override
-    public Void visitRedirection(RedirectionContext ctx) throws RuntimeException{
+    public Void visitRedirection(RedirectionContext ctx) throws RuntimeException {
         if(ctx.REDIRECTIN() != null){
             if(inputRedirect == null){
                 inputRedirect = ctx.argument().getText();
             }else{
-                throw new RuntimeException("More than one output redirection");
+                throw new RuntimeException("More than one input redirection");
             }
         }else{
             if(outputRedirect == null){
@@ -45,6 +45,11 @@ public class CallVisitor extends ShellGrammarBaseVisitor<Void>{
             }
         }
         return null;
+    }
+
+    @Override
+    public Void visitAtom(AtomContext ctx) {
+        return super.visitAtom(ctx);
     }
 
     @Override

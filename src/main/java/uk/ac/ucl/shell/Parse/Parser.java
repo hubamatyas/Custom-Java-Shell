@@ -2,11 +2,8 @@ package uk.ac.ucl.shell.Parse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,19 +22,25 @@ import uk.ac.ucl.shell.ShellGrammarParser;
 
 public class Parser {
 
-    //returns command of pip seperated calls
+    //returns list of commands as a list of seperated calls based on piping
     public static ArrayList<ArrayList<String>> parseCommand(String input){
         CharStream parserInput = CharStreams.fromString(input);
         ShellGrammarLexer lexer = new ShellGrammarLexer(parserInput);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         ShellGrammarParser parser = new ShellGrammarParser(tokenStream);
-        ParseTree tree = parser.call();
+
+        //use our own error listener
+        parser.removeErrorListeners();
+        parser.addErrorListener(new ParserErrorListener());
+
+        ParseTree tree = parser.command();
+        //use visitor to extract individual parts of commands
         CommandVisitor visitor = new CommandVisitor();
         visitor.visit(tree);
-        return visitor.atomicCommands;
+        return visitor.getAtomicCommands();
     }
 
-
+    //parses call  and returns class containing appname, args, input file, output file
     public static ParsedCall parseCall(String input) throws IOException {
 
         CharStream parserInput = CharStreams.fromString(input);
@@ -45,6 +48,7 @@ public class Parser {
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         ShellGrammarParser parser = new ShellGrammarParser(tokenStream);
         ParseTree tree = parser.call();
+        //utilize visitor to extract arguments and input/output files
         CallVisitor visitor = new CallVisitor();
         visitor.visit(tree);
 
@@ -76,9 +80,8 @@ public class Parser {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             Shell.eval(arg.substring(1, arg.length()-1), output);
             String text = new String(output.toByteArray(), "UTF-8");
-            text = text.replace('\n', ' ');
-            cleanArgs.addAll(Arrays.asList(text.split("[ \\t]")));
-
+            text = text.replaceAll("[\\r\\n]+", " ");
+            cleanArgs.addAll(Arrays.asList(text.split("[ \\t]+")));
         }else if(firstChar == '"'){
             //returns argument with double quotes removed and backquotes evaluated
             String backquoteRegex = "(\\`[^\\`]*\\`)";

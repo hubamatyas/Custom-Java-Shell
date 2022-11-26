@@ -6,6 +6,8 @@ grammar ShellGrammar;
 
 //commands
 
+command : seq EOF;
+
 seq :  atomicCommand | atomicCommand SEMICOLON seq*; 
 
 atomicCommand : pipe | call;
@@ -20,7 +22,7 @@ atom : redirection | argument;
 
 redirection : REDIRECTIN WHITESPACE? argument | REDIRECTOUT WHITESPACE? argument;
 
-argument : (UNQUOTED | DOUBLEQUOTED | SINGLEQUOTED | BACKQUOTE)+;
+argument : UNQUOTED | DOUBLEQUOTED | SINGLEQUOTED | BACKQUOTE;
 
 
 /*
@@ -38,6 +40,6 @@ WHITESPACE : (' ' | '\t')+;
 fragment BACKQUOTE_fragment : '`' (~[\n`])* '`';
 
 UNQUOTED : ~[\n\t '"`;|]+;
-SINGLEQUOTED : '\'' (~[\n"])* '\'';
+SINGLEQUOTED : '\'' (~[\n'])* '\'';
 BACKQUOTE : BACKQUOTE_fragment;
 DOUBLEQUOTED : '"' ( BACKQUOTE_fragment | ~[\n"])* '"';
