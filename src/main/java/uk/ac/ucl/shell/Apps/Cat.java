@@ -31,7 +31,7 @@ public class Cat extends Application {
     protected void eval() throws IOException {
         for (String arg : args) {
             List<String> fileLines = directory.readFile("cat", arg);
-            directory.writeFile(fileLines, writer);
+            directory.writeFile(fileLines, writer, lineSeparator);
         }
     }
 }

@@ -100,20 +100,16 @@ public class Directory {
         return lines;
     }
 
-    public void writeFile(List<String> lines, OutputStreamWriter writer) throws IOException {
+    public void writeFile(List<String> lines, OutputStreamWriter writer, String wordSeparator) throws IOException {
         for (String line : lines) {
-            writer.write(line);
-            writer.write(lineSeparator);
-            writer.flush();
+            writeLine(line, writer, wordSeparator);
         }
     }
 
-    public void writeFile(List<String> lines, OutputStreamWriter writer, String wordSeparator) throws IOException {
-        for (String line : lines) {
-            writer.write(line);
-            writer.write(wordSeparator);
-            writer.flush();
-        }
+    public void writeLine(String line, OutputStreamWriter writer, String separator) throws IOException {
+        writer.write(line);
+        writer.write(separator);
+        writer.flush();
     }
 
     public void writeNewLine(OutputStreamWriter writer) throws IOException {
@@ -121,7 +117,7 @@ public class Directory {
         writer.flush();
     }
 
-    private void checkFileToHandle(String appName, String fileName) {
+    public void checkFileToHandle(String appName, String fileName) {
         if (!existsFile(fileName)) {
             throw new RuntimeException(appName + ": " + fileName + " does not exist");
         }

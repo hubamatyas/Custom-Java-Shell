@@ -12,12 +12,14 @@ public abstract class Application implements IApplication {
     public OutputStreamWriter writer;
     public ArrayList<String> args;
     protected Directory directory;
+    protected String lineSeparator;
 
     public Application(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         this.args = args;
         this.input = input;
         this.writer = output;
         this.directory = Directory.getDirectory();
+        this.lineSeparator = System.getProperty("line.separator");
     }
 
     public void exec() throws IOException {

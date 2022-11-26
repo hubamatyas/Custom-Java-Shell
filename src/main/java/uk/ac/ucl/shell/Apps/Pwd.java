@@ -22,8 +22,6 @@ public class Pwd extends Application {
 
     @Override
     protected void eval() throws IOException {
-        writer.write(directory.getCurrentDirectory());
-        writer.write(System.getProperty("line.separator"));
-        writer.flush();
+        directory.writeLine(directory.getCurrentDirectory(), writer, lineSeparator);
     }
 }

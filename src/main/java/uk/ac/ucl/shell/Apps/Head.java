@@ -36,11 +36,15 @@ public class Head extends Application {
     @Override
     protected void eval() throws IOException {
         loadArgs();
+        head();
+    }
+
+    private void head() throws IOException {
         // add numOfLines parameter to readFile?
         List<String> fileLines = directory.readFile("head", fileName);
         numOfLines = Math.min(numOfLines, fileLines.size());
         List<String> headLines = fileLines.subList(0, numOfLines);
-        directory.writeFile(headLines, writer);
+        directory.writeFile(headLines, writer, lineSeparator);
     }
 
     private void loadArgs() {

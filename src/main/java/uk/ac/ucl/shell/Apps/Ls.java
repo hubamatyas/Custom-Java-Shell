@@ -27,30 +27,23 @@ public class Ls extends Application {
     @Override
     protected void eval() throws IOException {
         getDirectoryPath();
-        filesToOutput();
+        ls();
     }
 
-    private void filesToOutput() {
-        try {
-            ArrayList<File> listOfFiles = directory.getListOfFiles("ls", path);
-            System.out.println(listOfFiles);
-            boolean atLeastOnePrinted = false;
-            for (File file : listOfFiles) {
-                if (!file.getName().startsWith(".")) {
-                    writer.write(file.getName());
-                    writer.write("\t");
-                    writer.flush();
-                    atLeastOnePrinted = true;
-                }
+    private void ls() throws IOException {
+        directory.checkDirectoryToHandle("ls", path);
+        ArrayList<File> listOfFiles = directory.getListOfFiles("ls", path);
+        outputFiles(listOfFiles);
+        if (!listOfFiles.isEmpty()) {
+            directory.writeNewLine(writer);
+        }
+    }
+
+    private void outputFiles (ArrayList<File> listOfFiles) throws IOException {
+        for (File file : listOfFiles) {
+            if (!file.getName().startsWith(".")) {
+                directory.writeLine(file.getName(), writer, "\t");
             }
-            if (atLeastOnePrinted) {
-                writer.write(System.getProperty("line.separator"));
-                writer.flush();
-            }
-        } catch (NullPointerException e) {
-            throw new RuntimeException("ls: no such directory");
-        } catch (IOException e) {
-            throw new RuntimeException("ls: cannot open " + directory.getCurrentDirectory() + path);
         }
     }
 
