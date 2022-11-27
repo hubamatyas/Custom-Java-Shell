@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 public class Cut extends Application {
 
-    private String byteString;
     private final SortedSet<Integer> bytesRange;
     private int toEnd;
     public Cut(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
@@ -31,7 +30,6 @@ public class Cut extends Application {
         if (args.get(0).compareTo("-b") != 0) {
             throw new RuntimeException("cut: invalid option");
         }
-        byteString = args.get(1);
     }
 
     @Override
@@ -41,7 +39,7 @@ public class Cut extends Application {
     }
 
     private void parseByteString() {
-        for (String bytes : byteString.split(",")) {
+        for (String bytes : args.get(1).split(",")) {
             parseByte(bytes);
         }
     }
