@@ -11,6 +11,7 @@ public class ApplicationFactory {
     public static IApplication getApp(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) throws IOException{
         return switch(appName){
             case "cd" -> new Cd(args, input, writer);
+            case "cut" -> new Cut(args, input, writer);
             case "pwd" -> new Pwd(args, input, writer);
             case "ls" -> new Ls(args, input, writer);
             case "cat" -> new Cat(args, input, writer);
