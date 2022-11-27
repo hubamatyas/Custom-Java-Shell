@@ -9,11 +9,10 @@ import java.util.Scanner;
 import uk.ac.ucl.shell.Apps.ApplicationFactory;
 import uk.ac.ucl.shell.Commands.Seq;
 import uk.ac.ucl.shell.Parse.Parser;
+import uk.ac.ucl.shell.Directory;
 
 
 public class Shell {
-    
-    private static String currentDirectory =  System.getProperty("user.dir"); 
 
     public static String getDirectory(){
         return currentDirectory;
@@ -52,7 +51,7 @@ public class Shell {
             Scanner scanner = new Scanner(System.in);
             try{
                 while(true){
-                    String prompt = currentDirectory + "> ";
+                    String prompt = Directory.getDirectory().getCurrentDirectory() + "> ";
                     System.out.print(prompt);
                     try {
                         String cmdline = scanner.nextLine();

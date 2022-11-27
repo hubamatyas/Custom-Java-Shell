@@ -5,20 +5,24 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class Echo implements Application{
+public class Echo extends Application {
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
+    public Echo(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
 
-        boolean atLeastOnePrinted = false;
-        for (String arg : args) {
-            output.write(arg);
-            output.write(" ");
-            output.flush();
-            atLeastOnePrinted = true;
+    @Override
+    protected void checkArgs() {
+        if (args.isEmpty() && input != null) {
+            args.add(input.toString());
         }
-        if (atLeastOnePrinted) {
-            output.write(System.getProperty("line.separator"));
-            output.flush();
+    }
+
+    @Override
+    protected void eval() throws IOException {
+        directory.writeFile(args, writer, " ");
+        if (!args.isEmpty()) {
+            directory.writeNewLine(writer);
         }
     }
 }

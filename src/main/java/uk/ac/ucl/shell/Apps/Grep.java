@@ -10,48 +10,67 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import uk.ac.ucl.shell.Shell;
 
-public class Grep implements Application {
-    
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output){
+public class Grep extends Application {
+
+    private int numOfFiles;
+    private Pattern grepPattern;
+    public Grep(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(args, input, output);
+    }
+
+    @Override
+    protected void checkArgs() {
+        if (args.size() == 1 && input != null) {
+            args.add(input.toString());
+        }
         if (args.size() < 2) {
-            throw new RuntimeException("grep: wrong number of arguments");
+            throw new RuntimeException("grep: missing arguments");
         }
-        Pattern grepPattern = Pattern.compile(args.get(0));
-        int numOfFiles = args.size() - 1;
-        Path filePath;
-        Path[] filePathArray = new Path[numOfFiles];
-        Path currentDir = Paths.get(Shell.getDirectory());
-        for (int i = 0; i < numOfFiles; i++) {
-            filePath = currentDir.resolve(args.get(i + 1));
-            if (Files.notExists(filePath) || Files.isDirectory(filePath) ||
-                    !Files.exists(filePath) || !Files.isReadable(filePath)) {
-                throw new RuntimeException("grep: wrong file argument");
-            }
-            filePathArray[i] = filePath;
+    }
+
+    @Override
+    protected void eval() throws IOException {
+        ArrayList<String> files = new ArrayList<>(args.subList(1, args.size()));
+        verifyFiles(files);
+        setPattern();
+        grep(files);
+    }
+
+    private void verifyFiles(ArrayList<String> files) {
+        for (String file : files) {
+            directory.checkFileToHandle("grep", file);
         }
-        for (int j = 0; j < filePathArray.length; j++) {
-            Charset encoding = StandardCharsets.UTF_8;
-            try (BufferedReader reader = Files.newBufferedReader(filePathArray[j], encoding)) {
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    Matcher matcher = grepPattern.matcher(line);
-                    if (matcher.find()) {
-                        if (numOfFiles > 1) {
-                            output.write(args.get(j+1));
-                            output.write(":");
-                        }
-                        output.write(line);
-                        output.write(System.getProperty("line.separator"));
-                        output.flush();
-                    }
+        numOfFiles = files.size();
+    }
+
+    private void grep(ArrayList<String> files) throws IOException {
+        for (String file : files) {
+            List<String> fileLines = directory.readFile("grep", file);
+            searchPattern(fileLines, file);
+        }
+    }
+
+    private void searchPattern(List<String> fileLines, String file) throws IOException {
+        for (String line : fileLines) {
+            Matcher matcher = grepPattern.matcher(line);
+            if (matcher.find()) {
+                if (numOfFiles > 1) {
+                    directory.writeLine(file + ": " + line, writer, lineSeparator);
+                } else {
+                    directory.writeLine(line, writer, lineSeparator);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException("grep: cannot open " + args.get(j + 1));
             }
         }
+    }
+
+    private void setPattern() {
+        String pattern = args.get(0);
+        grepPattern = Pattern.compile(pattern);
     }
 }

@@ -7,34 +7,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import uk.ac.ucl.shell.Shell;
 
-public class Cat implements Application {
+public class Cat extends Application {
+    public Cat(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(args, input, writer);
+    }
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
-        if (args.isEmpty()) {
+    @Override
+    protected void checkArgs() {
+        if (args.isEmpty() && input == null) {
             throw new RuntimeException("cat: missing arguments");
-        } else {
-            for (String arg : args) {
-                Charset encoding = StandardCharsets.UTF_8;
-                File currFile = new File(Shell.getDirectory() + File.separator + arg);
-                if (currFile.exists()) {
-                    Path filePath = Paths.get(Shell.getDirectory() + File.separator + arg);
-                    try (BufferedReader reader = Files.newBufferedReader(filePath, encoding)) {
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            writer.write(String.valueOf(line));
-                            writer.write(System.getProperty("line.separator"));
-                            writer.flush();
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException("cat: cannot open " + arg);
-                    }
-                } else {
-                    throw new RuntimeException("cat: file does not exist");
-                }
-            }
+        }
+
+        if (args.isEmpty()) {
+            args.add(input.toString());
+        }
+    }
+
+    @Override
+    protected void eval() throws IOException {
+        for (String arg : args) {
+            List<String> fileLines = directory.readFile("cat", arg);
+            directory.writeFile(fileLines, writer, lineSeparator);
         }
     }
 }
