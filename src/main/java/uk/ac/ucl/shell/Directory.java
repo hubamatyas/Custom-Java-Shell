@@ -29,7 +29,7 @@ public class Directory {
     }
 
     // Singleton class
-    public static Directory getDirectory() {
+    public static Directory getInstance() {
         if (instance == null) {
             instance = new Directory();
         }

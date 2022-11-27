@@ -110,7 +110,7 @@ public class Parser {
     public static ArrayList<String> glob(String arg) throws IOException {
         ArrayList<String> globbingResult = new ArrayList<String>();
         // TODO: update the way of fetching directory;
-        Path dir = Paths.get(Directory.getDirectory().getCurrentDirectory());
+        Path dir = Paths.get(Directory.getInstance().getCurrentDirectory());
         DirectoryStream<Path> stream = Files.newDirectoryStream(dir, arg);
         for (Path entry : stream) {
             globbingResult.add(entry.getFileName().toString());
