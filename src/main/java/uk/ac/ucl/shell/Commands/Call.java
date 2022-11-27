@@ -27,7 +27,7 @@ public class Call extends Command {
             output = new FileOutputStream(parsedCall.getOutput());
         }
         OutputStreamWriter writer = new OutputStreamWriter(output);
-        ApplicationFactory.getApp(parsedCall.getApp()).exec(parsedCall.getArgs(), input, writer);
+        ApplicationFactory.getApp(parsedCall.getApp(), parsedCall.getArgs(), input, writer).exec();
     }
 
     

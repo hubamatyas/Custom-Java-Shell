@@ -2,29 +2,15 @@ package uk.ac.ucl.shell;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Scanner;
-
-import uk.ac.ucl.shell.Apps.ApplicationFactory;
 import uk.ac.ucl.shell.Commands.Seq;
-import uk.ac.ucl.shell.Parse.Parser;
-import uk.ac.ucl.shell.Directory;
 
 
 public class Shell {
 
-    public static String getDirectory(){
-        return currentDirectory;
-    }
-
-    public static void setDirectory(String dir){
-        currentDirectory = dir;
-    }
-
-
     public static void eval(String input, OutputStream output) throws IOException{
-        new Seq(input).eval(null, output);
+        Seq command = new Seq(input);
+        command.eval(null, output);
     }
 
     public static void main(String[] args) {
