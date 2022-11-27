@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import uk.ac.ucl.shell.Apps.ApplicationFactory;
+import uk.ac.ucl.shell.Commands.Seq;
+import uk.ac.ucl.shell.Parse.Parser;
 import uk.ac.ucl.shell.Directory;
 
 
 public class Shell {
-    
-    private static String currentDirectory = System.getProperty("user.dir");
 
     public static String getDirectory(){
         return currentDirectory;
@@ -24,21 +24,7 @@ public class Shell {
 
 
     public static void eval(String input, OutputStream output) throws IOException{
-
-        OutputStreamWriter standardWriter = new OutputStreamWriter(output);
-        ArrayList<String> rawCommands = Parsing.parse(input);
-
-        for (String rawCommand : rawCommands) {
-            // Shell functionality?
-            ArrayList<String> tokens = Parsing.produceTokens(currentDirectory, rawCommand);
-            String appName = tokens.get(0);
-            ArrayList<String> appArgs = new ArrayList<String>(tokens.subList(1, tokens.size()));
-
-            // Applications
-            // TODO: compartmentalise each application
-            // call functions in exec() and exec() itself seperately, not just one .extec() call
-            ApplicationFactory.getApp(appName, appArgs, null , standardWriter).exec();
-        }
+        new Seq(input).eval(null, output);
     }
 
     public static void main(String[] args) {
