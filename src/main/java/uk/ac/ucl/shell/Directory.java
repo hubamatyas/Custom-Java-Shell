@@ -76,6 +76,16 @@ public class Directory {
         return new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
     }
 
+    public ArrayList<String> getListOfSubDirs(String appName, String arg) {
+        ArrayList<String> subDirs = new ArrayList<>();
+        for (File file : getListOfFiles(appName, arg)) {
+            if (file.isDirectory()) {
+                subDirs.add(file.getName());
+            }
+        }
+        return subDirs;
+    }
+
     public List<String> readFile(String appName, String fileName) throws IOException {
         checkFileToHandle(appName, fileName);
         BufferedReader reader = createBufferedReader(appName, fileName);
