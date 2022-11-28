@@ -13,6 +13,7 @@ public class ApplicationFactory {
             case "cd" -> new Cd(args, input, writer);
             case "cut" -> new Cut(args, input, writer);
             case "find" -> new Find(args, input, writer);
+            case "uniq" -> new Uniq(args, input, writer);
             case "pwd" -> new Pwd(args, input, writer);
             case "ls" -> new Ls(args, input, writer);
             case "cat" -> new Cat(args, input, writer);
