@@ -2,8 +2,6 @@ package uk.ac.ucl.shell;
 
 import org.junit.Test;
 
-import uk.ac.ucl.shell.Shell;
-
 import static org.junit.Assert.*;
 
 import java.io.PipedInputStream;
