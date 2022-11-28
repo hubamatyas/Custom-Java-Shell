@@ -49,7 +49,21 @@ public class Directory {
     }
 
     public Path getPathTo(String arg) {
+        if (arg.equals("..")) {
+            String result = getRootDirectory();
+            return Paths.get(getRootDirectory());
+        }
         return Paths.get(currentDirectory + fileSeparator + arg);
+    }
+
+    private String getRootDirectory() {
+        int i = currentDirectory.length();
+        while (i-->0) {
+            if (String.valueOf(currentDirectory.charAt(i)).equals(fileSeparator)) {
+                break;
+            }
+        }
+        return currentDirectory.substring(0, i+1);
     }
 
     /*
