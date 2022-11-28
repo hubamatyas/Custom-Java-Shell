@@ -4,16 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.nio.file.Path;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Find extends Application {
 
-    private String dirToSearch;
-    private Queue<String> toVisit;
+    private final Queue<String> toVisit;
+    private Pattern findPattern;
     public Find(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
         super(args, input, writer);
-        dirToSearch = "";
         toVisit = new LinkedList<>();
     }
 
@@ -30,15 +30,24 @@ public class Find extends Application {
 
     @Override
     protected void eval() throws IOException {
-        setDirToSearch();
-        toVisit.add(dirToSearch);
+        setParams();
         find();
     }
 
-    private void setDirToSearch() {
+    private void setParams() {
         if (!args.get(0).equals("-name")) {
-            dirToSearch = args.get(0);
+            toVisit.add(args.get(0));
+            findPattern = parsePattern(args.get(2));
+        } else {
+            toVisit.add("");
+            findPattern = parsePattern(args.get(1));
         }
+    }
+
+    private Pattern parsePattern(String rawPattern) {
+        rawPattern = rawPattern.replace(".", "\\.");
+        rawPattern = rawPattern.replace("*", ".*");
+        return Pattern.compile(rawPattern);
     }
 
     private void find() throws IOException {
@@ -46,18 +55,21 @@ public class Find extends Application {
             return;
         }
 
-        String nextDir = toVisit.remove().toString();
-        for (String child : directory.getListOfSubDirs("find", nextDir)) {
+        String nextDir = toVisit.remove();
+        for (String child : directory.getSubDirectories("find", nextDir)) {
             toVisit.add(nextDir + File.separator + child);
-            System.out.println(child);
             find();
         }
-        //for (File file : directory.getListOfFiles("find", dirToSearch)) {
-        //    if (!file.isDirectory()) {
-        //        System.out.println(file.getName());
-        //    }
-            //if (file.getName().toString().equals(args.get(1))) {
-            //    directory.writeLine(file.toString(), writer, lineSeparator);
-            //}
+        findPattern(nextDir);
+    }
+
+    private void findPattern(String dir) throws IOException {
+        ArrayList<String> files = directory.getFiles("find", dir);
+        for (String file : files) {
+            Matcher matcher = findPattern.matcher(file);
+            if (matcher.find()) {
+                directory.writeLine(dir + File.separator + file, writer, lineSeparator);
+            }
+        }
     }
 }
