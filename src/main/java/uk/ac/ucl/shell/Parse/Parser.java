@@ -21,7 +21,8 @@ import uk.ac.ucl.shell.ShellGrammarLexer;
 import uk.ac.ucl.shell.ShellGrammarParser;
 import uk.ac.ucl.shell.Directory;
 
-public class Parser {
+public class
+Parser {
 
     // returns list of commands as a list of seperated calls based on piping
     public static ArrayList<ArrayList<String>> parseCommand(String input) {
