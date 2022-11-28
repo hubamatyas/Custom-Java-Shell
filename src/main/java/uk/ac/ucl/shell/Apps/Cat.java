@@ -25,28 +25,17 @@ public class Cat extends Application {
     @Override
     protected void eval() throws IOException {
         if (args.isEmpty()) {
-            catPiped();
+            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
+            cat(reader);
         } else {
-            cat();
+            for (String arg : args) {
+                BufferedReader reader = directory.createBufferedReader("cat", arg);
+                cat(reader);
+            }
         }
     }
 
-    private void catPiped() throws IOException {
-        BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
-        String fileName;
-        while ((fileName = reader.readLine()) != null) {
-            readFromFile(fileName);
-        }
-    }
-
-    private void cat() throws IOException {
-        for (String arg : args) {
-            readFromFile(arg);
-        }
-    }
-
-    private void readFromFile(String fileName) throws IOException {
-        BufferedReader reader = directory.createBufferedReader("cat", fileName);
+    private void cat(BufferedReader reader) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
             directory.writeLine(line, writer, lineSeparator);
