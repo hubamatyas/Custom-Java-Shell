@@ -1,4 +1,5 @@
 package uk.ac.ucl.shell.Apps;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -9,6 +10,19 @@ public class ApplicationFactory {
     public ApplicationFactory(){}
 
     public static IApplication getApp(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) throws IOException{
+        appName = appName.toLowerCase();
+        boolean unsafe = false;
+        if (appName.charAt(0) == '_') {
+            unsafe = true;
+            appName = appName.substring(1);
+        }
+
+        IApplication app = getAppInterface(appName, args, input, writer);
+        return unsafe ? new Unsafe(app) : app;
+
+    }
+
+    private static IApplication getAppInterface(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) throws IOException{
         return switch(appName){
             case "cd" -> new Cd(args, input, writer);
             case "cut" -> new Cut(args, input, writer);
@@ -26,5 +40,6 @@ public class ApplicationFactory {
             default ->throw new RuntimeException(appName + ": unknown application");
         };
     }
+
 
 }
