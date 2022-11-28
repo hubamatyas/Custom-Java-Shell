@@ -14,6 +14,7 @@ public class ApplicationFactory {
             case "cut" -> new Cut(args, input, writer);
             case "find" -> new Find(args, input, writer);
             case "uniq" -> new Uniq(args, input, writer);
+            case "sort" -> new Sort(args, input, writer);
             case "pwd" -> new Pwd(args, input, writer);
             case "ls" -> new Ls(args, input, writer);
             case "cat" -> new Cat(args, input, writer);
