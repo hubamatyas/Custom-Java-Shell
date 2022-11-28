@@ -127,7 +127,7 @@ public class Parser {
     */
     private static ArrayList<String> parseGlobbing(String arg) throws IOException {
         ArrayList<String> globbingResult = new ArrayList<String>();
-        Path dir = Paths.get(Directory.getDirectory().getCurrentDirectory());
+        Path dir = Paths.get(Directory.getInstance().getCurrentDirectory());
         DirectoryStream<Path> stream = Files.newDirectoryStream(dir, arg);
         for (Path entry : stream) {
             globbingResult.add(entry.getFileName().toString());

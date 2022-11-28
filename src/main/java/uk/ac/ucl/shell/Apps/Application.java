@@ -18,7 +18,7 @@ public abstract class Application implements IApplication {
         this.args = args;
         this.input = input;
         this.writer = output;
-        this.directory = Directory.getDirectory();
+        this.directory = Directory.getInstance();
         this.lineSeparator = System.getProperty("line.separator");
     }
 

@@ -37,7 +37,7 @@ public class Shell {
             Scanner scanner = new Scanner(System.in);
             try{
                 while(true){
-                    String prompt = Directory.getDirectory().getCurrentDirectory() + "> ";
+                    String prompt = Directory.getInstance().getCurrentDirectory() + "> ";
                     System.out.print(prompt);
                     try {
                         String cmdline = scanner.nextLine();
