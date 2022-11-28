@@ -70,10 +70,30 @@ public class Directory {
         return new File(String.valueOf(getPathTo(arg))).isDirectory();
     }
 
-    public ArrayList<File> getListOfFiles(String appName, String arg) {
+    public ArrayList<File> getContent(String appName, String arg) {
         checkDirectoryToHandle(appName, arg);
         File directory = new File(String.valueOf(getPathTo(arg)));
         return new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
+    }
+
+    public ArrayList<String> getSubDirectories(String appName, String arg) {
+        ArrayList<String> subDirs = new ArrayList<>();
+        for (File file : getContent(appName, arg)) {
+            if (file.isDirectory()) {
+                subDirs.add(file.getName());
+            }
+        }
+        return subDirs;
+    }
+
+    public ArrayList<String> getFiles(String appName, String arg) {
+        ArrayList<String> files = new ArrayList<>();
+        for (File file : getContent(appName, arg)) {
+            if (file.isFile()) {
+                files.add(file.getName());
+            }
+        }
+        return files;
     }
 
     public List<String> readFile(String appName, String fileName) throws IOException {

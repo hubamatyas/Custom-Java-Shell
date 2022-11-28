@@ -32,7 +32,7 @@ public class Ls extends Application {
 
     private void ls() throws IOException {
         directory.checkDirectoryToHandle("ls", path);
-        ArrayList<File> listOfFiles = directory.getListOfFiles("ls", path);
+        ArrayList<File> listOfFiles = directory.getContent("ls", path);
         outputFiles(listOfFiles);
         if (!listOfFiles.isEmpty()) {
             directory.writeNewLine(writer);
