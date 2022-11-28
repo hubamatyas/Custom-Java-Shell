@@ -2,6 +2,7 @@ package uk.ac.ucl.shell.Parse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -24,7 +25,11 @@ import uk.ac.ucl.shell.Directory;
 public class
 Parser {
 
-    // returns list of commands as a list of seperated calls based on piping
+    /** parses input and return list Commands which are a list of calls
+     * @param input : <code>String</code> to be parsed 
+     * @return <code> ArrayList </code> representing commands from left to right containing 
+     * a <code> ArrayList{@literal <}String> </code> representing pipe seperated calls from left to right
+    */ 
     public static ArrayList<ArrayList<String>> parseCommand(String input) {
         CharStream parserInput = CharStreams.fromString(input);
         ShellGrammarLexer lexer = new ShellGrammarLexer(parserInput);
@@ -42,8 +47,10 @@ Parser {
         return visitor.getAtomicCommands();
     }
 
-    // parses call and returns class containing appname, args, input file, output
-    // file
+    /**  Parses a call and returns its seperated parts
+     * @param input : <code> String </code> to be parsed
+     * @return <code> ParseCall </code> containing appname, args, input file, output file
+    */ 
     public static ParsedCall parseCall(String input) throws IOException {
 
         CharStream parserInput = CharStreams.fromString(input);
@@ -61,57 +68,72 @@ Parser {
 
     }
 
-    // Possible Issue: cleaning does not affect redirect operators, should it or
-    // should it not?
+    /**
+     * @param args : <code> ArrayList{@literal <}String> </code> of raw arguments accumulated from CallVisitor
+     * @return <code> ArrayList{@literal <}String> </code> containing the arguments interpreted using backquote parsing, globbing, and quote removal
+     */
     private static ArrayList<String> cleanArgs(ArrayList<String> args) throws IOException {
         ArrayList<String> result = new ArrayList<>();
         for (String arg : args) {
-            result.addAll(clean(arg));
+            switch (arg.charAt(0)) {
+                case '\'':
+                    result.add(parseSinglequote(arg));
+                    break;
+                case '`':
+                    String text = parseBackquote(arg);
+                    List<String> splitText = Arrays.asList(text.split("[ \\t]+"));
+                    result.addAll(splitText);
+                case '"':
+                    result.add(parseDoublequote(arg));
+                default:
+                    result.addAll(parseGlobbing(arg));
+                    break;
+            }
         }
         return result;
     }
 
-    // strips brackets, performs globbing, evaluates backquotes
-    private static ArrayList<String> clean(String arg) throws IOException {
-        ArrayList<String> cleanArgs = new ArrayList<String>();
-        char firstChar = arg.charAt(0);
-        if (firstChar == '\'') {
-            // returns string without quotes
-            cleanArgs.add(arg.substring(1, arg.length() - 1));
-
-        } else if (firstChar == '`') {
-            // eval and output it to a string
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            Shell.eval(arg.substring(1, arg.length() - 1), output);
-            String text = new String(output.toByteArray(), "UTF-8");
-            text = text.replaceAll("[\\r\\n]+", " ");
-            cleanArgs.addAll(Arrays.asList(text.split("[ \\t]+")));
-        } else if (firstChar == '"') {
-            // returns argument with double quotes removed and backquotes evaluated
-            String backquoteRegex = "(\\`[^\\`]*\\`)";
-            Pattern regex = Pattern.compile(backquoteRegex);
-            Matcher matcher = regex.matcher(arg);
-            int endIndex = 1;
-            StringBuilder output = new StringBuilder();
-            while (matcher.find()) {
-                output.append(arg.substring(endIndex, matcher.start()));
-                output.append(clean(matcher.group()));
-                endIndex = matcher.end();
-            }
-            output.append(arg.substring(endIndex, arg.length() - 1));
-            cleanArgs.add(output.toString());
-
-        } else {
-            // globs non quote argument
-            cleanArgs.addAll(glob(arg));
-        }
-        return cleanArgs;
+    private static String parseSinglequote(String arg){
+        return arg.substring(1, arg.length() - 1);
     }
 
-    public static ArrayList<String> glob(String arg) throws IOException {
+    private static String parseBackquote(String arg) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        Shell.eval(arg.substring(1, arg.length() - 1), output);
+        String text = new String(output.toByteArray(), "UTF-8");
+        text = text.replaceAll("[\\r\\n]+", " ");
+        return text;
+    }
+
+    private static String parseDoublequote(String arg) throws IOException {
+        String backquoteRegex = "(\\`[^\\`]*\\`)";
+        Pattern regex = Pattern.compile(backquoteRegex);
+        Matcher matcher = regex.matcher(arg);
+        int endIndex = 1;
+        StringBuilder output = new StringBuilder();
+        while (matcher.find()) {
+            output.append(arg.substring(endIndex, matcher.start()));
+            output.append(parseBackquote(matcher.group()));
+            endIndex = matcher.end();
+        }
+        output.append(arg.substring(endIndex, arg.length() - 1));
+        return output.toString();
+    }
+
+    /**
+    * globbing : returns list of files that match pattern
+    * @param arg : raw argument
+    * @return   if is a valid pattern: <code>arrayList</code> containing all files that match pattern
+    *           otherwise: <code>arrayList</code> containing the unchanged arg
+    */
+    private static ArrayList<String> parseGlobbing(String arg) throws IOException {
         ArrayList<String> globbingResult = new ArrayList<String>();
+<<<<<<< HEAD
         // TODO: update the way of fetching directory;
         Path dir = Paths.get(Directory.getInstance().getCurrentDirectory());
+=======
+        Path dir = Paths.get(Directory.getDirectory().getCurrentDirectory());
+>>>>>>> origin/debugParsing
         DirectoryStream<Path> stream = Files.newDirectoryStream(dir, arg);
         for (Path entry : stream) {
             globbingResult.add(entry.getFileName().toString());

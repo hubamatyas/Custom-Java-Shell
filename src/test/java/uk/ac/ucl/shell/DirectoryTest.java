@@ -4,10 +4,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import uk.ac.ucl.shell.Directory;
+
 public class DirectoryTest {
 
     @Test
-    public void getInstance() {
+    public void UniqueInstanceOnly() {
+        Directory instance1 = Directory.getInstance();
+        Directory instance2 = Directory.getInstance();
+        assertSame(instance1, instance2);
     }
 
     @Test
