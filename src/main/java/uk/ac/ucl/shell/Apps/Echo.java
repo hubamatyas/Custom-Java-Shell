@@ -13,8 +13,8 @@ public class Echo extends Application {
 
     @Override
     protected void checkArgs() {
-        if (args.isEmpty() && input != null) {
-            args.add(input.toString());
+        if (input != null) {
+            throw new RuntimeException("echo: cannot pipe output");
         }
     }
 

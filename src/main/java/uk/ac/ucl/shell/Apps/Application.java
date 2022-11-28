@@ -13,6 +13,7 @@ public abstract class Application implements IApplication {
     public ArrayList<String> args;
     protected Directory directory;
     protected String lineSeparator;
+    protected String fileSeparator;
 
     public Application(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         this.args = args;
@@ -20,6 +21,7 @@ public abstract class Application implements IApplication {
         this.writer = output;
         this.directory = Directory.getInstance();
         this.lineSeparator = System.getProperty("line.separator");
+        this.fileSeparator = System.getProperty("file.separator");
     }
 
     public void exec() throws IOException {

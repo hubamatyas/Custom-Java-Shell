@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Cat extends Application {
     public Cat(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
@@ -36,8 +35,8 @@ public class Cat extends Application {
     }
 
     private void cat(BufferedReader reader) throws IOException {
-        String line;
-        while ((line = reader.readLine()) != null) {
+        while (reader.ready()) {
+            String line = reader.readLine();
             directory.writeLine(line, writer, lineSeparator);
         }
     }

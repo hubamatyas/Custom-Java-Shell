@@ -14,7 +14,7 @@ public class Head extends Application {
     public Head(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         // add name of application to super
         super(args, input, output);
-        numOfLines = 10;
+        this.numOfLines = 10;
     }
 
     @Override
@@ -41,22 +41,22 @@ public class Head extends Application {
 
     private void head() throws IOException {
         // add numOfLines parameter to readFile?
-        List<String> fileLines = directory.readFile("head", fileName);
-        numOfLines = Math.min(numOfLines, fileLines.size());
-        List<String> headLines = fileLines.subList(0, numOfLines);
+        List<String> fileLines = directory.readFile("head", this.fileName);
+        this.numOfLines = Math.min(this.numOfLines, fileLines.size());
+        List<String> headLines = fileLines.subList(0, this.numOfLines);
         directory.writeFile(headLines, writer, lineSeparator);
     }
 
     private void loadArgs() {
         if (args.size() == 3) {
             try {
-                numOfLines = Integer.parseInt(args.get(1));
+                this.numOfLines = Integer.parseInt(args.get(1));
             } catch (Exception e) {
                 throw new RuntimeException("head: wrong argument " + args.get(1));
             }
-            fileName = args.get(2);
+            this.fileName = args.get(2);
         } else {
-            fileName = args.get(0);
+            this.fileName = args.get(0);
         }
     }
 }
