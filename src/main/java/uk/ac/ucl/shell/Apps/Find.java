@@ -19,6 +19,10 @@ public class Find extends Application {
         if (this.args.size() < 2) {
             throw new RuntimeException(appName + ": missing arguments");
         }
+        int maxArgs = this.args.get(0).equals("-name") ? 2 : 3;
+        if(this.args.size() > maxArgs){
+            throw new RuntimeException(appName + ": too many arguments");
+        }
     }
 
     @Override
@@ -34,7 +38,7 @@ public class Find extends Application {
         } else {
             this.toVisit.add("");
             this.pattern = parsePattern(this.args.get(1));
-        }
+        } 
     }
 
     private Pattern parsePattern(String rawPattern) {

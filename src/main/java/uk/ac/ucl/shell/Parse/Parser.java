@@ -82,8 +82,10 @@ public class Parser {
                     String text = parseBackquote(arg);
                     List<String> splitText = Arrays.asList(text.split("[ \\t]+"));
                     result.addAll(splitText);
+                    break;
                 case '"':
                     result.add(parseDoublequote(arg));
+                    break;
                 default:
                     result.addAll(parseGlobbing(arg));
                     break;
@@ -127,13 +129,14 @@ public class Parser {
     */
     private static ArrayList<String> parseGlobbing(String arg) throws IOException {
         ArrayList<String> globbingResult = new ArrayList<String>();
+        if(!arg.contains("*")){
+            globbingResult.add(arg);
+            return globbingResult;
+        }
         Path dir = Paths.get(Directory.getInstance().getCurrentDirectory());
         DirectoryStream<Path> stream = Files.newDirectoryStream(dir, arg);
         for (Path entry : stream) {
             globbingResult.add(entry.getFileName().toString());
-        }
-        if (globbingResult.isEmpty()) {
-            globbingResult.add(arg);
         }
         return globbingResult;
     }
