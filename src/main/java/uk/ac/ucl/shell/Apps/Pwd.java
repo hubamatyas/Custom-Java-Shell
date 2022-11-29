@@ -1,7 +1,5 @@
 package uk.ac.ucl.shell.Apps;
 
-import uk.ac.ucl.shell.Shell;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;

@@ -1,17 +1,10 @@
 package uk.ac.ucl.shell.Apps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
-
-import uk.ac.ucl.shell.Shell;
 
 public class Cat extends Application {
     public Cat(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
@@ -23,17 +16,28 @@ public class Cat extends Application {
         if (args.isEmpty() && input == null) {
             throw new RuntimeException("cat: missing arguments");
         }
-
-        if (args.isEmpty()) {
-            args.add(input.toString());
+        if (!args.isEmpty() && input != null) {
+            throw new RuntimeException("cat: cannot read from both file and input");
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        for (String arg : args) {
-            List<String> fileLines = directory.readFile("cat", arg);
-            directory.writeFile(fileLines, writer, lineSeparator);
+        if (args.isEmpty()) {
+            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
+            cat(reader);
+        } else {
+            for (String arg : args) {
+                BufferedReader reader = directory.createBufferedReader("cat", arg);
+                cat(reader);
+            }
+        }
+    }
+
+    private void cat(BufferedReader reader) throws IOException {
+        while (reader.ready()) {
+            String line = reader.readLine();
+            directory.writeLine(line, writer, lineSeparator);
         }
     }
 }

@@ -16,10 +16,7 @@ public class Ls extends Application {
 
     @Override
     protected void checkArgs() {
-        if (args.isEmpty() && input != null) {
-            args.add(input.toString());
-        }
-        if (args.size() > 1) {
+        if (args.size() > 1 || input != null) {
             throw new RuntimeException("ls: too many arguments");
         }
     }
@@ -30,12 +27,20 @@ public class Ls extends Application {
         ls();
     }
 
+    private void getDirectoryPath() {
+        if (args.isEmpty()) {
+            path = "";
+        } else {
+            path = args.get(0);
+        }
+    }
+
     private void ls() throws IOException {
         directory.checkDirectoryToHandle("ls", path);
         ArrayList<File> listOfFiles = directory.getContent("ls", path);
         outputFiles(listOfFiles);
         if (!listOfFiles.isEmpty()) {
-            directory.writeNewLine(writer);
+            directory.writeLine("", writer, lineSeparator);
         }
     }
 
@@ -44,14 +49,6 @@ public class Ls extends Application {
             if (!file.getName().startsWith(".")) {
                 directory.writeLine(file.getName(), writer, "\t");
             }
-        }
-    }
-
-    private void getDirectoryPath() {
-        if (args.isEmpty()) {
-            path = "";
-        } else {
-            path = args.get(0);
         }
     }
 }

@@ -1,10 +1,10 @@
 package uk.ac.ucl.shell.Apps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -14,17 +14,16 @@ public class Cut extends Application {
     private int toEnd;
     public Cut(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
         super(args, input, output);
-        bytesRange = new TreeSet<>();
-        toEnd = Integer.MAX_VALUE;
+        this.bytesRange = new TreeSet<>();
+        this.toEnd = Integer.MAX_VALUE;
     }
 
     @Override
     protected void checkArgs() {
-        if (args.size() == 2 || input != null) {
-            args.add(input.toString());
-            // TODO: piping
+        if (args.size() == 2 && input == null) {
+            throw new RuntimeException("cut: missing arguments");
         }
-        if (args.size() != 3) {
+        if (args.size() > 3) {
             throw new RuntimeException("cut: wrong number of arguments");
         }
         if (args.get(0).compareTo("-b") != 0) {
@@ -35,11 +34,19 @@ public class Cut extends Application {
     @Override
     protected void eval() throws IOException {
         parseByteString();
-        cut();
+        if (args.isEmpty()) {
+            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
+            cut(reader);
+        } else {
+            BufferedReader reader = directory.createBufferedReader("cut", args.get(0));
+            cut(reader);
+        }
     }
 
     private void parseByteString() {
-        for (String bytes : args.get(1).split(",")) {
+        args.remove(0);
+        String byteString = args.remove(0);
+        for (String bytes : byteString.split(",")) {
             parseByte(bytes);
         }
     }
@@ -52,20 +59,20 @@ public class Cut extends Application {
             int end = parseNumber(option.substring(firstLoc+1));
             addBytesRange(0, end);
         } else if (option.charAt(lastLoc) == '-') {
-            toEnd = parseNumber(option.substring(0, lastLoc));
+            this.toEnd = parseNumber(option.substring(0, lastLoc));
         } else if (option.contains("-")) {
             int start = parseNumber(option.substring(0, option.indexOf('-')));
             int end = parseNumber(option.substring(option.indexOf('-')+1));
             addBytesRange(start, end);
         } else {
             int number = parseNumber(option);
-            bytesRange.add(number);
+            this.bytesRange.add(number);
         }
     }
 
-    private int parseNumber(String substring) {
+    private int parseNumber(String str) {
         try {
-            return Integer.parseInt(substring);
+            return Integer.parseInt(str);
         } catch (Exception e) {
             throw new RuntimeException("cut: invalid byte range");
         }
@@ -73,21 +80,21 @@ public class Cut extends Application {
 
     private void addBytesRange(int start, int end) {
         for (int i = start; i <= end; i++) {
-            bytesRange.add(i);
+            this.bytesRange.add(i);
         }
     }
 
-    private void cut() throws IOException {
-        List<String> fileLines = directory.readFile("cut", args.get(2));
-        for (String line : fileLines) {
-            String newLine = cutLine(line);
-            directory.writeLine(newLine, writer, lineSeparator);
+    private void cut(BufferedReader reader) throws IOException {
+        while (reader.ready()) {
+            String line = reader.readLine();
+            String cutLine = cutLine(line);
+            directory.writeLine(cutLine, writer, lineSeparator);
         }
     }
 
     private String cutLine(String line) {
         StringBuilder sb = new StringBuilder();
-        if (toEnd != Integer.MAX_VALUE) {
+        if (this.toEnd != Integer.MAX_VALUE) {
             return toEOL(sb, line);
         } else {
             return notToEOL(sb, line);
@@ -95,18 +102,18 @@ public class Cut extends Application {
     }
 
     private String toEOL(StringBuilder sb, String line) {
-        for (int i : bytesRange) {
-            if (i < toEnd && i <= line.length()) {
+        for (int i : this.bytesRange) {
+            if (i < this.toEnd && i <= line.length()) {
                 sb.append(line.charAt(i-1));
             }
         }
-        sb.append(line, toEnd-1, line.length());
+        sb.append(line, this.toEnd-1, line.length());
         return sb.toString();
     }
 
     private String notToEOL(StringBuilder sb, String line) {
-        for (int i : bytesRange) {
-            if (i <= line.length()) {
+        for (int i : this.bytesRange) {
+            if (i <= line.length() && i > 0) {
                 sb.append(line.charAt(i-1));
             }
         }

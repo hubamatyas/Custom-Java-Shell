@@ -13,16 +13,18 @@ public class Echo extends Application {
 
     @Override
     protected void checkArgs() {
-        if (args.isEmpty() && input != null) {
-            args.add(input.toString());
+        if (input != null) {
+            throw new RuntimeException("echo: cannot pipe output");
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        directory.writeFile(args, writer, " ");
+        for (String arg : args) {
+            directory.writeLine(arg, writer, " ");
+        }
         if (!args.isEmpty()) {
-            directory.writeNewLine(writer);
+            directory.writeLine("", writer, lineSeparator);
         }
     }
 }
