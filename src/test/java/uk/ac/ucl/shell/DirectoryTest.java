@@ -16,14 +16,13 @@ public class DirectoryTest {
     String root;
 
     private String getPathToParentHelper() {
-        int i = currentDirPath.length()-1;
-        while (i-->0) {
+        int i = currentDirPath.length() - 1;
+        while (i-- > 0) {
             if (String.valueOf(currentDirPath.charAt(i)).equals(fileSeparator)) {
                 break;
             }
         }
-        root = currentDirPath.substring(0,i);
-        return currentDirPath.substring(0,i);
+        return currentDirPath.substring(0, i);
     }
 
     @Before
@@ -31,7 +30,7 @@ public class DirectoryTest {
         dir = Directory.getInstance();
         currentDirPath = System.getProperty("user.dir");
         fileSeparator = File.separator;
-        root = currentDirPath.substring(0,2);
+        root = currentDirPath.substring(0, 2);
     }
 
     @After
@@ -39,6 +38,7 @@ public class DirectoryTest {
         dir.setCurrentDirectory(currentDirPath);
     }
 
+    // getInstance()
     @Test
     public void uniqueInstanceOnly() {
         System.out.println("Creating instance");
@@ -46,11 +46,13 @@ public class DirectoryTest {
         assertSame(dir, newDir);
     }
 
+    // getCurrentDirectory()
     @Test
     public void getCurrentDirectory() {
         assertEquals(currentDirPath, dir.getCurrentDirectory());
     }
 
+    // getPathTo()
     @Test
     public void getPathToParent() {
         String rootDir = getPathToParentHelper();
@@ -63,9 +65,9 @@ public class DirectoryTest {
         assertEquals(currentDirPath, String.valueOf(dir.getPathTo(".")));
     }
 
+    // existsDirectory()
     @Test
     public void doesExistDirectories() {
-        System.out.println("Current directory: " + dir.getCurrentDirectory());
         assertTrue(dir.existsDirectory(""));
         assertTrue(dir.existsDirectory("src"));
         assertTrue(dir.existsDirectory("system_test"));
@@ -89,6 +91,7 @@ public class DirectoryTest {
         assertTrue(dir.existsDirectory("src/main/../../src"));
     }
 
+    // setCurrentDir()
     @Test
     public void setCurrentDirToCurrentDir() {
         dir.setCurrentDirectory(String.valueOf(dir.getPathTo("")));
@@ -109,19 +112,82 @@ public class DirectoryTest {
         assertEquals(root, String.valueOf(dir.getPathTo("..")));
     }
 
+    // getContent()
     @Test
-    public void existsFile() {
+    public void getCurrentDirContent() {
+        assertEquals(19, dir.getContent("ls", "").size());
     }
 
     @Test
-    public void getListOfFiles() {
+    public void getNestedDirContent() {
+        assertEquals(2, dir.getContent("ls", "src").size());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void exceptionDirNotFound() {
+        try {
+            dir.getContent("ls", "foo");
+        } catch (RuntimeException re) {
+            assertEquals("ls: foo directory does not exist", re.getMessage());
+            throw re;
+        }
+    }
+
+    // getSubDirectories
+    @Test
+    public void getCurrentSubDirContent() {
+        assertEquals(10, dir.getSubDirectories("find", "").size());
     }
 
     @Test
-    public void readFile() {
+    public void getNestedSubDirContent() {
+        assertEquals(2, dir.getSubDirectories("find", "src").size());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void exceptionSubDirNotFound() {
+        try {
+            dir.getSubDirectories("find", "foo");
+        } catch (RuntimeException re) {
+            assertEquals("find: foo directory does not exist", re.getMessage());
+            throw re;
+        }
+    }
+
+    // getFiles
+    @Test
+    public void getCurrentFiles() {
+        assertEquals(9, dir.getFiles("find", "").size());
     }
 
     @Test
-    public void writeFile() {
+    public void getNestedFiles() {
+        assertEquals(1, dir.getFiles("find", "system_test").size());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void exceptionDirOfFilesNotFound() {
+        try {
+            dir.getFiles("find", "foo");
+        } catch (RuntimeException re) {
+            assertEquals("find: foo directory does not exist", re.getMessage());
+            throw re;
+        }
+    }
+
+    // checkFileExists
+    @Test
+    public void fileExists() {
+        assertTrue(dir.existsFile("README.md"));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void exceptionFileDoesNotExist() {
+        try {
+            dir.checkFileExists("grep", "foo");
+        } catch (RuntimeException re) {
+            assertEquals("grep: foo does not exist", re.getMessage());
+            throw re;
+        }
     }
 }

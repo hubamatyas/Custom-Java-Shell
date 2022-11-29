@@ -24,16 +24,15 @@ public class ShellTest {
         scn = new Scanner(in);
     }
 
+    @After
+    public void tearDown() throws Exception {
+        scn.close();
+    }
+
     @Test
     public void basicEchoEval() throws IOException {
         Shell.eval("echo foo", out);
         assertEquals("foo", scn.next());
     }
 
-
-
-    @After
-    public void tearDown() throws Exception {
-        scn.close();
-    }
 }

@@ -80,7 +80,7 @@ public class Directory {
     }
 
     public ArrayList<File> getContent(String appName, String arg) {
-        checkDirectoryToHandle(appName, arg);
+        checkDirectoryExists(appName, arg);
         File directory = new File(String.valueOf(getPathTo(arg)));
         return new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
     }
@@ -114,13 +114,13 @@ public class Directory {
         }
     }
 
-    public void checkFileToHandle(String appName, String fileName) {
+    public void checkFileExists(String appName, String fileName) {
         if (!existsFile(fileName)) {
             throw new RuntimeException(appName + ": " + fileName + " does not exist");
         }
     }
 
-    public void checkDirectoryToHandle(String appName, String directoryName) {
+    public void checkDirectoryExists(String appName, String directoryName) {
         if (!existsDirectory(directoryName)) {
             throw new RuntimeException(appName + ": " + directoryName + " directory does not exist");
         }

@@ -23,7 +23,7 @@ public class Cd extends Application {
     @Override
     protected void eval() throws IOException {
         String subDirectory = this.args.get(0);
-        this.directory.checkDirectoryToHandle(this.appName, subDirectory);
+        this.directory.checkDirectoryExists(this.appName, subDirectory);
         this.directory.setCurrentDirectory(String.valueOf(this.directory.getPathTo(subDirectory)));
     }
 
