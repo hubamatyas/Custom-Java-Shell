@@ -1,69 +1,82 @@
 package uk.ac.ucl.shell.Apps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
 
 public class Tail extends Application {
-
     private int numOfLines;
-    private String fileName;
+    private final Queue<String> tailLines;
 
-    public Tail(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        super(args, input, output);
-        numOfLines = 10;
+    public Tail(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
+        this.numOfLines = 10;
+        this.tailLines = new java.util.LinkedList<>();
     }
 
     @Override
     protected void checkArgs() {
-        if ((args.size() == 0 || args.size() == 2) && input != null) {
-            args.add(input.toString());
+        if (this.args.isEmpty() && this.input == null) {
+            throw new RuntimeException(this.appName + ": missing arguments");
         }
-        if (args.isEmpty()) {
-            throw new RuntimeException("head: missing arguments");
+        if (this.args.size() > 1  && !this.args.get(0).equals("-n")) {
+            throw new RuntimeException(this.appName + ": wrong argument " + args.get(0));
         }
-        if (args.size() != 1 && args.size() != 3) {
-            throw new RuntimeException("head: wrong arguments");
-        }
-        if (args.size() == 3 && !args.get(0).equals("-n")) {
-            throw new RuntimeException("head: wrong argument " + args.get(0));
+        if (this.args.size() == 2 && this.input == null) {
+            throw new RuntimeException(this.appName + ": wrong argument " + args.get(1));
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        loadArgs();
-        tail();
+        loadOption();
+        setIsPiped();
+        redirect();
     }
 
-    private void tail() throws IOException {
-        List<String> fileLines = directory.readFile("head", fileName);
-        numOfLines = Math.max(fileLines.size() - numOfLines, 0);
-        List<String> tailLines = fileLines.subList(numOfLines, fileLines.size());
-        directory.writeFile(tailLines, writer, lineSeparator);
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
+        } else {
+            this.simpleCall(this.args.get(0));
+        }
     }
 
-    private void loadArgs() {
-        if (args.size() == 3) {
-            try {
-                numOfLines = Integer.parseInt(args.get(1));
-            } catch (Exception e) {
-                throw new RuntimeException("head: wrong argument " + args.get(1));
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
+        getTailLines(reader);
+        for (String line : this.tailLines) {
+            this.terminal.writeLine(line, writer, lineSeparator);
+        }
+    }
+
+    private void getTailLines(BufferedReader reader) throws IOException {
+        while (reader.ready()) {
+            String line = reader.readLine();
+            this.tailLines.add(line);
+            if (this.tailLines.size() > this.numOfLines) {
+                this.tailLines.remove();
             }
-            fileName = args.get(2);
-        } else {
-            fileName = args.get(0);
         }
     }
 
-    /*
-    private void getIndex(ArrayList<String> storage) {
-        if (numOfLines > storage.size()) {
-            index = 0;
-        } else {
-            index = storage.size() - numOfLines;
+    private void loadOption() {
+        if (!this.args.isEmpty() && this.args.get(0).equals("-n")) {
+            this.numOfLines = parseNumber(this.args.get(1));
+            this.args.remove(0);
+            this.args.remove(0);
         }
-    } */
+    }
+
+    private int parseNumber(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (Exception e) {
+            throw new RuntimeException("tail: invalid option");
+        }
+    }
 }

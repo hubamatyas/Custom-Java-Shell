@@ -1,62 +1,71 @@
 package uk.ac.ucl.shell.Apps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Head extends Application {
-
     private int numOfLines;
-    private String fileName;
 
-    public Head(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        // add name of application to super
-        super(args, input, output);
-        numOfLines = 10;
+    public Head(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
+        this.numOfLines = 10;
     }
 
     @Override
     protected void checkArgs() {
-        if ((args.size() == 0 || args.size() == 2) && input != null) {
-            args.add(input.toString());
+        if (args.isEmpty() && input == null) {
+            throw new RuntimeException(this.appName + ": missing arguments");
         }
-        if (args.isEmpty()) {
-            throw new RuntimeException("head: missing arguments");
+        if (args.size() > 1  && !args.get(0).equals("-n")) {
+            throw new RuntimeException(this.appName + ": wrong argument " + args.get(0));
         }
-        if (args.size() != 1 && args.size() != 3) {
-            throw new RuntimeException("head: wrong arguments");
-        }
-        if (args.size() == 3 && !args.get(0).equals("-n")) {
-            throw new RuntimeException("head: wrong argument " + args.get(0));
+        if (args.size() == 2 && input == null) {
+            throw new RuntimeException(this.appName + ": wrong argument " + args.get(1));
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        loadArgs();
-        head();
+        loadOption();
+        setIsPiped();
+        redirect();
     }
 
-    private void head() throws IOException {
-        // add numOfLines parameter to readFile?
-        List<String> fileLines = directory.readFile("head", fileName);
-        numOfLines = Math.min(numOfLines, fileLines.size());
-        List<String> headLines = fileLines.subList(0, numOfLines);
-        directory.writeFile(headLines, writer, lineSeparator);
-    }
-
-    private void loadArgs() {
-        if (args.size() == 3) {
-            try {
-                numOfLines = Integer.parseInt(args.get(1));
-            } catch (Exception e) {
-                throw new RuntimeException("head: wrong argument " + args.get(1));
-            }
-            fileName = args.get(2);
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
         } else {
-            fileName = args.get(0);
+            this.simpleCall(args.get(0));
+        }
+    }
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
+        int count = 0;
+        while (reader.ready() && count < this.numOfLines) {
+            String line = reader.readLine();
+            this.terminal.writeLine(line, writer, lineSeparator);
+            count++;
+        }
+    }
+
+    private void loadOption() {
+        if (!this.args.isEmpty() && this.args.get(0).equals("-n")) {
+            this.numOfLines = parseNumber(this.args.get(1));
+            this.args.remove(0);
+            this.args.remove(0);
+        }
+    }
+
+    private int parseNumber(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (Exception e) {
+            throw new RuntimeException("head: invalid option");
         }
     }
 }

@@ -1,7 +1,6 @@
 package uk.ac.ucl.shell.Apps;
 
-import uk.ac.ucl.shell.Shell;
-
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -9,19 +8,25 @@ import java.util.ArrayList;
 
 public class Pwd extends Application {
 
-    public Pwd(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        super(args, input, output);
+    public Pwd(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
     }
 
     @Override
     protected void checkArgs() {
-        if (args.size() != 0 || input != null) {
+        if (this.args.size() != 0 || this.input != null) {
             throw new RuntimeException("pwd: too many arguments");
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        directory.writeLine(directory.getCurrentDirectory(), writer, lineSeparator);
+        this.terminal.writeLine(this.directory.getCurrentDirectory(), writer, lineSeparator);
     }
+
+    @Override
+    protected void redirect() throws IOException {}
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {}
 }

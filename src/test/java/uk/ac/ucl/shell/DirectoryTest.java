@@ -41,6 +41,7 @@ public class DirectoryTest {
 
     @Test
     public void uniqueInstanceOnly() {
+        System.out.println("Creating instance");
         Directory newDir = Directory.getInstance();
         assertSame(dir, newDir);
     }
@@ -57,41 +58,49 @@ public class DirectoryTest {
     }
 
     @Test
-    public void doesExistDirectories() {
-        System.out.println("Current directory: " + dir.getCurrentDirectory());
-        assertTrue(dir.existsdirectory(""));
-        assertTrue(dir.existsdirectory("src"));
-        assertTrue(dir.existsdirectory("system_test"));
-    }
-
-    @Test
-    public void doesNotExistDirectories() {
-        assertFalse(dir.existsdirectory("foo"));
-        assertFalse(dir.existsdirectory("bar"));
-    }
-
-    @Test
-    public void doesNotExistHiddenDirectories() {
-        assertFalse(dir.existsdirectory(".gitignore"));
-    }
-
-    @Test
-    public void doesExistNestedDirectories() {
-        assertTrue(dir.existsdirectory("src/main"));
-        assertTrue(dir.existsdirectory("src/main/../main"));
-        assertTrue(dir.existsdirectory("src/main/../../src"));
-    }
-
-    @Test
-    public void setCurrentDirToCurrentDir() {
+    public void getPathToCurrentDir() {
         assertEquals(currentDirPath, String.valueOf(dir.getPathTo("")));
         assertEquals(currentDirPath, String.valueOf(dir.getPathTo(".")));
     }
 
     @Test
+    public void doesExistDirectories() {
+        System.out.println("Current directory: " + dir.getCurrentDirectory());
+        assertTrue(dir.existsDirectory(""));
+        assertTrue(dir.existsDirectory("src"));
+        assertTrue(dir.existsDirectory("system_test"));
+    }
+
+    @Test
+    public void doesNotExistDirectories() {
+        assertFalse(dir.existsDirectory("foo"));
+        assertFalse(dir.existsDirectory("bar"));
+    }
+
+    @Test
+    public void doesNotExistHiddenDirectories() {
+        assertFalse(dir.existsDirectory(".gitignore"));
+    }
+
+    @Test
+    public void doesExistNestedDirectories() {
+        assertTrue(dir.existsDirectory("src/main"));
+        assertTrue(dir.existsDirectory("src/main/../main"));
+        assertTrue(dir.existsDirectory("src/main/../../src"));
+    }
+
+    @Test
+    public void setCurrentDirToCurrentDir() {
+        dir.setCurrentDirectory(String.valueOf(dir.getPathTo("")));
+        assertEquals(currentDirPath, dir.getCurrentDirectory());
+        dir.setCurrentDirectory(String.valueOf(dir.getPathTo(".")));
+        assertEquals(currentDirPath, dir.getCurrentDirectory());
+    }
+
+    @Test
     public void setCurrentDirToParent() {
         dir.setCurrentDirectory(getPathToParentHelper());
-        assertTrue(dir.existsdirectory("java-shell-j3"));
+        assertTrue(dir.existsDirectory("java-shell-j3"));
     }
 
     @Test

@@ -1,37 +1,48 @@
 package uk.ac.ucl.shell.Apps;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
-
-import uk.ac.ucl.shell.Shell;
 
 public class Cat extends Application {
-    public Cat(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
-        super(args, input, writer);
+    public Cat(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(appName, args, input, writer);
     }
 
     @Override
     protected void checkArgs() {
-        if (args.isEmpty() && input == null) {
-            throw new RuntimeException("cat: missing arguments");
+        if (this.args.isEmpty() && this.input == null) {
+            throw new RuntimeException(this.appName + ": missing arguments");
         }
-
-        if (args.isEmpty()) {
-            args.add(input.toString());
+        if (!this.args.isEmpty() && this.input != null) {
+            throw new RuntimeException(this.appName + ": cannot read from both file and input");
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        for (String arg : args) {
-            List<String> fileLines = directory.readFile("cat", arg);
-            directory.writeFile(fileLines, writer, lineSeparator);
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
+        } else {
+            for (String arg : this.args) {
+                this.simpleCall(arg);
+            }
+        }
+    }
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
+        while (reader.ready()) {
+            String line = reader.readLine();
+            this.terminal.writeLine(line, writer, lineSeparator);
         }
     }
 }
