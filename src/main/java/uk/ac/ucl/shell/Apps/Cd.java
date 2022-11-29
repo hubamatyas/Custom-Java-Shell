@@ -24,7 +24,7 @@ public class Cd extends Application {
     protected void eval() throws IOException {
         String subDirectory = this.args.get(0);
         this.directory.checkDirectoryExists(this.appName, subDirectory);
-        this.directory.setCurrentDirectory(String.valueOf(this.directory.getPathTo(subDirectory)));
+        this.directory.setCurrentDirectory(this.directory.getPathTo(subDirectory).toString());
     }
 
     @Override

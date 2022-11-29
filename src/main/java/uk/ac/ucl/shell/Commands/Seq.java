@@ -1,10 +1,10 @@
 package uk.ac.ucl.shell.Commands;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.util.ArrayList;
 
 import uk.ac.ucl.shell.Parse.Parser;
@@ -23,10 +23,10 @@ public class Seq extends Command {
         for(ArrayList<String> command : atomicCommands){
             InputStream prevInput = input;
             for(int i = 0; i < command.size(); i++){
-                PipedInputStream pipedInput = new PipedInputStream();
-                PipedOutputStream pipedOutput = new PipedOutputStream(pipedInput);
+                //used ByteArrayStreams instead of PipedStreams due its size limitations of 4096 bytes
+                ByteArrayOutputStream pipedOutput = new ByteArrayOutputStream();
                 new Call(command.get(i)).eval(prevInput, i == command.size()- 1 ? output : pipedOutput);
-                prevInput = pipedInput;
+                prevInput = new ByteArrayInputStream(pipedOutput.toByteArray()) ;
             }
         }
     }

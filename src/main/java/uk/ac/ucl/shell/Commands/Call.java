@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import uk.ac.ucl.shell.Directory;
 import uk.ac.ucl.shell.Apps.ApplicationFactory;
