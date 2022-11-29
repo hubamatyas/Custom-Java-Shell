@@ -182,7 +182,7 @@ public class Directory {
      *                  where this method was called from
      * @param fileName  relative String path to {@code fileName}
      */
-    public void checkFileToHandle(String appName, String fileName) {
+    public void checkFileExists(String appName, String fileName) {
         if (!existsFile(fileName)) {
             throw new RuntimeException(appName + ": " + fileName + " does not exist");
         }
@@ -196,7 +196,7 @@ public class Directory {
      *                          where this method was called from
      * @param directoryName     relative String path to {@code directoryName}
      */
-    public void checkDirectoryToHandle(String appName, String directoryName) {
+    public void checkDirectoryExists(String appName, String directoryName) {
         if (!existsDirectory(directoryName)) {
             throw new RuntimeException(appName + ": " + directoryName + " directory does not exist");
         }
