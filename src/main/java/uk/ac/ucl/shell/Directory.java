@@ -102,7 +102,7 @@ public class Directory {
         return readLines(reader);
     }
 
-    public BufferedReader createBufferedReader(String appName, String fileName) throws IOException {
+    public BufferedReader createBufferedReader(String appName, String fileName) {
         try {
             return Files.newBufferedReader(getPathTo(fileName), encoding);
         }

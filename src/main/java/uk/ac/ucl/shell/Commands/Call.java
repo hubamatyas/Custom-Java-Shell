@@ -23,7 +23,8 @@ public class Call extends Command {
         
         if(parsedCall.hasInput()){
             input = new FileInputStream(parsedCall.getInput());
-        }if(parsedCall.hasOutput()){
+        }
+        if(parsedCall.hasOutput()){
             output = new FileOutputStream(parsedCall.getOutput());
         }
         OutputStreamWriter writer = new OutputStreamWriter(output);
