@@ -9,43 +9,55 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class Cut extends Application {
-
     private final SortedSet<Integer> bytesRange;
     private int toEnd;
-    public Cut(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        super(args, input, output);
+
+    public Cut(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
         this.bytesRange = new TreeSet<>();
         this.toEnd = Integer.MAX_VALUE;
     }
 
     @Override
     protected void checkArgs() {
-        if (args.size() == 2 && input == null) {
-            throw new RuntimeException("cut: missing arguments");
+        if (this.args.size() == 2 && this.input == null) {
+            throw new RuntimeException(this.appName + ": missing arguments");
         }
-        if (args.size() > 3) {
-            throw new RuntimeException("cut: wrong number of arguments");
+        if (this.args.size() > 3) {
+            throw new RuntimeException(this.appName + ": wrong number of arguments");
         }
-        if (args.get(0).compareTo("-b") != 0) {
-            throw new RuntimeException("cut: invalid option");
+        if (this.args.get(0).compareTo("-b") != 0) {
+            throw new RuntimeException(this.appName + ": invalid option");
         }
     }
 
     @Override
     protected void eval() throws IOException {
         parseByteString();
-        if (args.isEmpty()) {
-            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
-            cut(reader);
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            pipedCall();
         } else {
-            BufferedReader reader = directory.createBufferedReader("cut", args.get(0));
-            cut(reader);
+            simpleCall(this.args.get(0));
+        }
+    }
+
+    protected void app(BufferedReader reader) throws IOException {
+        while (reader.ready()) {
+            String line = reader.readLine();
+            String cutLine = cutLine(line);
+            this.terminal.writeLine(cutLine, writer, lineSeparator);
         }
     }
 
     private void parseByteString() {
-        args.remove(0);
-        String byteString = args.remove(0);
+        this.args.remove(0);
+        String byteString = this.args.remove(0);
         for (String bytes : byteString.split(",")) {
             parseByte(bytes);
         }
@@ -81,14 +93,6 @@ public class Cut extends Application {
     private void addBytesRange(int start, int end) {
         for (int i = start; i <= end; i++) {
             this.bytesRange.add(i);
-        }
-    }
-
-    private void cut(BufferedReader reader) throws IOException {
-        while (reader.ready()) {
-            String line = reader.readLine();
-            String cutLine = cutLine(line);
-            directory.writeLine(cutLine, writer, lineSeparator);
         }
     }
 

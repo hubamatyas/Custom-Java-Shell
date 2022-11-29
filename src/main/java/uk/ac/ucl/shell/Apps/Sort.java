@@ -9,11 +9,11 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Sort extends Application {
-
     private boolean reverse;
-    private List<String> fileLines;
-    public Sort(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
-        super(args, input, writer);
+    private final List<String> fileLines;
+
+    public Sort(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(appName, args, input, writer);
         this.reverse = false;
         this.fileLines = new ArrayList<>();
     }
@@ -21,33 +21,38 @@ public class Sort extends Application {
     @Override
     protected void checkArgs() {
         if (args.isEmpty() && input == null) {
-            throw new RuntimeException("sort: missing arguments");
+            throw new RuntimeException(appName + ": missing arguments");
         }
     }
 
     @Override
     protected void eval() throws IOException {
         loadOptions();
-        if (args.isEmpty()) {
-            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
-            sort(reader);
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.args.isEmpty()) {
+            this.pipedCall();
         } else {
-            BufferedReader reader = directory.createBufferedReader("uniq", args.get(0));
-            sort(reader);
+            this.simpleCall(this.args.get(0));
         }
     }
 
-    private void loadOptions() {
-        if (!args.isEmpty() && args.get(0).equals("-r")) {
-            this.reverse = true;
-            args.remove(0);
-        }
-    }
-
-    private void sort(BufferedReader reader) throws IOException {
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
         readInput(reader);
         sortInput();
         writeOutput();
+    }
+
+    private void loadOptions() {
+        if (!this.args.isEmpty() && this.args.get(0).equals("-r")) {
+            this.reverse = true;
+            this.args.remove(0);
+        }
     }
 
     private void readInput(BufferedReader reader) throws IOException {
@@ -67,7 +72,7 @@ public class Sort extends Application {
 
     private void writeOutput() throws IOException {
         for (String line : this.fileLines) {
-            directory.writeLine(line, writer, lineSeparator);
+            this.terminal.writeLine(line, writer, lineSeparator);
         }
     }
 }

@@ -1,30 +1,36 @@
 package uk.ac.ucl.shell.Apps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class Echo extends Application {
-
-    public Echo(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        super(args, input, output);
+    public Echo(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
     }
 
     @Override
     protected void checkArgs() {
-        if (input != null) {
-            throw new RuntimeException("echo: cannot pipe output");
+        if (this.input != null) {
+            throw new RuntimeException(appName + ": cannot pipe output");
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        for (String arg : args) {
-            directory.writeLine(arg, writer, " ");
+        for (String arg : this.args) {
+            this.terminal.writeLine(arg, writer, " ");
         }
-        if (!args.isEmpty()) {
-            directory.writeLine("", writer, lineSeparator);
+        if (!this.args.isEmpty()) {
+            this.terminal.writeLine("", writer, lineSeparator);
         }
     }
+
+    @Override
+    protected void redirect() {}
+
+    @Override
+    protected void app(BufferedReader reader) {}
 }
