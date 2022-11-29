@@ -7,40 +7,38 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class Uniq extends Application {
-
     private boolean caseInsensitive;
-    public Uniq(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
-        super(args, input, writer);
+
+    public Uniq(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(appName, args, input, writer);
         this.caseInsensitive = false;
     }
 
     @Override
     protected void checkArgs() {
         if (args.isEmpty() && input == null) {
-            throw new RuntimeException("uniq: missing arguments");
+            throw new RuntimeException(appName + ": missing arguments");
         }
     }
 
     @Override
     protected void eval() throws IOException {
         loadOptions();
-        if (args.isEmpty()) {
-            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
-            uniq(reader);
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
         } else {
-            BufferedReader reader = directory.createBufferedReader("uniq", args.get(0));
-            uniq(reader);
+            this.simpleCall(this.args.get(0));
         }
     }
 
-    private void loadOptions() {
-        if (!args.isEmpty() && args.get(0).equals("-i")) {
-            this.caseInsensitive = true;
-            args.remove(0);
-        }
-    }
-
-    private void uniq(BufferedReader reader) throws IOException {
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
         String prevLine = "";
         while (reader.ready()) {
             String line = reader.readLine();
@@ -48,9 +46,18 @@ public class Uniq extends Application {
                 line = line.toLowerCase();
             }
             if (!line.equals(prevLine)) {
-                directory.writeLine(line, writer, lineSeparator);
+                this.terminal.writeLine(line, writer, lineSeparator);
             }
             prevLine = line;
         }
     }
+
+    private void loadOptions() {
+        if (!this.args.isEmpty() && this.args.get(0).equals("-i")) {
+            this.caseInsensitive = true;
+            this.args.remove(0);
+        }
+    }
+
+
 }

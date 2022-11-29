@@ -9,63 +9,72 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Grep extends Application {
-
     private int numOfFiles;
     private Pattern pattern;
-    public Grep(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        super(args, input, output);
+    private String currentFile;
+
+    public Grep(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
         this.numOfFiles = 0;
+        this.currentFile = "";
     }
 
     @Override
     protected void checkArgs() {
         if (args.size() < 2 && input == null) {
-            throw new RuntimeException("grep: missing arguments");
+            throw new RuntimeException(this.appName + ": missing arguments");
         }
     }
 
     @Override
     protected void eval() throws IOException {
         setPattern();
-        if (args.isEmpty()) {
-            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
-            grep(reader, "");
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
         } else {
             verifyFiles(args);
             for (String arg : args) {
-                BufferedReader reader = directory.createBufferedReader("grep", arg);
-                grep(reader, arg);
+                this.currentFile = arg;
+                this.simpleCall(arg);
             }
+        }
+    }
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
+        while (reader.ready()) {
+            String line = reader.readLine();
+            searchPattern(line);
         }
     }
 
     private void verifyFiles(ArrayList<String> files) {
         for (String file : files) {
-            directory.checkFileToHandle("grep", file);
+            this.directory.checkFileToHandle("grep", file);
         }
         this.numOfFiles = files.size();
     }
 
-    private void grep(BufferedReader reader, String file) throws IOException {
-        while (reader.ready()) {
-            String line = reader.readLine();
-            searchPattern(line, file);
-        }
-    }
 
-    private void searchPattern(String line, String file) throws IOException {
+    private void searchPattern(String line) throws IOException {
         Matcher matcher = this.pattern.matcher(line);
         if (matcher.find()) {
-            if (numOfFiles > 1) {
-                directory.writeLine(file + ": " + line, writer, lineSeparator);
+            if (this.numOfFiles > 1) {
+                this.terminal.writeLine(this.currentFile + ": " + line, writer, lineSeparator);
             } else {
-                directory.writeLine(line, writer, lineSeparator);
+                this.terminal.writeLine(line, writer, lineSeparator);
             }
         }
     }
 
     private void setPattern() {
-        String pattern = args.remove(0);
+        String pattern = this.args.remove(0);
         this.pattern = Pattern.compile(pattern);
     }
 }

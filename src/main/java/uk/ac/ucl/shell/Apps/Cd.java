@@ -1,28 +1,36 @@
 package uk.ac.ucl.shell.Apps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class Cd extends Application {
-    public Cd(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
-        super(args, input, writer);
+    public Cd(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(appName, args, input, writer);
     }
 
     @Override
     protected void checkArgs() {
-        if (args.isEmpty()) {
-            throw new RuntimeException("cd: missing argument");
-        } else if (args.size() > 1 || input != null) {
-            throw new RuntimeException("cd: too many arguments");
+        if (this.args.isEmpty()) {
+            throw new RuntimeException(appName + ": missing argument");
+        } else if (this.args.size() > 1 || this.input != null) {
+            throw new RuntimeException(appName + ": too many arguments");
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        String subDir = args.get(0);
-        directory.checkDirectoryToHandle("cd", subDir);
-        directory.setCurrentDirectory(subDir);
+        String subDirectory = this.args.get(0);
+        this.directory.checkDirectoryToHandle(this.appName, subDirectory);
+        this.directory.setCurrentDirectory(subDirectory);
     }
+
+    @Override
+    protected void redirect() {}
+
+    @Override
+    protected void app(BufferedReader reader) {}
+
 }

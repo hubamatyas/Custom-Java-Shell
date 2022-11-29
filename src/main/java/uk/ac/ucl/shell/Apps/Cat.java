@@ -7,37 +7,42 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class Cat extends Application {
-    public Cat(ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
-        super(args, input, writer);
+    public Cat(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(appName, args, input, writer);
     }
 
     @Override
     protected void checkArgs() {
-        if (args.isEmpty() && input == null) {
-            throw new RuntimeException("cat: missing arguments");
+        if (this.args.isEmpty() && this.input == null) {
+            throw new RuntimeException(this.appName + ": missing arguments");
         }
-        if (!args.isEmpty() && input != null) {
-            throw new RuntimeException("cat: cannot read from both file and input");
+        if (!this.args.isEmpty() && this.input != null) {
+            throw new RuntimeException(this.appName + ": cannot read from both file and input");
         }
     }
 
     @Override
     protected void eval() throws IOException {
-        if (args.isEmpty()) {
-            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
-            cat(reader);
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
         } else {
-            for (String arg : args) {
-                BufferedReader reader = directory.createBufferedReader("cat", arg);
-                cat(reader);
+            for (String arg : this.args) {
+                this.simpleCall(arg);
             }
         }
     }
 
-    private void cat(BufferedReader reader) throws IOException {
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
         while (reader.ready()) {
             String line = reader.readLine();
-            directory.writeLine(line, writer, lineSeparator);
+            this.terminal.writeLine(line, writer, lineSeparator);
         }
     }
 }

@@ -1,23 +1,19 @@
 package uk.ac.ucl.shell.Apps;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Ls extends Application {
-
     private String path;
 
-    public Ls(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        super(args, input, output);
+    public Ls(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
     }
 
     @Override
     protected void checkArgs() {
-        if (args.size() > 1 || input != null) {
-            throw new RuntimeException("ls: too many arguments");
+        if (this.args.size() > 1 || this.input != null) {
+            throw new RuntimeException(this.appName + ": too many arguments");
         }
     }
 
@@ -28,27 +24,33 @@ public class Ls extends Application {
     }
 
     private void getDirectoryPath() {
-        if (args.isEmpty()) {
-            path = "";
+        if (this.args.isEmpty()) {
+            this.path = "";
         } else {
-            path = args.get(0);
+            this.path = this.args.get(0);
         }
     }
 
     private void ls() throws IOException {
-        directory.checkDirectoryToHandle("ls", path);
-        ArrayList<File> listOfFiles = directory.getContent("ls", path);
+        this.directory.checkDirectoryToHandle("ls", this.path);
+        ArrayList<File> listOfFiles = this.directory.getContent("ls", this.path);
         outputFiles(listOfFiles);
         if (!listOfFiles.isEmpty()) {
-            directory.writeLine("", writer, lineSeparator);
+            this.terminal.writeLine("", writer, lineSeparator);
         }
     }
 
     private void outputFiles (ArrayList<File> listOfFiles) throws IOException {
         for (File file : listOfFiles) {
             if (!file.getName().startsWith(".")) {
-                directory.writeLine(file.getName(), writer, "\t");
+                this.terminal.writeLine(file.getName(), writer, "\t");
             }
         }
     }
+
+    @Override
+    protected void redirect() throws IOException {}
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {}
 }

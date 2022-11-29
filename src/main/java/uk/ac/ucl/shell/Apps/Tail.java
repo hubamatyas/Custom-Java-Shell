@@ -8,66 +8,67 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 public class Tail extends Application {
-
     private int numOfLines;
-    private String fileName;
-    private Queue<String> tailLines;
+    private final Queue<String> tailLines;
 
-    public Tail(ArrayList<String> args, InputStream input, OutputStreamWriter output) {
-        super(args, input, output);
+    public Tail(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
         this.numOfLines = 10;
         this.tailLines = new java.util.LinkedList<>();
     }
 
     @Override
     protected void checkArgs() {
-        if (args.isEmpty() && input == null) {
-            throw new RuntimeException("tail: missing arguments");
+        if (this.args.isEmpty() && this.input == null) {
+            throw new RuntimeException(this.appName + ": missing arguments");
         }
-        if (args.size() > 1  && !args.get(0).equals("-n")) {
-            throw new RuntimeException("tail: wrong argument " + args.get(0));
+        if (this.args.size() > 1  && !this.args.get(0).equals("-n")) {
+            throw new RuntimeException(this.appName + ": wrong argument " + args.get(0));
         }
-        if (args.size() == 2 && input == null) {
-            throw new RuntimeException("tail: wrong argument " + args.get(1));
+        if (this.args.size() == 2 && this.input == null) {
+            throw new RuntimeException(this.appName + ": wrong argument " + args.get(1));
         }
     }
 
     @Override
     protected void eval() throws IOException {
         loadOption();
-        if (args.isEmpty() && input != null) {
-            BufferedReader reader = new BufferedReader(new java.io.InputStreamReader(input));
-            tail(reader);
-        } else if (!args.isEmpty()) {
-            BufferedReader reader = directory.createBufferedReader("tail", args.get(0));
-            tail(reader);
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
         } else {
-            throw new RuntimeException("tail: missing arguments");
+            this.simpleCall(this.args.get(0));
         }
     }
 
-    private void tail(BufferedReader reader) throws IOException {
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
         getTailLines(reader);
-        for (String line : tailLines) {
-            directory.writeLine(line, writer, lineSeparator);
+        for (String line : this.tailLines) {
+            this.terminal.writeLine(line, writer, lineSeparator);
         }
     }
 
     private void getTailLines(BufferedReader reader) throws IOException {
         while (reader.ready()) {
             String line = reader.readLine();
-            tailLines.add(line);
-            if (tailLines.size() > numOfLines) {
-                tailLines.remove();
+            this.tailLines.add(line);
+            if (this.tailLines.size() > this.numOfLines) {
+                this.tailLines.remove();
             }
         }
     }
 
     private void loadOption() {
-        if (!args.isEmpty() && args.get(0).equals("-n")) {
-            this.numOfLines = parseNumber(args.get(1));
-            args.remove(0);
-            args.remove(0);
+        if (!this.args.isEmpty() && this.args.get(0).equals("-n")) {
+            this.numOfLines = parseNumber(this.args.get(1));
+            this.args.remove(0);
+            this.args.remove(0);
         }
     }
 

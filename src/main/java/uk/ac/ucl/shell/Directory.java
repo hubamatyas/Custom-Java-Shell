@@ -76,12 +76,6 @@ public class Directory {
         }
     }
 
-    public void writeLine(String line, OutputStreamWriter writer, String separator) throws IOException {
-        writer.write(line);
-        writer.write(separator);
-        writer.flush();
-    }
-
     public void checkFileToHandle(String appName, String fileName) {
         if (!existsFile(fileName)) {
             throw new RuntimeException(appName + ": " + fileName + " does not exist");
