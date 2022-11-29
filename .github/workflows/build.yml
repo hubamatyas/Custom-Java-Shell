@@ -16,4 +16,4 @@ jobs:
     - name: Test Echo
       run: docker run --rm shell /comp0010/sh -c 'echo foo'
     - name: System Tests
-      run: docker run -ti --rm shell /comp0010/tools/test
+      run: docker run --rm shell /comp0010/tools/test
