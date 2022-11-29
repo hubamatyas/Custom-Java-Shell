@@ -13,7 +13,6 @@ public class TerminalTest {
 
     private Scanner scn;
     private PipedInputStream in;
-//    private PipedOutputStream out;
     private Terminal ter;
     private String lineSeparator;
     private OutputStreamWriter output;
@@ -21,11 +20,10 @@ public class TerminalTest {
     @Before
     public void setUp() throws IOException {
         in = new PipedInputStream();
-//        out = new PipedOutputStream(in);
         scn = new Scanner(in);
+        output = new OutputStreamWriter(new PipedOutputStream(in));
         ter = Terminal.getInstance();
-        lineSeparator = System.getProperty("user.lineseparator");
-        output = new OutputStreamWriter(System.out);
+        lineSeparator = System.getProperty("line.separator");
     }
 
     @After
@@ -42,8 +40,21 @@ public class TerminalTest {
 
     // writeLine()
     @Test
-    public void expectedOutput() throws IOException {
-        ter.writeLine("foo bar", output, lineSeparator);
-//        assertEquals("foo bar", scn.next());
+    public void writeWord() throws IOException {
+        ter.writeLine("foo", output, lineSeparator);
+        assertEquals("foo", scn.next());
     }
+
+    @Test
+    public void writeMultipleWords() throws IOException {
+        ter.writeLine("foo bar", output, lineSeparator);
+        assertEquals("foo bar", scn.next());
+    }
+
+    @Test
+    public void writeMultipleLines() throws IOException {
+        ter.writeLine("foo bar \nfoobar", output, lineSeparator);
+        assertEquals("foo bar \nfoobar", scn.next());
+    }
+
 }

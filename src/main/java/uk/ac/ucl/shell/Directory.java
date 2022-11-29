@@ -65,6 +65,7 @@ public class Directory {
         String[] paths = getPaths(arg);
         String currentPath = getCurrentDirectory();
         for (String path : paths) {
+            System.out.println(currentPath);
             if (arg.equals(".")) {
                 continue;
             }
@@ -74,7 +75,7 @@ public class Directory {
                 }
                 currentPath = getParentDirectory(currentPath);
             } else {
-                currentPath += fileSeparator + path;
+                currentPath = String.valueOf(Paths.get(currentPath+fileSeparator+path));
             }
         }
         return Paths.get(currentPath);
