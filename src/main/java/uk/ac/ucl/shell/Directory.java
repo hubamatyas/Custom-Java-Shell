@@ -62,39 +62,7 @@ public class Directory {
     }
 
     public Path getPathTo(String arg) {
-        String[] paths = getPaths(arg);
-        String currentPath = getCurrentDirectory();
-        for (String path : paths) {
-            if (arg.equals(".")) {
-                continue;
-            }
-            if (arg.equals("..")) {
-                if (currentPath.equals(root)) {
-                    continue;
-                }
-                currentPath = getParentDirectory(currentPath);
-            } else {
-                currentPath += fileSeparator + path;
-            }
-        }
-        return Paths.get(currentPath);
-    }
-
-    private String[] getPaths(String arg) {
-        if (fileSeparator.equals("\\")) {
-            return arg.split("\\\\");
-        }
-        return arg.split(fileSeparator);
-    }
-
-    private String getParentDirectory(String path) {
-        int i = path.length();
-        while (i-->0) {
-            if (String.valueOf(path.charAt(i)).equals(fileSeparator)) {
-                break;
-            }
-        }
-        return path.substring(0, i);
+        return Paths.get(getCurrentDirectory(), arg).normalize();
     }
 
     /**
