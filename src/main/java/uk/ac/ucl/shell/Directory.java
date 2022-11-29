@@ -20,14 +20,10 @@ public class Directory {
     private static Directory instance;
     private String currentDirectory;
     private final Charset encoding;
-    private final String fileSeparator;
-    private final String root;
 
     private Directory() {
-        fileSeparator = File.separator;
         encoding = StandardCharsets.UTF_8;
         currentDirectory = System.getProperty("user.dir");
-        root = currentDirectory.substring(0,2);
     }
 
     /**

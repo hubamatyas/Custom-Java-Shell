@@ -1,13 +1,17 @@
 package uk.ac.ucl.shell.Apps;
 
 import java.io.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Find extends Application {
     private final Queue<String> toVisit;
-    private Pattern pattern;
+    private String pattern;
 
     public Find(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
         super(appName, args, input, writer);
@@ -20,8 +24,8 @@ public class Find extends Application {
             throw new RuntimeException(appName + ": missing arguments");
         }
         int maxArgs = this.args.get(0).equals("-name") ? 2 : 3;
-        if(this.args.size() > maxArgs){
-            throw new RuntimeException(appName + ": too many arguments");
+        if(this.args.size() != maxArgs){
+            throw new RuntimeException(appName + ": incorrect number of arguments");
         }
     }
 
@@ -34,17 +38,11 @@ public class Find extends Application {
     private void setParams() {
         if (!this.args.get(0).equals("-name")) {
             this.toVisit.add(this.args.get(0));
-            this.pattern = parsePattern(this.args.get(2));
+            this.pattern = this.args.get(2);
         } else {
             this.toVisit.add("");
-            this.pattern = parsePattern(this.args.get(1));
+            this.pattern = this.args.get(1);
         } 
-    }
-
-    private Pattern parsePattern(String rawPattern) {
-        rawPattern = rawPattern.replace(".", "\\.");
-        rawPattern = rawPattern.replace("*", ".*");
-        return Pattern.compile(rawPattern);
     }
 
     private void find() throws IOException {
@@ -61,12 +59,10 @@ public class Find extends Application {
     }
 
     private void findPattern(String dir) throws IOException {
-        ArrayList<String> files = this.directory.getFiles("find", dir);
-        for (String file : files) {
-            Matcher matcher = this.pattern.matcher(file);
-            if (matcher.find()) {
-                this.terminal.writeLine(dir + File.separator + file, writer, lineSeparator);
-            }
+        Path absoluteDir = Paths.get(this.directory.getCurrentDirectory(), dir);
+        DirectoryStream<Path> stream = Files.newDirectoryStream(absoluteDir, pattern);
+        for (Path entry : stream) {
+            this.terminal.writeLine(dir + File.separator + entry.getFileName().toString(), writer, lineSeparator);
         }
     }
 
