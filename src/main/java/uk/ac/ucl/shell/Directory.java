@@ -20,12 +20,14 @@ public class Directory {
     private String currentDirectory;
     private String fileSeparator;
     private String lineSeparator;
+    private String root;
 
     private Directory() {
         encoding = StandardCharsets.UTF_8;
         fileSeparator = File.separator;
         lineSeparator = System.getProperty("line.separator");
         currentDirectory = System.getProperty("user.dir");
+        root = currentDirectory.substring(0,2);
     }
 
     // Singleton class
@@ -49,21 +51,42 @@ public class Directory {
     }
 
     public Path getPathTo(String arg) {
-        if (arg.equals("..")) {
-            String result = getRootDirectory();
-            return Paths.get(getRootDirectory());
+        String[] paths = getPaths(arg);
+        String currentPath = currentDirectory;
+        for (String path : paths) {
+            System.out.println("Current Path: " + currentPath);
+            System.out.println("Path: " + path);
+            if (arg.equals(".")) {
+                continue;
+            }
+            if (arg.equals("..")) {
+                if (currentPath.equals(root)) {
+                    continue;
+                }
+                currentPath = getParentDirectory(currentPath);
+            } else {
+                currentPath += fileSeparator + path;
+            }
         }
-        return Paths.get(currentDirectory + fileSeparator + arg);
+        System.out.println("Final path: " + currentPath);
+        return Paths.get(currentPath);
     }
 
-    private String getRootDirectory() {
-        int i = currentDirectory.length();
+    private String[] getPaths(String arg) {
+        if (fileSeparator.equals("\\")) {
+            return arg.split("\\\\");
+        }
+        return arg.split(fileSeparator);
+    }
+
+    private String getParentDirectory(String path) {
+        int i = path.length();
         while (i-->0) {
-            if (String.valueOf(currentDirectory.charAt(i)).equals(fileSeparator)) {
+            if (String.valueOf(path.charAt(i)).equals(fileSeparator)) {
                 break;
             }
         }
-        return currentDirectory.substring(0, i+1);
+        return path.substring(0, i);
     }
 
     /*
@@ -80,7 +103,7 @@ public class Directory {
         return new File(String.valueOf(getPathTo(arg))).exists();
     }
 
-    public boolean existsDirectory(String arg) {
+    public boolean existsdirectory(String arg) {
         return new File(String.valueOf(getPathTo(arg))).isDirectory();
     }
 
@@ -138,7 +161,7 @@ public class Directory {
     }
 
     public void checkDirectoryToHandle(String appName, String directoryName) {
-        if (!existsDirectory(directoryName)) {
+        if (!existsdirectory(directoryName)) {
             throw new RuntimeException(appName + ": " + directoryName + " directory does not exist");
         }
     }
