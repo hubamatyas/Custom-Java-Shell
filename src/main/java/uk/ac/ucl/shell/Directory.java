@@ -21,11 +21,13 @@ public class Directory {
     private String currentDirectory;
     private final Charset encoding;
     private final String fileSeparator;
+    private final String root;
 
     private Directory() {
-        this.encoding = StandardCharsets.UTF_8;
-        this.fileSeparator = File.separator;
-        this.currentDirectory = System.getProperty("user.dir");
+        fileSeparator = File.separator;
+        encoding = StandardCharsets.UTF_8;
+        currentDirectory = System.getProperty("user.dir");
+        root = currentDirectory.substring(0,2);
     }
 
     /**
@@ -56,7 +58,43 @@ public class Directory {
      *                     new current directory
      */
     public void setCurrentDirectory(String newDirectory) {
-        this.currentDirectory = String.valueOf(getPathTo(newDirectory));
+        this.currentDirectory = newDirectory;
+    }
+
+    public Path getPathTo(String arg) {
+        String[] paths = getPaths(arg);
+        String currentPath = getCurrentDirectory();
+        for (String path : paths) {
+            if (arg.equals(".")) {
+                continue;
+            }
+            if (arg.equals("..")) {
+                if (currentPath.equals(root)) {
+                    continue;
+                }
+                currentPath = getParentDirectory(currentPath);
+            } else {
+                currentPath += fileSeparator + path;
+            }
+        }
+        return Paths.get(currentPath);
+    }
+
+    private String[] getPaths(String arg) {
+        if (fileSeparator.equals("\\")) {
+            return arg.split("\\\\");
+        }
+        return arg.split(fileSeparator);
+    }
+
+    private String getParentDirectory(String path) {
+        int i = path.length();
+        while (i-->0) {
+            if (String.valueOf(path.charAt(i)).equals(fileSeparator)) {
+                break;
+            }
+        }
+        return path.substring(0, i);
     }
 
     /**
@@ -71,7 +109,7 @@ public class Directory {
      *                  as a String list
      */
     public ArrayList<File> getContent(String appName, String arg) {
-        checkDirectoryToHandle(appName, arg);
+        checkDirectoryExists(appName, arg);
         File directory = new File(String.valueOf(getPathTo(arg)));
         return new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
     }
@@ -129,7 +167,7 @@ public class Directory {
      */
     public BufferedReader createBufferedReader(String appName, String fileName) {
         try {
-            return Files.newBufferedReader(getPathTo(fileName), this.encoding);
+            return Files.newBufferedReader(getPathTo(fileName), encoding);
         }
         catch (IOException e) {
             throw new RuntimeException(appName + ": cannot open " + fileName);
@@ -164,15 +202,12 @@ public class Directory {
         }
     }
 
-    private Path getPathTo(String arg) {
-        return Paths.get(this.currentDirectory + this.fileSeparator + arg);
-    }
-
-    private boolean existsFile(String arg) {
+    public boolean existsFile(String arg) {
         return new File(String.valueOf(getPathTo(arg))).exists();
     }
 
-    private boolean existsDirectory(String arg) {
+    public boolean existsDirectory(String arg) {
         return new File(String.valueOf(getPathTo(arg))).isDirectory();
     }
+
 }
