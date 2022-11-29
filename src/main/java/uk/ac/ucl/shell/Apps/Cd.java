@@ -23,6 +23,6 @@ public class Cd extends Application {
     protected void eval() throws IOException {
         String subDir = args.get(0);
         directory.checkDirectoryToHandle("cd", subDir);
-        directory.setCurrentDirectory(String.valueOf(directory.getPathTo(subDir)));
+        directory.setCurrentDirectory(subDir);
     }
 }

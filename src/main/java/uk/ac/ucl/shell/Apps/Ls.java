@@ -40,7 +40,7 @@ public class Ls extends Application {
         ArrayList<File> listOfFiles = directory.getContent("ls", path);
         outputFiles(listOfFiles);
         if (!listOfFiles.isEmpty()) {
-            directory.writeNewLine(writer);
+            directory.writeLine("", writer, lineSeparator);
         }
     }
 
