@@ -22,7 +22,8 @@ import uk.ac.ucl.shell.ShellGrammarLexer;
 import uk.ac.ucl.shell.ShellGrammarParser;
 import uk.ac.ucl.shell.Directory;
 
-public class Parser {
+public class
+Parser {
 
     /** parses input and return list Commands which are a list of calls
      * @param input : <code>String</code> to be parsed 
