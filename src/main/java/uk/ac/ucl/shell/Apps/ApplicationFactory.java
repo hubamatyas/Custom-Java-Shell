@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-import uk.ac.ucl.shell.Exceptions.UknownAppException;
+import uk.ac.ucl.shell.Exceptions.UnknownAppException;
 
 public class ApplicationFactory {
 
@@ -50,7 +50,7 @@ public class ApplicationFactory {
             case "tail" -> new Tail(appName, args, input, writer);
             case "grep" -> new Grep(appName, args, input, writer);
             case "exit" -> new Exit(appName, args, input, writer);
-            default ->throw new UknownAppException(appName);
+            default ->throw new UnknownAppException(appName);
         };
     }
 

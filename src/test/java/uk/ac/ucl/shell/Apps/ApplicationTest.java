@@ -3,6 +3,9 @@ package uk.ac.ucl.shell.Apps;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +18,11 @@ public abstract class ApplicationTest {
     private ByteArrayOutputStream out;
     private OutputStreamWriter writer;
     private String appName;
-
+    private int minArgs;
+    private int maxArgs;
+//    static String[] exampleArgs = new String[]{"foo", "bar", "foobar", "lorem", "ipsum"};
+//    private String[] tooFewArgs = new String[minArgs-1];
+//    private String[] tooManyArgs = new String[maxArgs+1];
 
     @Before
     public void setUp() throws Exception {
@@ -23,6 +30,9 @@ public abstract class ApplicationTest {
         lineSeparator = System.getProperty("line.separator");
         out = new ByteArrayOutputStream();
         writer = new OutputStreamWriter(out);
+//        minArgs = setMinArgs();
+//        maxArgs = setMaxArgs();
+//        generateArgs();
     }
 
     @After
@@ -31,6 +41,8 @@ public abstract class ApplicationTest {
     }
 
     public abstract String setAppName();
+//    public abstract int setMinArgs();
+//    public abstract int setMaxArgs();
 
     public void execApp(ArrayList<String> args, String input) throws IOException {
         ApplicationFactory.getApp(appName, args, createInputStream(input), writer).exec();
@@ -50,4 +62,19 @@ public abstract class ApplicationTest {
     public ByteArrayOutputStream getOut() {
         return out;
     }
+
+//    private void generateArgs() {
+//        if (minArgs - 1 >= 0) System.arraycopy(exampleArgs, 0, tooFewArgs, 0, minArgs - 1);
+//        if (maxArgs + 1 >= 0) System.arraycopy(exampleArgs, 0, tooManyArgs, 0, maxArgs + 1);
+//    }
+//
+//    @Test(expected = MissingArgumentsException.class)
+//    public void missingArguments() throws IOException {
+//        execApp(createArgs(tooFewArgs), null);
+//    }
+//
+//    @Test(expected = TooManyArgumentsException.class)
+//    public void tooManyArguments() throws IOException {
+//        execApp(createArgs(tooManyArgs), null);
+//    }
 }
