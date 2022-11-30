@@ -1,8 +1,10 @@
 package uk.ac.ucl.shell.Apps;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
@@ -26,6 +28,13 @@ public class UniqTest extends OutputTest{
         content = buildContent(lines);
 
         generateTestFile(fileName, content);
+    }
+
+    @Override
+    @After
+    public void tearDown() throws Exception {
+        super.tearDown();
+        new File("uniqTest").delete();
     }
 
     private String buildContent(String[] lines) {
