@@ -14,7 +14,7 @@ public class Ls extends Application {
 
     @Override
     protected void checkArgs() {
-        if (this.args.size() > 1 || this.input != null) {
+        if (this.args.size() > 1) {
             throw new TooManyArgumentsException(appName);
         }
     }

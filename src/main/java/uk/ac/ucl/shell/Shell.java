@@ -14,9 +14,7 @@ public class Shell {
     }
 
     public static void main(String[] args) {
-
         if (args.length > 0) {
-
             // When running in non-interactive mode
             if (args.length != 2) {
                 System.out.println("COMP0010 shell: wrong number of arguments");
@@ -34,9 +32,8 @@ public class Shell {
                 System.out.println("COMP0010 shell: " + e.getMessage());
             }
         } else {
-            Scanner scanner = new Scanner(System.in);
-            try{
-                while(true){
+            try (Scanner scanner = new Scanner(System.in)) {
+                while (true) {
                     String prompt = Directory.getInstance().getCurrentDirectory() + "> ";
                     System.out.print(prompt);
                     try {
@@ -46,8 +43,6 @@ public class Shell {
                         Terminal.getInstance().printError("COMP0010 shell: " + e.getMessage());
                     }
                 }
-            } finally {
-                scanner.close();
             }
         }
     }

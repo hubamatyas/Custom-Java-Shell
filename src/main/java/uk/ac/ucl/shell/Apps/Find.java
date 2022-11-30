@@ -24,10 +24,11 @@ public class Find extends Application {
         if(this.args.size() == 0){
             throw new MissingArgumentsException(appName);
         }
+
         int maxArgs = this.args.get(0).equals("-name") ? 2 : 3;
         if (this.args.size() < maxArgs) {
            throw new MissingArgumentsException(appName);
-        }else if(this.args.size() > maxArgs){
+        } else if(this.args.size() > maxArgs){
             throw new TooManyArgumentsException(appName);
         }
     }

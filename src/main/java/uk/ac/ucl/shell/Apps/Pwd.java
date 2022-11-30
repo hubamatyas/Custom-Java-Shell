@@ -16,7 +16,7 @@ public class Pwd extends Application {
 
     @Override
     protected void checkArgs() {
-        if (this.args.size() != 0 || this.input != null) {
+        if (this.args.size() != 0) {
             throw new TooManyArgumentsException(appName);
         }
     }

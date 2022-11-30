@@ -18,9 +18,6 @@ public class Cat extends Application {
         if (this.args.isEmpty() && this.input == null) {
             throw new MissingArgumentsException(appName);
         }
-        if (!this.args.isEmpty() && this.input != null) {
-            throw new RuntimeException(this.appName + ": cannot read from both file and input");
-        }
     }
 
     @Override
