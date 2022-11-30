@@ -1,25 +1,40 @@
 package uk.ac.ucl.shell.Apps;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import uk.ac.ucl.shell.Shell;
 
-public class Cd implements Application {
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
-        if (args.isEmpty()) {
-            throw new RuntimeException("cd: missing argument");
-        } else if (args.size() > 1) {
-            throw new RuntimeException("cd: too many arguments");
-        }
-        String dirString = args.get(0);
-        File dir = new File(Shell.getDirectory(), dirString);
-        if (!dir.exists() || !dir.isDirectory()) {
-            throw new RuntimeException("cd: " + dirString + " is not an existing directory");
-        }
-        Shell.setDirectory(dir.getCanonicalPath());
+public class Cd extends Application {
+    public Cd(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
+        super(appName, args, input, writer);
     }
+
+    @Override
+    protected void checkArgs() {
+        if (this.args.isEmpty()) {
+            throw new MissingArgumentsException(appName);
+        }
+        if (this.args.size() > 1) {
+            throw new TooManyArgumentsException(appName);
+        }
+    }
+
+    @Override
+    protected void eval() throws IOException {
+        String subDirectory = this.args.get(0);
+        this.directory.checkDirectoryExists(this.appName, subDirectory);
+        this.directory.setCurrentDirectory(this.directory.getPathTo(subDirectory).toString());
+    }
+
+    @Override
+    protected void redirect() {}
+
+    @Override
+    protected void app(BufferedReader reader) {}
+
 }

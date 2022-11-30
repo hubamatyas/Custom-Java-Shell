@@ -1,24 +1,32 @@
 package uk.ac.ucl.shell.Apps;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class Echo implements Application{
+public class Echo extends Application {
+    public Echo(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
+    }
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
+    @Override
+    protected void checkArgs() {}
 
-        boolean atLeastOnePrinted = false;
-        for (String arg : args) {
-            output.write(arg);
-            output.write(" ");
-            output.flush();
-            atLeastOnePrinted = true;
+    @Override
+    protected void eval() throws IOException {
+        for (String arg : this.args) {
+            this.terminal.writeLine(arg, writer, " ");
         }
-        if (atLeastOnePrinted) {
-            output.write(System.getProperty("line.separator"));
-            output.flush();
+        if (!this.args.isEmpty()) {
+            this.terminal.writeLine("", writer, lineSeparator);
         }
     }
+
+    @Override
+    protected void redirect() {}
+
+    @Override
+    protected void app(BufferedReader reader) {}
 }

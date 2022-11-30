@@ -4,54 +4,82 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import uk.ac.ucl.shell.Shell;
 
-public class Grep implements Application {
-    
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output){
-        if (args.size() < 2) {
-            throw new RuntimeException("grep: wrong number of arguments");
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+
+public class Grep extends Application {
+    private int numOfFiles;
+    private Pattern pattern;
+    private String currentFile;
+
+    public Grep(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
+        this.numOfFiles = 0;
+        this.currentFile = "";
+    }
+
+    @Override
+    protected void checkArgs() {
+        if ((args.size() < 2 && input == null) || args.size() < 1) {
+            throw new MissingArgumentsException(appName);
         }
-        Pattern grepPattern = Pattern.compile(args.get(0));
-        int numOfFiles = args.size() - 1;
-        Path filePath;
-        Path[] filePathArray = new Path[numOfFiles];
-        Path currentDir = Paths.get(Shell.getDirectory());
-        for (int i = 0; i < numOfFiles; i++) {
-            filePath = currentDir.resolve(args.get(i + 1));
-            if (Files.notExists(filePath) || Files.isDirectory(filePath) ||
-                    !Files.exists(filePath) || !Files.isReadable(filePath)) {
-                throw new RuntimeException("grep: wrong file argument");
+    }
+
+    @Override
+    protected void eval() throws IOException {
+        setPattern();
+        setIsPiped();
+        redirect();
+    }
+
+    @Override
+    protected void redirect() throws IOException {
+        if (this.isPiped) {
+            this.pipedCall();
+        } else {
+            verifyFiles(args);
+            for (String arg : args) {
+                this.currentFile = arg;
+                this.simpleCall(arg);
             }
-            filePathArray[i] = filePath;
         }
-        for (int j = 0; j < filePathArray.length; j++) {
-            Charset encoding = StandardCharsets.UTF_8;
-            try (BufferedReader reader = Files.newBufferedReader(filePathArray[j], encoding)) {
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    Matcher matcher = grepPattern.matcher(line);
-                    if (matcher.find()) {
-                        if (numOfFiles > 1) {
-                            output.write(args.get(j+1));
-                            output.write(":");
-                        }
-                        output.write(line);
-                        output.write(System.getProperty("line.separator"));
-                        output.flush();
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("grep: cannot open " + args.get(j + 1));
+    }
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {
+        while (reader.ready()) {
+            String line = reader.readLine();
+            searchPattern(line);
+        }
+    }
+
+    private void verifyFiles(ArrayList<String> files) {
+        for (String file : files) {
+            this.directory.checkFileExists("grep", file);
+        }
+        this.numOfFiles = files.size();
+    }
+
+
+    private void searchPattern(String line) throws IOException {
+        Matcher matcher = this.pattern.matcher(line);
+        if (matcher.find()) {
+            if (this.numOfFiles > 1) {
+                //this.terminal.writeLine(this.currentFile + ": " + line, writer, lineSeparator);
+                this.terminal.writeLine(this.currentFile, writer, ": ");
+                this.terminal.writePatternMatch(line, matcher.start(), matcher.end(), writer, lineSeparator);
+            } else {
+                //this.terminal.writeLine(line, writer, lineSeparator);
+                this.terminal.writePatternMatch(line, matcher.start(), matcher.end(), writer, lineSeparator);
             }
         }
+    }
+
+    private void setPattern() {
+        String pattern = this.args.remove(0);
+        this.pattern = Pattern.compile(pattern);
     }
 }

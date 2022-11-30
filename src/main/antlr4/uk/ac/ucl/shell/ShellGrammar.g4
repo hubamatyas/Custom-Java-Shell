@@ -6,23 +6,23 @@ grammar ShellGrammar;
 
 //commands
 
-command : seq;
+command : seq EOF;
 
-seq :  atomicCommand SEMICOLON? | atomicCommand SEMICOLON seq*; 
+seq :  atomicCommand | atomicCommand SEMICOLON seq*; 
 
 atomicCommand : pipe | call;
 
-pipe : pipe PIPEOP call | call PIPEOP call  ;
+pipe : pipe PIPEOP call | call PIPEOP call;
 
 // call 
 
-call : redirection* argument atom*;
+call : WHITESPACE? (redirection WHITESPACE)* argument (WHITESPACE atom)* WHITESPACE?;
 
 atom : redirection | argument;
 
-redirection : REDIRECTIN argument | REDIRECTOUT argument;
+redirection : REDIRECTIN WHITESPACE? argument | REDIRECTOUT WHITESPACE? argument;
 
-argument : (UNQUOTED | DOUBLEQUOTED | SINGLEQUOTED | BACKQUOTE)+;
+argument : UNQUOTED | DOUBLEQUOTED | SINGLEQUOTED | BACKQUOTE;
 
 
 /*
@@ -35,9 +35,11 @@ PIPEOP : '|';
 REDIRECTIN : '<';
 REDIRECTOUT : '>';
 
+WHITESPACE : (' ' | '\t')+;
+
 fragment BACKQUOTE_fragment : '`' (~[\n`])* '`';
 
-UNQUOTED : ~[\n'"`;|]+;
-SINGLEQUOTED : '\'' (~[\n"])* '\'';
+UNQUOTED : ~[\n\t '"`;|]+;
+SINGLEQUOTED : '\'' (~[\n'])* '\'';
 BACKQUOTE : BACKQUOTE_fragment;
 DOUBLEQUOTED : '"' ( BACKQUOTE_fragment | ~[\n"])* '"';

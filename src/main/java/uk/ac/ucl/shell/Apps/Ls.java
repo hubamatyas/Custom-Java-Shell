@@ -1,44 +1,58 @@
 package uk.ac.ucl.shell.Apps;
 
-import uk.ac.ucl.shell.Shell;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
 
-public class Ls implements Application{
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output)
-        throws IOException{
-        File currDir;
-        if (args.isEmpty()) {
-            currDir = new File(Shell.getDirectory());
-        } else if (args.size() == 1) {
-            currDir = new File(args.get(0));
-        } else {
-            throw new RuntimeException("ls: too many arguments");
-        }
-        try {
-            File[] listOfFiles = currDir.listFiles();
-            boolean atLeastOnePrinted = false;
-            assert listOfFiles != null;
-            for (File file : listOfFiles) {
-                if (!file.getName().startsWith(".")) {
-                    output.write(file.getName());
-                    output.write("\t");
-                    output.flush();
-                    atLeastOnePrinted = true;
-                }
-            }
-            if (atLeastOnePrinted) {
-                output.write(System.getProperty("line.separator"));
-                output.flush();
-            }
-        } catch (NullPointerException e) {
-            throw new RuntimeException("ls: no such directory");
+public class Ls extends Application {
+    private String path;
+
+    public Ls(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
+    }
+
+    @Override
+    protected void checkArgs() {
+        if (this.args.size() > 1) {
+            throw new TooManyArgumentsException(appName);
         }
     }
 
+    @Override
+    protected void eval() throws IOException {
+        getDirectoryPath();
+        ls();
+    }
+
+    private void getDirectoryPath() {
+        if (this.args.isEmpty()) {
+            this.path = "";
+        } else {
+            this.path = this.args.get(0);
+        }
+    }
+
+    private void ls() throws IOException {
+        this.directory.checkDirectoryExists("ls", this.path);
+        ArrayList<File> listOfFiles = this.directory.getContent("ls", this.path);
+        outputFiles(listOfFiles);
+        if (!listOfFiles.isEmpty()) {
+            this.terminal.writeLine("", writer, lineSeparator);
+        }
+    }
+
+    private void outputFiles (ArrayList<File> listOfFiles) throws IOException {
+        for (File file : listOfFiles) {
+            if (!file.getName().startsWith(".")) {
+                this.terminal.writeLine(file.getName(), writer, "\t");
+            }
+        }
+    }
+
+    @Override
+    protected void redirect() throws IOException {}
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {}
 }

@@ -1,17 +1,34 @@
 package uk.ac.ucl.shell.Apps;
 
-import uk.ac.ucl.shell.Shell;
-
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class Pwd implements Application {
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
-    public void exec(ArrayList<String> args, InputStream input, OutputStreamWriter output) throws IOException {
-        output.write(Shell.getDirectory());
-        output.write(System.getProperty("line.separator"));
-        output.flush();
+public class Pwd extends Application {
+
+    public Pwd(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
+        super(appName, args, input, output);
     }
+
+    @Override
+    protected void checkArgs() {
+        if (this.args.size() != 0) {
+            throw new TooManyArgumentsException(appName);
+        }
+    }
+
+    @Override
+    protected void eval() throws IOException {
+        this.terminal.writeLine(this.directory.getCurrentDirectory(), writer, lineSeparator);
+    }
+
+    @Override
+    protected void redirect() throws IOException {}
+
+    @Override
+    protected void app(BufferedReader reader) throws IOException {}
 }

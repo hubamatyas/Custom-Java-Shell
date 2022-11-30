@@ -1,0 +1,16 @@
+uk\ac\ucl\shell\Apps\PwdTest.class
+uk\ac\ucl\shell\Apps\LsTest.class
+uk\ac\ucl\shell\Apps\UniqTest.class
+uk\ac\ucl\shell\Apps\EchoTest.class
+uk\ac\ucl\shell\Apps\CatTest.class
+uk\ac\ucl\shell\Apps\CdTest.class
+uk\ac\ucl\shell\Apps\FindTest.class
+uk\ac\ucl\shell\Apps\HeadTest.class
+uk\ac\ucl\shell\Parse\ParserTest.class
+uk\ac\ucl\shell\Apps\SortTest.class
+uk\ac\ucl\shell\DirectoryTest.class
+uk\ac\ucl\shell\Apps\ExitTest.class
+uk\ac\ucl\shell\ShellTest.class
+uk\ac\ucl\shell\Apps\CutTest.class
+uk\ac\ucl\shell\Apps\TailTest.class
+uk\ac\ucl\shell\Apps\GrepTest.class
