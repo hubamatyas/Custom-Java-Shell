@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import uk.ac.ucl.shell.Exceptions.InvalidOptionException;
 import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 public class Head extends Application {
     private int numOfLines;
@@ -21,12 +22,18 @@ public class Head extends Application {
     protected void checkArgs() {
         if (args.isEmpty() && input == null) {
             throw new MissingArgumentsException(appName);
+        }else if(args.isEmpty()){
+            return;
         }
-        if (args.size() > 1  && !args.get(0).equals("-n")) {
-            throw new InvalidOptionException(appName, args.get(0));
+        if (args.get(0).equals("-n")) {
+            if(args.size() > 3){
+                throw new TooManyArgumentsException(appName);
+            }
+        }else if (args.size() > 1) {
+            throw new TooManyArgumentsException(appName);
         }
         if (args.size() == 2 && input == null) {
-            throw new InvalidOptionException(appName, args.get(1));
+            throw new MissingArgumentsException(appName);
         }
     }
 
