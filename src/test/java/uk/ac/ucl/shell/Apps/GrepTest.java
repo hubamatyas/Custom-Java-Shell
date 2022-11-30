@@ -1,6 +1,7 @@
 package uk.ac.ucl.shell.Apps;
 
 import org.junit.Test;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
 
 import java.io.IOException;
 
@@ -30,5 +31,9 @@ public class GrepTest extends OutputTest{
     }
 
     // Exceptions
+    @Test(expected = MissingArgumentsException.class)
+    public void missingArgumentsException() throws IOException {
+        testOutput(createArgs(), null, null);
+    }
 
 }
