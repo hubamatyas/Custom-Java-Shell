@@ -83,7 +83,6 @@ class TestShell(unittest.TestCase):
         cmdline = "echo hello world"
         stdout = self.eval(cmdline)
         result = stdout.strip()
-        print(result)
         self.assertEqual(result, "hello world")
 
     def test_ls(self):
