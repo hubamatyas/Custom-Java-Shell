@@ -18,7 +18,8 @@ public class Cd extends Application {
     protected void checkArgs() {
         if (this.args.isEmpty()) {
             throw new MissingArgumentsException(appName);
-        } else if (this.args.size() > 1 || this.input != null) {
+        }
+        if (this.args.size() > 1) {
             throw new TooManyArgumentsException(appName);
         }
     }

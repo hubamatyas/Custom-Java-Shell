@@ -12,11 +12,7 @@ public class Echo extends Application {
     }
 
     @Override
-    protected void checkArgs() {
-        if (this.input != null) {
-            throw new RuntimeException(appName + ": cannot pipe output");
-        }
-    }
+    protected void checkArgs() {}
 
     @Override
     protected void eval() throws IOException {
