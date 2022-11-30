@@ -58,7 +58,7 @@ public class Grep extends Application {
 
     private void verifyFiles(ArrayList<String> files) {
         for (String file : files) {
-            this.directory.checkFileExists("grep", file);
+            this.directory.checkFileExists(appName, file);
         }
         this.numOfFiles = files.size();
     }

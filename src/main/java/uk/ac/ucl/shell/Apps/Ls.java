@@ -34,8 +34,8 @@ public class Ls extends Application {
     }
 
     private void ls() throws IOException {
-        this.directory.checkDirectoryExists("ls", this.path);
-        ArrayList<File> listOfFiles = this.directory.getContent("ls", this.path);
+        this.directory.checkDirectoryExists(appName, this.path);
+        ArrayList<File> listOfFiles = this.directory.getContent(appName, this.path);
         outputFiles(listOfFiles);
         if (!listOfFiles.isEmpty()) {
             this.terminal.writeLine("", writer, lineSeparator);
