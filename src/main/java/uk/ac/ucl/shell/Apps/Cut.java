@@ -66,8 +66,6 @@ public class Cut extends Application {
         for (String bytes : byteString.split(",")) {
             parseByte(bytes);
         }
-        System.out.println(this.bytesRange);
-        System.out.println(this.toEnd);
     }
 
     private void parseByte(String option) {
