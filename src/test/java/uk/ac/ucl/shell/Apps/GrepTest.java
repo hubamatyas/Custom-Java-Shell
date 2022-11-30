@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 
-public class GrepTest{
+public class GrepTest extends OutputTest{
 
     @Override
     public String setAppName() {
