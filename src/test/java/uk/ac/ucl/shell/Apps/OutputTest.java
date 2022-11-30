@@ -20,19 +20,18 @@ public abstract class OutputTest extends ApplicationTest{
     public void setUp() throws Exception {
         super.setUp();
         String fileSeparator = System.getProperty("file.separator");
-//        fileNames = new String[]{"test1.txt", "test2.txt", "text3.txt", "testDir"+fileSeparator+"foo.txt", "testDir"+fileSeparator+"foobar.txt", "testDir"+fileSeparator+"bar.txt"};
-        fileNames = new String[]{"test1.txt", "test2.txt", "text3.txt"};
+        fileNames = new String[]{"foo.txt", "foobar.txt", "lorem.txt", "testDir"+fileSeparator+"foo.txt", "testDir"+fileSeparator+"foobar.txt", "testDir"+fileSeparator+"bar.txt"};
         contents = new String[]{
                 "foo"+lineSeparator+"bar"+lineSeparator,
                 "foobar"+lineSeparator,
-                "Lorem ipsum"+lineSeparator+"dolar sit amet,"+lineSeparator+"consectetur adipiscing elit,",
-//                "fo",
-//                "fb",
-//                "ba"
+                "Lorem ipsum"+lineSeparator+"dolar sit amet,"+lineSeparator+"consectetur adipiscing elit,"+lineSeparator,
+                "fo"+lineSeparator,
+                "fb"+lineSeparator,
+                "ba"+lineSeparator
         };
-//        String currentDir = System.getProperty("user.dir");
-//        File dir = new File(currentDir+fileSeparator+"testDir");
-//        dir.mkdir();
+        String currentDir = System.getProperty("user.dir");
+        File dir = new File(currentDir+fileSeparator+"testDir");
+        dir.mkdir();
         generateTestFiles();
     }
 
@@ -44,7 +43,7 @@ public abstract class OutputTest extends ApplicationTest{
             File f = new File(fileName);
             f.delete();
         }
-//        new File("testDir").delete();
+        new File("testDir").delete();
     }
 
     protected String[] getFileNames() {
