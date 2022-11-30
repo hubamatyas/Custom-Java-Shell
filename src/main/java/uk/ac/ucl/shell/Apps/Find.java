@@ -12,11 +12,13 @@ import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 public class Find extends Application {
     private final Queue<String> toVisit;
+    private boolean relative;
     private String pattern;
 
     public Find(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
         super(appName, args, input, writer);
         this.toVisit = new LinkedList<>();
+        this.relative = false;
     }
 
     @Override
@@ -42,6 +44,7 @@ public class Find extends Application {
     private void setParams() {
         if (!this.args.get(0).equals("-name")) {
             this.toVisit.add(this.args.get(0));
+            this.relative = true;
             this.pattern = this.args.get(2);
         } else {
             this.toVisit.add("");
@@ -66,7 +69,12 @@ public class Find extends Application {
         Path absoluteDir = Paths.get(this.directory.getCurrentDirectory(), dir);
         DirectoryStream<Path> stream = Files.newDirectoryStream(absoluteDir, pattern);
         for (Path entry : stream) {
-            this.terminal.writeLine(dir + File.separator + entry.getFileName().toString(), writer, lineSeparator);
+            String line = dir + File.separator + entry.getFileName().toString();
+            if (this.relative) {
+                this.terminal.writeLine(line, writer, lineSeparator);
+            } else {
+                this.terminal.writeLine("." + line, writer, lineSeparator);
+            }
         }
     }
 
