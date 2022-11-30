@@ -124,19 +124,18 @@ public class Cut extends Application {
 
     private String notToEOL(StringBuilder sb, String line) {
         for (int i : this.bytesRange) {
-            if (i <= line.length() && i > 1) {
+            if (i <= line.length() && i > 0) {
                 sb.append(line.charAt(i-1));
             }
         }
         return sb.toString();
     }
 
-    private StringBuilder notToEOL(StringBuilder sb, String line, int end) {
+    private void notToEOL(StringBuilder sb, String line, int end) {
         for (int i : this.bytesRange) {
             if (i <= line.length() && i > 0 && i < end) {
                 sb.append(line.charAt(i-1));
             }
         }
-        return sb;
     }
 }
