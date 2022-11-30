@@ -11,24 +11,17 @@ import static org.junit.Assert.*;
 
 public class TerminalTest {
 
-    private Scanner scn;
-    private PipedInputStream in;
     private Terminal ter;
     private String lineSeparator;
-    private OutputStreamWriter output;
+    private ByteArrayOutputStream out;
+    private OutputStreamWriter outwriter;
 
     @Before
     public void setUp() throws IOException {
-        in = new PipedInputStream();
-        scn = new Scanner(in);
-        output = new OutputStreamWriter(new PipedOutputStream(in));
+        out = new ByteArrayOutputStream();
+        outwriter = new OutputStreamWriter(out);
         ter = Terminal.getInstance();
         lineSeparator = System.getProperty("line.separator");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        scn.close();
     }
 
     // getInstance()
@@ -41,20 +34,21 @@ public class TerminalTest {
     // writeLine()
     @Test
     public void writeWord() throws IOException {
-        ter.writeLine("foo", output, lineSeparator);
-        assertEquals("foo", scn.next());
+        ter.writeLine("foo", outwriter, lineSeparator);
+        String text = out.toString();
+        assertEquals("foo"+lineSeparator, out.toString());
     }
 
     @Test
     public void writeMultipleWords() throws IOException {
-        ter.writeLine("foo bar", output, lineSeparator);
-        assertEquals("foo bar", scn.next());
+        ter.writeLine("foo bar", outwriter, lineSeparator);
+        assertEquals("foo bar"+lineSeparator, out.toString());
     }
 
     @Test
     public void writeMultipleLines() throws IOException {
-        ter.writeLine("foo bar \nfoobar", output, lineSeparator);
-        assertEquals("foo bar \nfoobar", scn.next());
+        ter.writeLine("foo bar"+lineSeparator+"foobar", outwriter, lineSeparator);
+        assertEquals("foo bar"+lineSeparator+"foobar"+lineSeparator, out.toString());
     }
 
 }

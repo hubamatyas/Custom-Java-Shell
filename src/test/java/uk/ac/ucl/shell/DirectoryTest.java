@@ -30,7 +30,7 @@ public class DirectoryTest {
         dir = Directory.getInstance();
         currentDirPath = System.getProperty("user.dir");
         fileSeparator = File.separator;
-        root = currentDirPath.substring(0, 2);
+        root = currentDirPath.substring(0, 2) + fileSeparator;
     }
 
     @After
