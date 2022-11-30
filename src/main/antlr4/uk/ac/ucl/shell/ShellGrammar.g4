@@ -8,7 +8,7 @@ grammar ShellGrammar;
 
 command : seq EOF;
 
-seq :  atomicCommand | atomicCommand SEMICOLON seq*; 
+seq :  atomicCommand | atomicCommand SEMICOLON seq?; 
 
 atomicCommand : pipe | call;
 
