@@ -14,8 +14,10 @@ public class Terminal {
 
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    public static final boolean enableColour = true;
-    
+
+    // set to false when testing to avoid colour formatted output strings
+    public static final boolean enableHighlighting = false;
+
     private boolean isSysOut;
 
     private Terminal() {
@@ -64,7 +66,7 @@ public class Terminal {
      */
     public void writePatternMatch(String line, int startIndex, int endIndex, OutputStreamWriter writer, String separator) throws IOException {
         writer.write(line.substring(0, startIndex));
-        if(isSysOut && enableColour) {
+        if(isSysOut && enableHighlighting) {
             writer.write(ANSI_YELLOW_BACKGROUND + line.substring(startIndex, endIndex) + ANSI_RESET);
         }else{
             writer.write(line.substring(startIndex, endIndex));
