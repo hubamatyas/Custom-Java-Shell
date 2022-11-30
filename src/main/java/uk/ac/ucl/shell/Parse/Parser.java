@@ -99,7 +99,7 @@ Parser {
     private static String parseBackquote(String arg) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         Shell.eval(arg.substring(1, arg.length() - 1), output);
-        String text = new String(output.toByteArray(), "UTF-8");
+        String text = output.toString("UTF-8");
         text = text.replaceAll("[\\r\\n]+", " ");
         return text;
     }
