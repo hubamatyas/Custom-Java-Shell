@@ -76,7 +76,8 @@ public class Cut extends Application {
             int end = parseNumber(option.substring(firstLoc+1));
             addBytesRange(0, end);
         } else if (option.charAt(lastLoc) == '-') {
-            this.toEnd = parseNumber(option.substring(0, lastLoc));
+            int newEnd = parseNumber(option.substring(0, lastLoc));
+            this.toEnd = Math.min(this.toEnd, newEnd);
         } else if (option.contains("-")) {
             int start = parseNumber(option.substring(0, option.indexOf('-')));
             int end = parseNumber(option.substring(option.indexOf('-')+1));
