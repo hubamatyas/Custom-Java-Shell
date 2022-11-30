@@ -66,6 +66,8 @@ public class Cut extends Application {
         for (String bytes : byteString.split(",")) {
             parseByte(bytes);
         }
+        System.out.println(this.bytesRange);
+        System.out.println(this.toEnd);
     }
 
     private void parseByte(String option) {
@@ -105,6 +107,7 @@ public class Cut extends Application {
     private String cutLine(String line) {
         StringBuilder sb = new StringBuilder();
         if (this.toEnd != Integer.MAX_VALUE) {
+            notToEOL(sb, line, this.toEnd);
             return toEOL(sb, line);
         } else {
             return notToEOL(sb, line);
@@ -113,7 +116,7 @@ public class Cut extends Application {
 
     private String toEOL(StringBuilder sb, String line) {
         for (int i : this.bytesRange) {
-            if (i < this.toEnd && i <= line.length()) {
+            if (i < this.toEnd && i <= line.length() && i > 1) {
                 sb.append(line.charAt(i-1));
             }
         }
@@ -123,10 +126,19 @@ public class Cut extends Application {
 
     private String notToEOL(StringBuilder sb, String line) {
         for (int i : this.bytesRange) {
-            if (i <= line.length() && i > 0) {
+            if (i <= line.length() && i > 1) {
                 sb.append(line.charAt(i-1));
             }
         }
         return sb.toString();
+    }
+
+    private StringBuilder notToEOL(StringBuilder sb, String line, int end) {
+        for (int i : this.bytesRange) {
+            if (i <= line.length() && i > 0 && i < end) {
+                sb.append(line.charAt(i-1));
+            }
+        }
+        return sb;
     }
 }
