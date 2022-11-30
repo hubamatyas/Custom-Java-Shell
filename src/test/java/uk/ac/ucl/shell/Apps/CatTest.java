@@ -7,8 +7,6 @@ import static org.junit.Assert.*;
 
 public class CatTest {
 
-
-
     @Before
     public void setUp() throws Exception {
 
