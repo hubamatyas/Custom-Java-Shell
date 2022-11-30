@@ -44,13 +44,11 @@ public class Uniq extends Application {
         String prevLine = "";
         while (reader.ready()) {
             String line = reader.readLine();
-            if (this.caseInsensitive) {
-                line = line.toLowerCase();
-            }
+            String lineToCompare = this.caseInsensitive ? line.toLowerCase() : line;
             if (!line.equals(prevLine)) {
                 this.terminal.writeLine(line, writer, lineSeparator);
             }
-            prevLine = line;
+            prevLine = lineToCompare;
         }
     }
 

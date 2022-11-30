@@ -1,5 +1,8 @@
+uk\ac\ucl\shell\TerminalTest.class
 uk\ac\ucl\shell\Apps\PwdTest.class
+uk\ac\ucl\shell\Apps\ApplicationTest.class
 uk\ac\ucl\shell\Apps\LsTest.class
+uk\ac\ucl\shell\Apps\OutputTest.class
 uk\ac\ucl\shell\Apps\UniqTest.class
 uk\ac\ucl\shell\Apps\EchoTest.class
 uk\ac\ucl\shell\Apps\CatTest.class
