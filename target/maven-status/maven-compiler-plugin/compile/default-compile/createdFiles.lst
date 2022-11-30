@@ -14,12 +14,12 @@ uk\ac\ucl\shell\Directory.class
 uk\ac\ucl\shell\Apps\Exit.class
 uk\ac\ucl\shell\Apps\Grep.class
 uk\ac\ucl\shell\Apps\Sort.class
-uk\ac\ucl\shell\Exceptions\UknownAppException.class
 uk\ac\ucl\shell\ShellGrammarParser$RedirectionContext.class
 uk\ac\ucl\shell\Apps\Cat.class
 uk\ac\ucl\shell\Apps\Echo.class
 uk\ac\ucl\shell\Exceptions\InvalidByteRangeException.class
 uk\ac\ucl\shell\ShellGrammarParser$AtomicCommandContext.class
+uk\ac\ucl\shell\Exceptions\UnknownAppException.class
 uk\ac\ucl\shell\ShellGrammarBaseVisitor.class
 uk\ac\ucl\shell\Apps\Cut.class
 uk\ac\ucl\shell\Apps\Find.class

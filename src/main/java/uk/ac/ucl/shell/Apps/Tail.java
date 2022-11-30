@@ -9,6 +9,7 @@ import java.util.Queue;
 
 import uk.ac.ucl.shell.Exceptions.InvalidOptionException;
 import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 public class Tail extends Application {
     private int numOfLines;
@@ -22,13 +23,19 @@ public class Tail extends Application {
 
     @Override
     protected void checkArgs() {
-        if (this.args.isEmpty() && this.input == null) {
+        if (args.isEmpty() && input == null) {
             throw new MissingArgumentsException(appName);
+        }else if(args.isEmpty()){
+            return;
         }
-        if (this.args.size() > 1  && !this.args.get(0).equals("-n")) {
-            throw new InvalidOptionException(appName, args.get(0));
+        if (args.get(0).equals("-n")) {
+            if(args.size() > 3){
+                throw new TooManyArgumentsException(appName);
+            }
+        }else if (args.size() > 1) {
+            throw new TooManyArgumentsException(appName);
         }
-        if (this.args.size() == 2 && this.input == null) {
+        if (args.size() == 2 && input == null) {
             throw new MissingArgumentsException(appName);
         }
     }

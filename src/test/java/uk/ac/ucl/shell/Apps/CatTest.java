@@ -2,6 +2,7 @@ package uk.ac.ucl.shell.Apps;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,22 +17,13 @@ public class CatTest extends OutputTest {
     // Testing
     @Test
     public void singleFile() throws IOException {
-        String expectedOutput = "foo"+lineSeparator+"bar"+lineSeparator;
-        String fileName = "test.txt";
-        generateTestFile(fileName, expectedOutput);
-        testOutput(createArgs(fileName), null, expectedOutput);
+        testOutput(createArgs(getFileNames()[0]), null, getContents()[0]);
     }
 
     @Test
     public void multipleFiles() throws IOException {
-        String[] fileNames = new String[]{"test1.txt", "test2.txt"};
-        String[] contents = new String[]{
-                "foo"+lineSeparator+"bar"+lineSeparator,
-                "foobar"+lineSeparator
-        };
-        String expectedOutput = String.join("", contents);
-        generateTestFiles(fileNames, contents);
-        testOutput(createArgs(fileNames), null, expectedOutput);
+        String expectedOutput = String.join("", getContents());
+        testOutput(createArgs(getFileNames()), null, expectedOutput);
     }
 
     @Test
@@ -41,9 +33,9 @@ public class CatTest extends OutputTest {
     }
 
     // Exceptions
-    @Test(expected = RuntimeException.class)
-    public void cannotReadFromInputAndArgs() throws IOException {
-        testOutput(createArgs("foo", "bar"), "foobar", "lipsum");
+    @Test(expected = MissingArgumentsException.class)
+    public void missingArgumentsException() throws IOException {
+        testOutput(createArgs(), null, "lipsum");
     }
 
     @Test(expected = RuntimeException.class)
@@ -53,10 +45,7 @@ public class CatTest extends OutputTest {
 
     @Test(expected = RuntimeException.class)
     public void exceptionNestedFileDoesNotExist() throws IOException {
-        String contents = "foobar";
-        String fileName = "test.txt";
-        generateTestFile(fileName, contents);
-        testOutput(createArgs(fileName, "doesNotExist"), null, null);
+        testOutput(createArgs(getFileNames()[0], "doesNotExist"), null, null);
     }
 
 }

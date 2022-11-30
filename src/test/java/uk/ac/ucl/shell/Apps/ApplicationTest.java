@@ -3,6 +3,9 @@ package uk.ac.ucl.shell.Apps;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +18,6 @@ public abstract class ApplicationTest {
     private ByteArrayOutputStream out;
     private OutputStreamWriter writer;
     private String appName;
-
 
     @Before
     public void setUp() throws Exception {
@@ -50,4 +52,5 @@ public abstract class ApplicationTest {
     public ByteArrayOutputStream getOut() {
         return out;
     }
+
 }
