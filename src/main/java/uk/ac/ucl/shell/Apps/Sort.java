@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+
 public class Sort extends Application {
     private boolean reverse;
     private final List<String> fileLines;
@@ -21,7 +23,7 @@ public class Sort extends Application {
     @Override
     protected void checkArgs() {
         if (args.isEmpty() && input == null) {
-            throw new RuntimeException(appName + ": missing arguments");
+            throw new MissingArgumentsException(appName);
         }
     }
 

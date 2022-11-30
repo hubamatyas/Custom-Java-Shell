@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import uk.ac.ucl.shell.Exceptions.UknownAppException;
+
 public class ApplicationFactory {
 
     /**
@@ -48,7 +50,7 @@ public class ApplicationFactory {
             case "tail" -> new Tail(appName, args, input, writer);
             case "grep" -> new Grep(appName, args, input, writer);
             case "exit" -> new Exit(appName, args, input, writer);
-            default ->throw new RuntimeException(appName + ": unknown application");
+            default ->throw new UknownAppException(appName);
         };
     }
 

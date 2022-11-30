@@ -11,6 +11,6 @@ public class CatTest {
 
     @Before
     public void setUp() throws Exception {
-
+        
     }
 }

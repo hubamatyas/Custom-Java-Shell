@@ -74,7 +74,14 @@ public class Terminal {
         writer.flush();
     }
 
-
+    /**
+     * Writes a line to the {@code writer} OutputStream
+     * specified by {@code writer}
+     *
+     * @param message prints an error to standard output in red
+     *
+     * @throws IOException if an IO exception occurs while writing to the OutputStream
+     */
     public void printError(String message) {
         System.out.println(ANSI_RED + message + ANSI_RESET);
     }

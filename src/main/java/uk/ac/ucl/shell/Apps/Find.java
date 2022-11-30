@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
+
 public class Find extends Application {
     private final Queue<String> toVisit;
     private String pattern;
@@ -18,12 +21,14 @@ public class Find extends Application {
 
     @Override
     protected void checkArgs() {
-        if (this.args.size() < 2) {
-            throw new RuntimeException(appName + ": missing arguments");
+        if(this.args.size() == 0){
+            throw new MissingArgumentsException(appName);
         }
         int maxArgs = this.args.get(0).equals("-name") ? 2 : 3;
-        if(this.args.size() != maxArgs){
-            throw new RuntimeException(appName + ": incorrect number of arguments");
+        if (this.args.size() < maxArgs) {
+           throw new MissingArgumentsException(appName);
+        }else if(this.args.size() > maxArgs){
+            throw new TooManyArgumentsException(appName);
         }
     }
 

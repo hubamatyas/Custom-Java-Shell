@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import uk.ac.ucl.shell.Exceptions.InvalidByteRangeException;
+import uk.ac.ucl.shell.Exceptions.InvalidOptionException;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
+
 public class Cut extends Application {
     private final SortedSet<Integer> bytesRange;
     private int toEnd;
@@ -21,13 +26,13 @@ public class Cut extends Application {
     @Override
     protected void checkArgs() {
         if (this.args.size() == 2 && this.input == null) {
-            throw new RuntimeException(this.appName + ": missing arguments");
+            throw new MissingArgumentsException(appName);
         }
         if (this.args.size() > 3) {
-            throw new RuntimeException(this.appName + ": wrong number of arguments");
+            throw new TooManyArgumentsException(appName);
         }
         if (this.args.get(0).compareTo("-b") != 0) {
-            throw new RuntimeException(this.appName + ": invalid option");
+            throw new InvalidOptionException(appName, this.args.get(0));
         }
     }
 
@@ -86,7 +91,7 @@ public class Cut extends Application {
         try {
             return Integer.parseInt(str);
         } catch (Exception e) {
-            throw new RuntimeException("cut: invalid byte range");
+            throw new InvalidByteRangeException();
         }
     }
 

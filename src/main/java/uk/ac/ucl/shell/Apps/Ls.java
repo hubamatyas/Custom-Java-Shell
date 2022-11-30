@@ -3,6 +3,8 @@ package uk.ac.ucl.shell.Apps;
 import java.io.*;
 import java.util.ArrayList;
 
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
+
 public class Ls extends Application {
     private String path;
 
@@ -13,7 +15,7 @@ public class Ls extends Application {
     @Override
     protected void checkArgs() {
         if (this.args.size() > 1 || this.input != null) {
-            throw new RuntimeException(this.appName + ": too many arguments");
+            throw new TooManyArgumentsException(appName);
         }
     }
 
