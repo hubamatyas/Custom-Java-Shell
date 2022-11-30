@@ -15,17 +15,7 @@ import uk.ac.ucl.shell.Apps.ApplicationFactory;
 
 public class ParserTest {
 
-    private Parser parser;
-
-    @Before
-    public void setUp() throws Exception {
-        parser = new Parser();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
+    // Parsing calls
 
     // Parser assertion
     private void assertParsedCall(String app, String[] args, String input, String output, ParsedCall parsedCall) {
@@ -67,9 +57,6 @@ public class ParserTest {
         assertEquals(output, parsedCall.getOutput());
     }
 
-    // Command assertions
-
-    // Parse call
     @Test
     public void parseAppOneArg() throws IOException {
         ParsedCall parsedCall = Parser.parseCall("echo foo");
@@ -151,21 +138,99 @@ public class ParserTest {
     @Test
     public void parseAppMultiArgsBQOutput() throws IOException {
         ParsedCall parsedCall = Parser.parseCall("echo foo > `echo output`");
-        assertParsedCall("echo", new String[]{"foo"}, null, "input", parsedCall);
+        assertParsedCall("echo", new String[]{"foo"}, null, "output", parsedCall);
     }
 
-    @Test
-    public void parseAppMultiArgsBQNullInput() throws IOException {
+    // Exceptions
+    @Test(expected = RuntimeException.class)
+    public void invalidBackQuotedInput() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("`< input`");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidArgBackQuotedInput() throws IOException {
         ParsedCall parsedCall = Parser.parseCall("echo foo `< input`");
-        assertParsedCall("echo", new String[]{"foo"}, null, null, parsedCall);
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidBackQuotedOutput() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("`> output`");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidArgBackQuotedOutput() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("echo foo `> output`");
+        fail("Invalid call exception not thrown");
+    }
+
+
+    // Parsing commands
+
+    // Asserting size
+    private void assertSizes(int[] size, ArrayList<ArrayList<String>> commands) {
+        for (int i=0; i<commands.size(); i++) {
+            assertEquals(size[i], commands.get(i).size());
+        }
+    }
+
+    // Functionality
+    @Test
+    public void parseSingleSingleCall() {
+        ArrayList<ArrayList<String>> parsedCommands = Parser.parseCommand("echo foo");
+        assertSizes(new int[]{1}, parsedCommands);
     }
 
     @Test
-    public void parseAppMultiArgsBQNullOutput() throws IOException {
-        ParsedCall parsedCall = Parser.parseCall("echo foo `< output`");
-        assertParsedCall("echo", new String[]{"foo"}, null, null, parsedCall);
+    public void parseSemiColon() {
+        ArrayList<ArrayList<String>> parsedCommands = Parser.parseCommand("echo foo; echo bar");
+        assertSizes(new int[]{1, 1}, parsedCommands);
     }
 
-    // Parse command
+    @Test
+    public void parsePipe() {
+        ArrayList<ArrayList<String>> parsedCommands = Parser.parseCommand("echo foo | grep fo");
+        assertSizes(new int[]{2}, parsedCommands);
+    }
+
+    @Test
+    public void parsePipeSemiColon() {
+        ArrayList<ArrayList<String>> parsedCommands = Parser.parseCommand("echo foo | grep fo; echo bar | grep ba");
+        assertSizes(new int[]{2, 2}, parsedCommands);
+    }
+
+
+    // Exceptions
+    @Test(expected = RuntimeException.class)
+    public void unfinishedBackQuotes() throws IOException {
+        ArrayList<ArrayList<String>> commands = Parser.parseCommand("echo `echo bar");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void unfinishedSingleQuotes() throws IOException {
+        ArrayList<ArrayList<String>> commands = Parser.parseCommand("echo 'echo bar");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void unfinishedDoubleQuotes() throws IOException {
+        ArrayList<ArrayList<String>> commands = Parser.parseCommand("echo \"echo bar");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidSingleInput() throws IOException {
+        ArrayList<ArrayList<String>> commands = Parser.parseCommand("< input");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidSingleOutput() throws IOException {
+        ArrayList<ArrayList<String>> commands = Parser.parseCommand("> output");
+        fail("Invalid call exception not thrown");
+    }
 
 }
