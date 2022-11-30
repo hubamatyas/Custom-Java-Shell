@@ -1,14 +1,11 @@
 package uk.ac.ucl.shell.Parse;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import uk.ac.ucl.shell.ShellGrammarBaseVisitor;
 import uk.ac.ucl.shell.ShellGrammarParser.ArgumentContext;
-import uk.ac.ucl.shell.ShellGrammarParser.CallContext;
 import uk.ac.ucl.shell.ShellGrammarParser.RedirectionContext;
 
 public class CallVisitor extends ShellGrammarBaseVisitor<Void>{
@@ -23,11 +20,6 @@ public class CallVisitor extends ShellGrammarBaseVisitor<Void>{
         inputRedirect = null;
         args = new ArrayList<String>();
         return super.visit(tree);
-    }
-
-    @Override
-    public Void visitCall(CallContext ctx) {    
-        return super.visitCall(ctx);
     }
 
     @Override

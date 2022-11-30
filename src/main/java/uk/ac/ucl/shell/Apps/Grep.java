@@ -23,7 +23,7 @@ public class Grep extends Application {
 
     @Override
     protected void checkArgs() {
-        if ((args.size() < 2 && input == null) || args.size() < 1) {
+        if (args.size() < 2 && input == null || args.size() < 1) {
             throw new MissingArgumentsException(appName);
         }
     }
