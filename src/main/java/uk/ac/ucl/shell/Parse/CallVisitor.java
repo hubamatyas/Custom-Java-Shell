@@ -6,7 +6,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import uk.ac.ucl.shell.ShellGrammarBaseVisitor;
 import uk.ac.ucl.shell.ShellGrammarParser.ArgumentContext;
-import uk.ac.ucl.shell.ShellGrammarParser.AtomContext;
 import uk.ac.ucl.shell.ShellGrammarParser.CallContext;
 import uk.ac.ucl.shell.ShellGrammarParser.RedirectionContext;
 
@@ -31,31 +30,40 @@ public class CallVisitor extends ShellGrammarBaseVisitor<Void>{
 
     @Override
     public Void visitRedirection(RedirectionContext ctx) throws RuntimeException {
+        ArrayList<String> cleanedArgs;
+        try {
+            cleanedArgs = Parser.cleanArg(ctx.argument().getText());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         if(ctx.REDIRECTIN() != null){
             if(inputRedirect == null){
-                inputRedirect = ctx.argument().getText();
+                inputRedirect = cleanedArgs.remove(0);
             }else{
                 throw new RuntimeException("More than one input redirection");
             }
         }else{
             if(outputRedirect == null){
-                outputRedirect = ctx.argument().getText();
+                outputRedirect = cleanedArgs.remove(0);
             }else{
                 throw new RuntimeException("More than one output redirection");
             }
         }
+        args.addAll(cleanedArgs);
         return null;
     }
 
     @Override
-    public Void visitAtom(AtomContext ctx) {
-        return super.visitAtom(ctx);
-    }
-
-    @Override
-    public Void visitArgument(ArgumentContext ctx){
-        args.add(ctx.getText());
-        return super.visitArgument(ctx);
+    public Void visitArgument(ArgumentContext ctx) throws RuntimeException{
+        ArrayList<String> cleanedArgs;
+        try {
+            cleanedArgs = Parser.cleanArg(ctx.getText());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        args.addAll(cleanedArgs);
+        return null;
     }
 
     public String getInput(){

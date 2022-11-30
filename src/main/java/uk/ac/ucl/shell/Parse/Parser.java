@@ -61,36 +61,33 @@ Parser {
         // utilize visitor to extract arguments and input/output files
         CallVisitor visitor = new CallVisitor();
         visitor.visit(tree);
-
-        ArrayList<String> args = cleanArgs(visitor.getArgs());
+        ArrayList<String> args = visitor.getArgs();
 
         return new ParsedCall(args.remove(0), args, visitor.getInput(), visitor.getOutput());
 
     }
 
     /**
-     * @param args : <code> ArrayList{@literal <}String> </code> of raw arguments accumulated from CallVisitor
+     * @param args : <code> String </code> for raw argument from CallVisitor argument context
      * @return <code> ArrayList{@literal <}String> </code> containing the arguments interpreted using backquote parsing, globbing, and quote removal
      */
-    private static ArrayList<String> cleanArgs(ArrayList<String> args) throws IOException {
+    public static ArrayList<String> cleanArg(String arg) throws IOException {
         ArrayList<String> result = new ArrayList<>();
-        for (String arg : args) {
-            switch (arg.charAt(0)) {
-                case '\'':
-                    result.add(parseSinglequote(arg));
-                    break;
-                case '`':
-                    String text = parseBackquote(arg);
-                    List<String> splitText = Arrays.asList(text.split("[ \\t]+"));
-                    result.addAll(splitText);
-                    break;
-                case '"':
-                    result.add(parseDoublequote(arg));
-                    break;
-                default:
-                    result.addAll(parseGlobbing(arg));
-                    break;
-            }
+        switch (arg.charAt(0)) {
+            case '\'':
+                result.add(parseSinglequote(arg));
+                break;
+            case '`':
+                String text = parseBackquote(arg);
+                List<String> splitText = Arrays.asList(text.split("[ \\t]+"));
+                result.addAll(splitText);
+                break;
+            case '"':
+                result.add(parseDoublequote(arg));
+                break;
+            default:
+                result.addAll(parseGlobbing(arg));
+                break;
         }
         return result;
     }
