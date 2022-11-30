@@ -2,6 +2,8 @@ package uk.ac.ucl.shell.Apps;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 import java.io.IOException;
 
@@ -42,5 +44,28 @@ public class FindTest extends OutputTest{
     }
 
     // Exceptions
+    @Test(expected = MissingArgumentsException.class)
+    public void emptyArgumentsException() throws IOException {
+        testOutput(createArgs(), null, null);
+    }
 
+    @Test(expected = MissingArgumentsException.class)
+    public void missingArgumentsException() throws IOException {
+        testOutput(createArgs("-name"), null, null);
+    }
+
+    @Test(expected = MissingArgumentsException.class)
+    public void missingArgumentsExceptionWithSubdir() throws IOException {
+        testOutput(createArgs("subdir", "-name"), null, null);
+    }
+
+    @Test(expected = TooManyArgumentsException.class)
+    public void tooManyArgumentsException() throws IOException {
+        testOutput(createArgs("-name", "foo", "bar"), null, null);
+    }
+
+    @Test(expected = TooManyArgumentsException.class)
+    public void tooManyArgumentsExceptionWithSubdir() throws IOException {
+        testOutput(createArgs("subdir", "-name", "foo", "bar"), null, null);
+    }
 }
