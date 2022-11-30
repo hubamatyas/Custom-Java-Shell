@@ -18,6 +18,9 @@ public class Seq extends Command {
 
     @Override
     public void eval(InputStream input, OutputStream output) throws IOException{
+        if(getInputString().equals("")){
+            return;
+        }
         //parses command into atomic commands each containing calls ordered by piping
         ArrayList<ArrayList<String>> atomicCommands = Parser.parseCommand(getInputString());
         for(ArrayList<String> command : atomicCommands){
