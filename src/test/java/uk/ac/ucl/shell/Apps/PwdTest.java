@@ -2,6 +2,7 @@ package uk.ac.ucl.shell.Apps;
 
 import org.junit.Test;
 import uk.ac.ucl.shell.Directory;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 import java.io.IOException;
 
@@ -30,5 +31,8 @@ public class PwdTest extends OutputTest{
     }
 
     // Exceptions
-
+    @Test(expected = TooManyArgumentsException.class)
+    public void tooManyArgumentsException() throws IOException {
+        testOutput(createArgs("foo"), null, null);
+    }
 }
