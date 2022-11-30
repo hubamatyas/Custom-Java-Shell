@@ -3,6 +3,8 @@ package uk.ac.ucl.shell.Apps;
 import org.junit.After;
 import org.junit.Test;
 import uk.ac.ucl.shell.Directory;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 import java.io.IOException;
 
@@ -36,5 +38,8 @@ public class LsTest extends OutputTest{
     }
 
     // Exceptions
-
+    @Test(expected = TooManyArgumentsException.class)
+    public void tooManyArgumentsException() throws IOException {
+        testOutput(createArgs("foo", "bar"), null, null);
+    }
 }

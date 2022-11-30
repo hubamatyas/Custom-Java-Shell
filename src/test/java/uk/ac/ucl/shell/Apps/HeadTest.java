@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import uk.ac.ucl.shell.Exceptions.InvalidOptionException;
 import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
 public class HeadTest extends OutputTest{
 
@@ -48,12 +49,17 @@ public class HeadTest extends OutputTest{
         testOutput(createArgs("-n", "t", getFileNames()[1]), null, "");
     }
 
-    @Test(expected = InvalidOptionException.class)
-    public void wrongOptionsAmount() throws IOException{
-        testOutput(createArgs("-n", getFileNames()[2]), null, "");
+    @Test(expected = TooManyArgumentsException.class)
+    public void tooManyArgs() throws IOException{
+        testOutput(createArgs("1", "2", getFileNames()[2]), null, "");
     }
 
-    @Test(expected = InvalidOptionException.class)
+    @Test(expected = TooManyArgumentsException.class)
+    public void tooManyArgsOptions() throws IOException{
+        testOutput(createArgs("-n", "1", "2", getFileNames()[2]), null, "");
+    }
+
+    @Test(expected = MissingArgumentsException.class)
     public void noFileOptions() throws IOException{
         testOutput(createArgs("-n", "6"), null, "");
     }
@@ -62,10 +68,6 @@ public class HeadTest extends OutputTest{
     public void missingArg() throws IOException{
         testOutput(createArgs(), null, "");
     }
-
-
-
-
 
 
 }
