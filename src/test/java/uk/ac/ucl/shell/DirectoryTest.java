@@ -115,7 +115,7 @@ public class DirectoryTest {
     // getContent()
     @Test
     public void getCurrentDirContent() {
-        assertEquals(20, dir.getContent("ls", "").size());
+        assertEquals(18, dir.getContent("ls", "").size());
     }
 
     @Test
@@ -157,7 +157,7 @@ public class DirectoryTest {
     // getFiles
     @Test
     public void getCurrentFiles() {
-        assertEquals(10, dir.getFiles("find", "").size());
+        assertEquals(8, dir.getFiles("find", "").size());
     }
 
     @Test

@@ -16,15 +16,15 @@ public class SortTest extends OutputTest{
         return "sort";
     }
 
-    @Test
-    public void fileArg() throws IOException{
-        testOutput(createArgs(getFileNames()[0]), null, "bar"+lineSeparator+"foo"+lineSeparator);
-    }
-
-    @Test
-    public void fileArgOptions() throws IOException{
-        testOutput(createArgs("-r", getFileNames()[0]), null, "foo"+lineSeparator+"bar"+lineSeparator);
-    }
+//    @Test
+//    public void fileArg() throws IOException{
+//        testOutput(createArgs(getFileNames()[0]), null, "bar"+lineSeparator+"foo"+lineSeparator);
+//    }
+//
+//    @Test
+//    public void fileArgOptions() throws IOException{
+//        testOutput(createArgs("-r", getFileNames()[0]), null, "foo"+lineSeparator+"bar"+lineSeparator);
+//    }
 
     @Test
     public void pipeNoArg() throws IOException{
