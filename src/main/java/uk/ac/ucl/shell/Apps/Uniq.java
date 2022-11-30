@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+
 public class Uniq extends Application {
     private boolean caseInsensitive;
 
@@ -17,7 +19,7 @@ public class Uniq extends Application {
     @Override
     protected void checkArgs() {
         if (args.isEmpty() && input == null) {
-            throw new RuntimeException(appName + ": missing arguments");
+            throw new MissingArgumentsException(appName);
         }
     }
 

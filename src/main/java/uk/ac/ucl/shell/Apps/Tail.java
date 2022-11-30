@@ -7,6 +7,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import uk.ac.ucl.shell.Exceptions.InvalidOptionException;
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+
 public class Tail extends Application {
     private int numOfLines;
     private final Queue<String> tailLines;
@@ -20,13 +23,13 @@ public class Tail extends Application {
     @Override
     protected void checkArgs() {
         if (this.args.isEmpty() && this.input == null) {
-            throw new RuntimeException(this.appName + ": missing arguments");
+            throw new MissingArgumentsException(appName);
         }
         if (this.args.size() > 1  && !this.args.get(0).equals("-n")) {
-            throw new RuntimeException(this.appName + ": wrong argument " + args.get(0));
+            throw new InvalidOptionException(appName, args.get(0));
         }
         if (this.args.size() == 2 && this.input == null) {
-            throw new RuntimeException(this.appName + ": wrong argument " + args.get(1));
+            throw new MissingArgumentsException(appName);
         }
     }
 
@@ -76,7 +79,7 @@ public class Tail extends Application {
         try {
             return Integer.parseInt(str);
         } catch (Exception e) {
-            throw new RuntimeException("tail: invalid option");
+            throw new InvalidOptionException(appName, str);
         }
     }
 }

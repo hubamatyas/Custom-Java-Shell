@@ -7,32 +7,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class OutputTest {
-
-    private String appName;
-    protected String lineSeparator;
-
-    protected void setParameters(String appName) {
-        this.appName = appName;
-        lineSeparator = System.getProperty("line.separator");
-    }
+public abstract class OutputTest extends ApplicationTest{
 
     protected void testOutput(ArrayList<String> args, String input, String expectedOutput) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        OutputStreamWriter writer = new OutputStreamWriter(out);
-        ApplicationFactory.getApp(appName, args, createInputStream(input), writer).exec();
-        checkOutput(expectedOutput, out);
-    }
-
-    private InputStream createInputStream(String input) {
-        if (input == null) {
-            return null;
-        }
-        return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private void checkOutput(String expectedOutput, ByteArrayOutputStream output) {
-        assertEquals(expectedOutput, output.toString());
+        execApp(args, input);
+        assertEquals(expectedOutput, getOut().toString());
     }
 
     protected void generateTestFiles(String[] names, String[] contents) throws IOException{
@@ -47,8 +26,4 @@ public abstract class OutputTest {
         fileOut.close();
     }
 
-
-    protected ArrayList<String> createArgs(String... args) {
-        return new ArrayList<>(List.of(args));
-    }
 }

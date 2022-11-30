@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
+
 public class Pwd extends Application {
 
     public Pwd(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter output) {
@@ -14,8 +16,8 @@ public class Pwd extends Application {
 
     @Override
     protected void checkArgs() {
-        if (this.args.size() != 0 || this.input != null) {
-            throw new RuntimeException("pwd: too many arguments");
+        if (this.args.size() != 0) {
+            throw new TooManyArgumentsException(appName);
         }
     }
 

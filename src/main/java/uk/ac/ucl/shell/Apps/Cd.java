@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
+
 public class Cd extends Application {
     public Cd(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
         super(appName, args, input, writer);
@@ -14,9 +17,10 @@ public class Cd extends Application {
     @Override
     protected void checkArgs() {
         if (this.args.isEmpty()) {
-            throw new RuntimeException(appName + ": missing argument");
-        } else if (this.args.size() > 1 || this.input != null) {
-            throw new RuntimeException(appName + ": too many arguments");
+            throw new MissingArgumentsException(appName);
+        }
+        if (this.args.size() > 1) {
+            throw new TooManyArgumentsException(appName);
         }
     }
 

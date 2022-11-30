@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+
 public class Cat extends Application {
     public Cat(String appName, ArrayList<String> args, InputStream input, OutputStreamWriter writer) {
         super(appName, args, input, writer);
@@ -14,10 +16,7 @@ public class Cat extends Application {
     @Override
     protected void checkArgs() {
         if (this.args.isEmpty() && this.input == null) {
-            throw new RuntimeException(this.appName + ": missing arguments");
-        }
-        if (!this.args.isEmpty() && this.input != null) {
-            throw new RuntimeException(this.appName + ": cannot read from both file and input");
+            throw new MissingArgumentsException(appName);
         }
     }
 

@@ -17,7 +17,6 @@ public class Terminal {
     
     private boolean isSysOut;
 
-
     private Terminal() {
 
     }
@@ -74,7 +73,13 @@ public class Terminal {
         writer.flush();
     }
 
-
+    /**
+     * Writes a line to the {@code writer} OutputStream
+     * specified by {@code writer}
+     *
+     * @param message prints an error to standard output in red
+     *
+     */
     public void printError(String message) {
         System.out.println(ANSI_RED + message + ANSI_RESET);
     }
@@ -82,8 +87,6 @@ public class Terminal {
     /**
      * notifies the Terminal class if the current outputStream is the standard output
      * @param output  Outputstream to compare to System.out
-     *
-     * @throws IOException if an IO exception occurs while writing to the OutputStream
      */
     public void observeOutput(OutputStream output){
         isSysOut = output == System.out;

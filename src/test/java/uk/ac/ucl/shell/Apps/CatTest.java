@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class CatTest extends OutputTest {
 
-    @Before
-    public void setUp() throws Exception {
-        setParameters("cat");
+    @Override
+    public String setAppName() {
+        return "cat";
     }
 
     // Testing
@@ -41,6 +41,11 @@ public class CatTest extends OutputTest {
     }
 
     // Exceptions
+    @Test(expected = RuntimeException.class)
+    public void cannotReadFromInputAndArgs() throws IOException {
+        testOutput(createArgs("foo", "bar"), "foobar", "lipsum");
+    }
+
     @Test(expected = RuntimeException.class)
     public void exceptionSingleFileDoesNotExist() throws IOException {
         testOutput(createArgs("doesNotExist"), null, null);

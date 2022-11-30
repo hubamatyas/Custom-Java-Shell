@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
+
 public class Grep extends Application {
     private int numOfFiles;
     private Pattern pattern;
@@ -21,8 +23,8 @@ public class Grep extends Application {
 
     @Override
     protected void checkArgs() {
-        if (args.size() < 2 && input == null) {
-            throw new RuntimeException(this.appName + ": missing arguments");
+        if ((args.size() < 2 && input == null) || args.size() < 1) {
+            throw new MissingArgumentsException(appName);
         }
     }
 
