@@ -76,7 +76,8 @@ public class Cut extends Application {
             int end = parseNumber(option.substring(firstLoc+1));
             addBytesRange(0, end);
         } else if (option.charAt(lastLoc) == '-') {
-            this.toEnd = parseNumber(option.substring(0, lastLoc));
+            int newEnd = parseNumber(option.substring(0, lastLoc));
+            this.toEnd = Math.min(this.toEnd, newEnd);
         } else if (option.contains("-")) {
             int start = parseNumber(option.substring(0, option.indexOf('-')));
             int end = parseNumber(option.substring(option.indexOf('-')+1));
@@ -104,6 +105,7 @@ public class Cut extends Application {
     private String cutLine(String line) {
         StringBuilder sb = new StringBuilder();
         if (this.toEnd != Integer.MAX_VALUE) {
+            notToEOL(sb, line, this.toEnd);
             return toEOL(sb, line);
         } else {
             return notToEOL(sb, line);
@@ -112,7 +114,7 @@ public class Cut extends Application {
 
     private String toEOL(StringBuilder sb, String line) {
         for (int i : this.bytesRange) {
-            if (i < this.toEnd && i <= line.length()) {
+            if (i < this.toEnd && i <= line.length() && i > 1) {
                 sb.append(line.charAt(i-1));
             }
         }
@@ -127,5 +129,13 @@ public class Cut extends Application {
             }
         }
         return sb.toString();
+    }
+
+    private void notToEOL(StringBuilder sb, String line, int end) {
+        for (int i : this.bytesRange) {
+            if (i <= line.length() && i > 0 && i < end) {
+                sb.append(line.charAt(i-1));
+            }
+        }
     }
 }

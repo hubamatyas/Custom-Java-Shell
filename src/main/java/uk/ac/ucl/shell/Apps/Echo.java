@@ -16,11 +16,13 @@ public class Echo extends Application {
 
     @Override
     protected void eval() throws IOException {
+        String lastArg = this.args.get(this.args.size() - 1);
         for (String arg : this.args) {
-            this.terminal.writeLine(arg, writer, " ");
-        }
-        if (!this.args.isEmpty()) {
-            this.terminal.writeLine("", writer, lineSeparator);
+            if (arg.equals(lastArg)) {
+                this.terminal.writeLine(arg, writer, lineSeparator);
+            } else {
+                this.terminal.writeLine(arg, writer, " ");
+            }
         }
     }
 
