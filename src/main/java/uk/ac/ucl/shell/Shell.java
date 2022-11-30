@@ -15,7 +15,6 @@ public class Shell {
     public static void main(String[] args) {
 
         if (args.length > 0) {
-
             // When running in non-interactive mode
             if (args.length != 2) {
                 Terminal.getInstance().printError("COMP0010 shell: wrong number of arguments");
