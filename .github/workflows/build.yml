@@ -14,4 +14,4 @@ jobs:
     - name: Build the Docker image
       run: docker build -t shell .
     - name: Test Echo
-      run: docker run --rm shell /comp0010/sh -c 'echo foo'
+      run: docker run -ti --rm shell /comp0010/sh -c 'echo foo'
