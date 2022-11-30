@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="uk.ac.ucl.shell.ShellTest" time="0.085" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="uk.ac.ucl.shell.ShellTest" time="0.041" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="GB"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\asus\AppData\Local\Temp\surefire8500212036791884883\surefirebooter-20221129141259479_3.jar C:\Users\asus\AppData\Local\Temp\surefire8500212036791884883 2022-11-29T14-12-58_895-jvmRun1 surefire-20221129141259479_1tmp surefire_0-20221129141259479_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\asus\AppData\Local\Temp\surefire1153089204982122003\surefirebooter-20221129221802214_3.jar C:\Users\asus\AppData\Local\Temp\surefire1153089204982122003 2022-11-29T22-18-01_596-jvmRun1 surefire-20221129221802214_1tmp surefire_0-20221129221802214_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\asus\OneDrive - University College London\Year 2\COMP0010 Software Engineering\Coursework\java-shell-j3\target\test-classes;C:\Users\asus\OneDrive - University College London\Year 2\COMP0010 Software Engineering\Coursework\java-shell-j3\target\classes;C:\Users\asus\.m2\repository\junit\junit\4.12\junit-4.12.jar;C:\Users\asus\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\asus\.m2\repository\org\antlr\antlr4-runtime\4.7\antlr4-runtime-4.7.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\asus\AppData\Local\Temp\surefire8500212036791884883\surefirebooter-20221129141259479_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\asus\AppData\Local\Temp\surefire1153089204982122003\surefirebooter-20221129221802214_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17+35-LTS-2724"/>
@@ -56,5 +56,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="basicEchoEval" classname="uk.ac.ucl.shell.ShellTest" time="0.077"/>
+  <testcase name="basicEchoEval" classname="uk.ac.ucl.shell.ShellTest" time="0.032"/>
 </testsuite>
