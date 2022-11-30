@@ -81,7 +81,7 @@ public class Terminal {
      *
      */
     public void printError(String message) {
-        System.out.println(ANSI_RED + message + ANSI_RESET);
+        System.err.println(ANSI_RED + message + ANSI_RESET);
     }
 
     /**

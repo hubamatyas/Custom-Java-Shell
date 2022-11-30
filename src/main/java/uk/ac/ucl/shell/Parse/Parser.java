@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -131,10 +132,16 @@ Parser {
             globbingResult.add(arg);
             return globbingResult;
         }
-        Path dir = Paths.get(Directory.getInstance().getCurrentDirectory());
-        DirectoryStream<Path> stream = Files.newDirectoryStream(dir, arg);
+        String[] splitArg = arg.split("/"); 
+        String globArg = splitArg[splitArg.length-1];
+        
+        String[] globDir = Arrays.copyOfRange(splitArg, 0, splitArg.length-1);
+        Path globPath = Paths.get(".", globDir).normalize();
+
+        Path dir = Paths.get(Directory.getInstance().getCurrentDirectory(), globDir);
+        DirectoryStream<Path> stream = Files.newDirectoryStream(dir, globArg);
         for (Path entry : stream) {
-            globbingResult.add(entry.getFileName().toString());
+            globbingResult.add(globPath.resolve(entry.getFileName()).toString());
         }
         return globbingResult;
     }
