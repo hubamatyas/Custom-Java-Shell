@@ -29,6 +29,7 @@ public class Shell {
         } catch (Exception e) {
             System.out.println("COMP0010 shell: " + e.getMessage());
         }
+        
     }
 
     private static void interactiveMode() {
