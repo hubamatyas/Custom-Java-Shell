@@ -63,16 +63,13 @@ public class Grep extends Application {
         this.numOfFiles = files.size();
     }
 
-
     private void searchPattern(String line) throws IOException {
         Matcher matcher = this.pattern.matcher(line);
         if (matcher.find()) {
             if (this.numOfFiles > 1) {
-                //this.terminal.writeLine(this.currentFile + ": " + line, writer, lineSeparator);
                 this.terminal.writeLine(this.currentFile, writer, ":");
                 this.terminal.writePatternMatch(line, matcher.start(), matcher.end(), writer, lineSeparator);
             } else {
-                //this.terminal.writeLine(line, writer, lineSeparator);
                 this.terminal.writePatternMatch(line, matcher.start(), matcher.end(), writer, lineSeparator);
             }
         }
