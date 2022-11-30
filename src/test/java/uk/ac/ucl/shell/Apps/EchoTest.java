@@ -16,7 +16,7 @@ public class EchoTest extends OutputTest{
     // Testing functionality
     @Test
     public void noArg() throws IOException {
-        testOutput(createArgs(), null, lineSeparator);
+        testOutput(createArgs(""), null, lineSeparator);
     }
 
     @Test
@@ -31,7 +31,7 @@ public class EchoTest extends OutputTest{
 
     @Test
     public void ignoreInput() throws IOException {
-        testOutput(createArgs(), getFileNames()[0], lineSeparator);
+        testOutput(createArgs(""), getFileNames()[0], lineSeparator);
     }
 
 }
