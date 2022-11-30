@@ -43,7 +43,7 @@ public class Shell {
                         String cmdline = scanner.nextLine();
                         eval(cmdline, System.out);
                     } catch (Exception e) {
-                        System.out.println("COMP0010 shell: " + e.getMessage());
+                        Terminal.getInstance().printError("COMP0010 shell: " + e.getMessage());
                     }
                 }
             } finally {
