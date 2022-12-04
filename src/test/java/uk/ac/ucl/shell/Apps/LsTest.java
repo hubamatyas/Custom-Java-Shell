@@ -17,24 +17,17 @@ public class LsTest extends OutputTest{
         return "ls";
     }
 
-    @Override
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        Directory.getInstance().setCurrentDirectory(System.getProperty("user.dir"));
-    }
-
     // Functionality
     @Test
     public void lsCurrentDir() throws IOException {
         Directory dir = Directory.getInstance();
         dir.setCurrentDirectory(String.valueOf(dir.getPathTo("testDir")));
-        testOutput(createArgs(), null, "bar.txt\tfoo.txt\tfoobar.txt\t"+lineSeparator);
+        testOutput(createArgs(), null, "foobar.txt\tfoo.txt\tbar.txt\t"+lineSeparator);
     }
 
     @Test
     public void lsNestedDir() throws IOException {
-        testOutput(createArgs("testDir"), null, "bar.txt\tfoo.txt\tfoobar.txt\t"+lineSeparator);
+        testOutput(createArgs("testDir"), null, "foobar.txt\tfoo.txt\tbar.txt\t"+lineSeparator);
     }
 
     // Exceptions

@@ -18,7 +18,7 @@ public class CutTest extends OutputTest{
         return "cut";
     }
 
-    // Testing
+    // Functionality
     @Test
     public void byteRange() throws IOException {
         String expectedOutput = "fo"+lineSeparator+"ba"+lineSeparator;

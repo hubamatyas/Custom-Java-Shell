@@ -14,6 +14,7 @@ public class GrepTest extends OutputTest{
         return "grep";
     }
 
+    // Functionality
     @Test
     public void currentDirFile() throws IOException {
         testOutput(createArgs("fo", getFileNames()[0]), null, "foo"+lineSeparator);

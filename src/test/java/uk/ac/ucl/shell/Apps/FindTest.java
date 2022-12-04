@@ -33,13 +33,13 @@ public class FindTest extends OutputTest{
 
     @Test
     public void allCurrentDirFiles() throws IOException {
-        String expectedOutput = "."+fileSeparator+getFileNames()[3]+lineSeparator+"."+fileSeparator+getFileNames()[4]+lineSeparator+"."+fileSeparator+getFileNames()[0]+lineSeparator+"."+fileSeparator+getFileNames()[1]+lineSeparator;
+        String expectedOutput = "."+fileSeparator+getFileNames()[4]+lineSeparator+"."+fileSeparator+getFileNames()[3]+lineSeparator+"."+fileSeparator+getFileNames()[1]+lineSeparator+"."+fileSeparator+getFileNames()[0]+lineSeparator;
         testOutput(createArgs("-name", "foo*"), null, expectedOutput);
     }
 
     @Test
     public void nestedDirFiles() throws IOException {
-        String expectedOutput = getFileNames()[3]+lineSeparator+getFileNames()[4]+lineSeparator;
+        String expectedOutput = getFileNames()[4]+lineSeparator+getFileNames()[3]+lineSeparator;
         testOutput(createArgs("testDir", "-name", "foo*"), null, expectedOutput);
     }
 

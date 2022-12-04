@@ -11,31 +11,31 @@ import java.io.File;
 public class DirectoryTest {
 
     Directory dir;
-    String currentDirPath;
+    String workingDir;
     String fileSeparator;
     String root;
 
-    private String getPathToParentHelper() {
-        int i = currentDirPath.length() - 1;
+    private String getPathToParentHelper(String dirPath) {
+        int i = dirPath.length() - 1;
         while (i-- > 0) {
-            if (String.valueOf(currentDirPath.charAt(i)).equals(fileSeparator)) {
+            if (String.valueOf(dirPath.charAt(i)).equals(fileSeparator)) {
                 break;
             }
         }
-        return currentDirPath.substring(0, i);
+        return dirPath.substring(0, i+1);
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         dir = Directory.getInstance();
-        currentDirPath = System.getProperty("user.dir");
+        workingDir = System.getProperty("user.dir");
         fileSeparator = File.separator;
-        root = currentDirPath.substring(0, 2) + fileSeparator;
+        root = workingDir.substring(0, 2) + fileSeparator;
     }
 
     @After
-    public void tearDown() throws Exception {
-        dir.setCurrentDirectory(currentDirPath);
+    public void tearDown() {
+        dir.setCurrentDirectory(workingDir);
     }
 
     // getInstance()
@@ -49,20 +49,20 @@ public class DirectoryTest {
     // getCurrentDirectory()
     @Test
     public void getCurrentDirectory() {
-        assertEquals(currentDirPath, dir.getCurrentDirectory());
+        assertEquals(workingDir, dir.getCurrentDirectory());
     }
 
     // getPathTo()
     @Test
     public void getPathToParent() {
-        String rootDir = getPathToParentHelper();
-        assertEquals(rootDir, String.valueOf(dir.getPathTo("..")));
+        String parentDir = getPathToParentHelper(workingDir);
+        assertEquals(parentDir, String.valueOf(dir.getPathTo("..")));
     }
 
     @Test
     public void getPathToCurrentDir() {
-        assertEquals(currentDirPath, String.valueOf(dir.getPathTo("")));
-        assertEquals(currentDirPath, String.valueOf(dir.getPathTo(".")));
+        assertEquals(workingDir, String.valueOf(dir.getPathTo("")));
+        assertEquals(workingDir, String.valueOf(dir.getPathTo(".")));
     }
 
     // existsDirectory()
@@ -95,29 +95,12 @@ public class DirectoryTest {
     @Test
     public void setCurrentDirToCurrentDir() {
         dir.setCurrentDirectory(String.valueOf(dir.getPathTo("")));
-        assertEquals(currentDirPath, dir.getCurrentDirectory());
+        assertEquals(workingDir, dir.getCurrentDirectory());
         dir.setCurrentDirectory(String.valueOf(dir.getPathTo(".")));
-        assertEquals(currentDirPath, dir.getCurrentDirectory());
-    }
-
-    @Test
-    public void setCurrentDirToParent() {
-        dir.setCurrentDirectory(getPathToParentHelper());
-        assertTrue(dir.existsDirectory("java-shell-j3"));
-    }
-
-    @Test
-    public void setCurrentDirToParentOfRoot() {
-        dir.setCurrentDirectory(root);
-        assertEquals(root, String.valueOf(dir.getPathTo("..")));
+        assertEquals(workingDir, dir.getCurrentDirectory());
     }
 
     // getContent()
-    @Test
-    public void getCurrentDirContent() {
-        assertEquals(18, dir.getContent("ls", "").size());
-    }
-
     @Test
     public void getNestedDirContent() {
         assertEquals(2, dir.getContent("ls", "src").size());
@@ -134,11 +117,6 @@ public class DirectoryTest {
     }
 
     // getSubDirectories
-    @Test
-    public void getCurrentSubDirContent() {
-        assertEquals(10, dir.getSubDirectories("find", "").size());
-    }
-
     @Test
     public void getNestedSubDirContent() {
         assertEquals(2, dir.getSubDirectories("find", "src").size());
@@ -157,7 +135,7 @@ public class DirectoryTest {
     // getFiles
     @Test
     public void getCurrentFiles() {
-        assertEquals(8, dir.getFiles("find", "").size());
+        assertEquals(7, dir.getFiles("find", "").size());
     }
 
     @Test

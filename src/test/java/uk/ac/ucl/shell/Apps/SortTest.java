@@ -18,13 +18,7 @@ public class SortTest extends OutputTest{
         return "sort";
     }
 
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        Directory.getInstance().setCurrentDirectory(System.getProperty("user.dir"));
-    }
-
+    // Functionality
     @Test
     public void fileArg() throws IOException{
         testOutput(createArgs(getFileNames()[0]), null, "bar"+lineSeparator+"foo"+lineSeparator);

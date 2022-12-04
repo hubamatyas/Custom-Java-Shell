@@ -13,7 +13,7 @@ public class EchoTest extends OutputTest{
         return "echo";
     }
 
-    // Testing functionality
+    // Functionality
     @Test
     public void noArg() throws IOException {
         testOutput(createArgs(""), null, lineSeparator);

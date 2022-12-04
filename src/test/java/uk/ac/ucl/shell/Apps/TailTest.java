@@ -20,14 +20,7 @@ public class TailTest extends OutputTest{
         return "tail";
     }
 
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        Directory.getInstance().setCurrentDirectory(System.getProperty("user.dir"));
-    }
-
-
+    // Functionality
     @Test
     public void fileArgOptions() throws IOException{
         testOutput(createArgs("-n", "5", getFileNames()[1]), null, getContents()[1]);
