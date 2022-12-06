@@ -39,6 +39,7 @@ public class SortTest extends OutputTest{
         testOutput(createArgs("-r"), getContents()[0], "foo"+lineSeparator+"bar"+lineSeparator);
     }
 
+    // Exceptions
     @Test(expected = MissingArgumentsException.class)
     public void missingArg() throws IOException{
         testOutput(createArgs(), null, "");
