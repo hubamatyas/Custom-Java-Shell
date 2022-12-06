@@ -45,7 +45,7 @@ public class Uniq extends Application {
         while (reader.ready()) {
             String line = reader.readLine();
             String lineToCompare = this.caseInsensitive ? line.toLowerCase() : line;
-            if (!line.equals(prevLine)) {
+            if (!lineToCompare.equals(prevLine)) {
                 this.terminal.writeLine(line, writer, lineSeparator);
             }
             prevLine = lineToCompare;

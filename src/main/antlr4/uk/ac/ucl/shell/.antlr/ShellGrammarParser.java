@@ -543,10 +543,22 @@ public class ShellGrammarParser extends Parser {
 	}
 
 	public static class ArgumentContext extends ParserRuleContext {
-		public TerminalNode UNQUOTED() { return getToken(ShellGrammarParser.UNQUOTED, 0); }
-		public TerminalNode DOUBLEQUOTED() { return getToken(ShellGrammarParser.DOUBLEQUOTED, 0); }
-		public TerminalNode SINGLEQUOTED() { return getToken(ShellGrammarParser.SINGLEQUOTED, 0); }
-		public TerminalNode BACKQUOTE() { return getToken(ShellGrammarParser.BACKQUOTE, 0); }
+		public List<TerminalNode> UNQUOTED() { return getTokens(ShellGrammarParser.UNQUOTED); }
+		public TerminalNode UNQUOTED(int i) {
+			return getToken(ShellGrammarParser.UNQUOTED, i);
+		}
+		public List<TerminalNode> DOUBLEQUOTED() { return getTokens(ShellGrammarParser.DOUBLEQUOTED); }
+		public TerminalNode DOUBLEQUOTED(int i) {
+			return getToken(ShellGrammarParser.DOUBLEQUOTED, i);
+		}
+		public List<TerminalNode> SINGLEQUOTED() { return getTokens(ShellGrammarParser.SINGLEQUOTED); }
+		public TerminalNode SINGLEQUOTED(int i) {
+			return getToken(ShellGrammarParser.SINGLEQUOTED, i);
+		}
+		public List<TerminalNode> BACKQUOTE() { return getTokens(ShellGrammarParser.BACKQUOTE); }
+		public TerminalNode BACKQUOTE(int i) {
+			return getToken(ShellGrammarParser.BACKQUOTE, i);
+		}
 		public ArgumentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -558,18 +570,37 @@ public class ShellGrammarParser extends Parser {
 		enterRule(_localctx, 14, RULE_argument);
 		int _la;
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(82);
-			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << UNQUOTED) | (1L << SINGLEQUOTED) | (1L << BACKQUOTE) | (1L << DOUBLEQUOTED))) != 0)) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
+			setState(83); 
+			_errHandler.sync(this);
+			_alt = 1;
+			do {
+				switch (_alt) {
+				case 1:
+					{
+					{
+					setState(82);
+					_la = _input.LA(1);
+					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << UNQUOTED) | (1L << SINGLEQUOTED) | (1L << BACKQUOTE) | (1L << DOUBLEQUOTED))) != 0)) ) {
+					_errHandler.recoverInline(this);
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
+						consume();
+					}
+					}
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
+				setState(85); 
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
 		catch (RecognitionException re) {
@@ -599,28 +630,29 @@ public class ShellGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\13W\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\13Z\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\3\2\3\2\3\3\3\3"+
 		"\3\3\3\3\5\3\32\n\3\5\3\34\n\3\3\4\3\4\5\4 \n\4\3\5\3\5\3\5\3\5\3\5\3"+
 		"\5\3\5\3\5\7\5*\n\5\f\5\16\5-\13\5\3\6\5\6\60\n\6\3\6\3\6\3\6\7\6\65\n"+
 		"\6\f\6\16\68\13\6\3\6\3\6\3\6\7\6=\n\6\f\6\16\6@\13\6\3\6\5\6C\n\6\3\7"+
-		"\3\7\5\7G\n\7\3\b\3\b\5\bK\n\b\3\b\3\b\3\b\5\bP\n\b\3\b\5\bS\n\b\3\t\3"+
-		"\t\3\t\2\3\b\n\2\4\6\b\n\f\16\20\2\3\3\2\b\13\2Z\2\22\3\2\2\2\4\33\3\2"+
-		"\2\2\6\37\3\2\2\2\b!\3\2\2\2\n/\3\2\2\2\fF\3\2\2\2\16R\3\2\2\2\20T\3\2"+
-		"\2\2\22\23\5\4\3\2\23\24\7\2\2\3\24\3\3\2\2\2\25\34\5\6\4\2\26\27\5\6"+
-		"\4\2\27\31\7\3\2\2\30\32\5\4\3\2\31\30\3\2\2\2\31\32\3\2\2\2\32\34\3\2"+
-		"\2\2\33\25\3\2\2\2\33\26\3\2\2\2\34\5\3\2\2\2\35 \5\b\5\2\36 \5\n\6\2"+
-		"\37\35\3\2\2\2\37\36\3\2\2\2 \7\3\2\2\2!\"\b\5\1\2\"#\5\n\6\2#$\7\4\2"+
-		"\2$%\5\n\6\2%+\3\2\2\2&\'\f\4\2\2\'(\7\4\2\2(*\5\n\6\2)&\3\2\2\2*-\3\2"+
-		"\2\2+)\3\2\2\2+,\3\2\2\2,\t\3\2\2\2-+\3\2\2\2.\60\7\7\2\2/.\3\2\2\2/\60"+
-		"\3\2\2\2\60\66\3\2\2\2\61\62\5\16\b\2\62\63\7\7\2\2\63\65\3\2\2\2\64\61"+
-		"\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\679\3\2\2\28\66\3\2\2"+
-		"\29>\5\20\t\2:;\7\7\2\2;=\5\f\7\2<:\3\2\2\2=@\3\2\2\2><\3\2\2\2>?\3\2"+
-		"\2\2?B\3\2\2\2@>\3\2\2\2AC\7\7\2\2BA\3\2\2\2BC\3\2\2\2C\13\3\2\2\2DG\5"+
-		"\16\b\2EG\5\20\t\2FD\3\2\2\2FE\3\2\2\2G\r\3\2\2\2HJ\7\5\2\2IK\7\7\2\2"+
-		"JI\3\2\2\2JK\3\2\2\2KL\3\2\2\2LS\5\20\t\2MO\7\6\2\2NP\7\7\2\2ON\3\2\2"+
-		"\2OP\3\2\2\2PQ\3\2\2\2QS\5\20\t\2RH\3\2\2\2RM\3\2\2\2S\17\3\2\2\2TU\t"+
-		"\2\2\2U\21\3\2\2\2\16\31\33\37+/\66>BFJOR";
+		"\3\7\5\7G\n\7\3\b\3\b\5\bK\n\b\3\b\3\b\3\b\5\bP\n\b\3\b\5\bS\n\b\3\t\6"+
+		"\tV\n\t\r\t\16\tW\3\t\2\3\b\n\2\4\6\b\n\f\16\20\2\3\3\2\b\13\2^\2\22\3"+
+		"\2\2\2\4\33\3\2\2\2\6\37\3\2\2\2\b!\3\2\2\2\n/\3\2\2\2\fF\3\2\2\2\16R"+
+		"\3\2\2\2\20U\3\2\2\2\22\23\5\4\3\2\23\24\7\2\2\3\24\3\3\2\2\2\25\34\5"+
+		"\6\4\2\26\27\5\6\4\2\27\31\7\3\2\2\30\32\5\4\3\2\31\30\3\2\2\2\31\32\3"+
+		"\2\2\2\32\34\3\2\2\2\33\25\3\2\2\2\33\26\3\2\2\2\34\5\3\2\2\2\35 \5\b"+
+		"\5\2\36 \5\n\6\2\37\35\3\2\2\2\37\36\3\2\2\2 \7\3\2\2\2!\"\b\5\1\2\"#"+
+		"\5\n\6\2#$\7\4\2\2$%\5\n\6\2%+\3\2\2\2&\'\f\4\2\2\'(\7\4\2\2(*\5\n\6\2"+
+		")&\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,\t\3\2\2\2-+\3\2\2\2.\60\7\7"+
+		"\2\2/.\3\2\2\2/\60\3\2\2\2\60\66\3\2\2\2\61\62\5\16\b\2\62\63\7\7\2\2"+
+		"\63\65\3\2\2\2\64\61\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\67"+
+		"9\3\2\2\28\66\3\2\2\29>\5\20\t\2:;\7\7\2\2;=\5\f\7\2<:\3\2\2\2=@\3\2\2"+
+		"\2><\3\2\2\2>?\3\2\2\2?B\3\2\2\2@>\3\2\2\2AC\7\7\2\2BA\3\2\2\2BC\3\2\2"+
+		"\2C\13\3\2\2\2DG\5\16\b\2EG\5\20\t\2FD\3\2\2\2FE\3\2\2\2G\r\3\2\2\2HJ"+
+		"\7\5\2\2IK\7\7\2\2JI\3\2\2\2JK\3\2\2\2KL\3\2\2\2LS\5\20\t\2MO\7\6\2\2"+
+		"NP\7\7\2\2ON\3\2\2\2OP\3\2\2\2PQ\3\2\2\2QS\5\20\t\2RH\3\2\2\2RM\3\2\2"+
+		"\2S\17\3\2\2\2TV\t\2\2\2UT\3\2\2\2VW\3\2\2\2WU\3\2\2\2WX\3\2\2\2X\21\3"+
+		"\2\2\2\17\31\33\37+/\66>BFJORW";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

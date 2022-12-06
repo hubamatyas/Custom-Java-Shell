@@ -23,7 +23,7 @@ public class Grep extends Application {
 
     @Override
     protected void checkArgs() {
-        if ((args.size() < 2 && input == null) || args.size() < 1) {
+        if (args.size() < 2 && input == null || args.size() < 1) {
             throw new MissingArgumentsException(appName);
         }
     }
@@ -58,21 +58,18 @@ public class Grep extends Application {
 
     private void verifyFiles(ArrayList<String> files) {
         for (String file : files) {
-            this.directory.checkFileExists("grep", file);
+            this.directory.checkFileExists(appName, file);
         }
         this.numOfFiles = files.size();
     }
-
 
     private void searchPattern(String line) throws IOException {
         Matcher matcher = this.pattern.matcher(line);
         if (matcher.find()) {
             if (this.numOfFiles > 1) {
-                //this.terminal.writeLine(this.currentFile + ": " + line, writer, lineSeparator);
-                this.terminal.writeLine(this.currentFile, writer, ": ");
+                this.terminal.writeLine(this.currentFile, writer, ":");
                 this.terminal.writePatternMatch(line, matcher.start(), matcher.end(), writer, lineSeparator);
             } else {
-                //this.terminal.writeLine(line, writer, lineSeparator);
                 this.terminal.writePatternMatch(line, matcher.start(), matcher.end(), writer, lineSeparator);
             }
         }

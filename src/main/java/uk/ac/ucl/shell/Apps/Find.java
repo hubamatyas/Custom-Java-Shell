@@ -58,7 +58,7 @@ public class Find extends Application {
         }
 
         String nextDir = this.toVisit.remove();
-        for (String child : this.directory.getSubDirectories("find", nextDir)) {
+        for (String child : this.directory.getSubDirectories(appName, nextDir)) {
             this.toVisit.add(nextDir + File.separator + child);
             find();
         }
