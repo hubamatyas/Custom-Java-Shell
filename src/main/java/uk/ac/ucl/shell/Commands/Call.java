@@ -24,7 +24,8 @@ public class Call extends Command {
     @Override
     public void eval(InputStream input, OutputStream output) throws IOException{
         ParsedCall parsedCall = Parser.parseCall(getInputString());
-        
+
+        boolean outputRedirect = false;
         if(parsedCall.hasInput()){
             File file = new File(Directory.getInstance().getCurrentDirectory(), parsedCall.getInput());
             input = new FileInputStream(file);
@@ -32,10 +33,12 @@ public class Call extends Command {
         if(parsedCall.hasOutput()){
             File file = new File(Directory.getInstance().getCurrentDirectory(), parsedCall.getOutput());
             output = new FileOutputStream(file);
+            outputRedirect = true;
         }
         Terminal.getInstance().observeOutput(output);
         OutputStreamWriter writer = new OutputStreamWriter(output);
         ApplicationFactory.getApp(parsedCall.getApp(), parsedCall.getArgs(), input, writer).exec();
+        if(outputRedirect) writer.close();
     }
 
     

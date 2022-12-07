@@ -44,9 +44,12 @@ public class ShellTest {
     @Test
     public void produceOutput() throws IOException {
         Shell.eval("echo foo > output.txt", out);
+        scn.close();
         File f = new File("output.txt");
         assertTrue(f.exists());
-        f.delete();
+        if (!f.delete()) {
+            throw new RuntimeException("File not deleted");
+        };
     }
 
     @Test
