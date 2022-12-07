@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -141,6 +142,31 @@ public class ParserTest {
         assertParsedCall("echo", new String[]{"foo"}, null, "output", parsedCall);
     }
 
+    @Test
+    public void parseDoubleQuotes() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("echo \"foo\" bar");
+        assertParsedCall("echo", new String[]{"foo", "bar"}, null, null, parsedCall);
+    }
+
+    @Test
+    public void parseSingleQuotes() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("echo 'foo' bar");
+        assertParsedCall("echo", new String[]{"foo", "bar"}, null, null, parsedCall);
+    }
+
+    @Test
+    public void ignoreBacktickInQuote() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("echo \"`foo\"");
+        assertParsedCall("echo", new String[]{"`foo"}, null, null, parsedCall);
+    }
+
+    // Globbing
+    @Test
+    public void globbing() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("cat system_test/*");
+        assertParsedCall("cat", new String[]{"system_test"+File.separator+"tests.py"}, null, null, parsedCall);
+    }
+
     // Exceptions
     @Test(expected = RuntimeException.class)
     public void invalidBackQuotedInput() throws IOException {
@@ -163,6 +189,18 @@ public class ParserTest {
     @Test(expected = RuntimeException.class)
     public void invalidArgBackQuotedOutput() throws IOException {
         ParsedCall parsedCall = Parser.parseCall("echo foo `> output`");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void doubleInput() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("echo foo < input < input");
+        fail("Invalid call exception not thrown");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void doubleOutput() throws IOException {
+        ParsedCall parsedCall = Parser.parseCall("echo foo > output > output");
         fail("Invalid call exception not thrown");
     }
 

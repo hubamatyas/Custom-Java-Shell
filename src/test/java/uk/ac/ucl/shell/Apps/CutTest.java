@@ -18,7 +18,7 @@ public class CutTest extends OutputTest{
         return "cut";
     }
 
-    // Testing
+    // Functionality
     @Test
     public void byteRange() throws IOException {
         String expectedOutput = "fo"+lineSeparator+"ba"+lineSeparator;
@@ -35,6 +35,18 @@ public class CutTest extends OutputTest{
     public void multipleByteRanges() throws IOException {
         String expectedOutput = "Loem p"+lineSeparator+"doar i"+lineSeparator+"cosece"+lineSeparator;
         testOutput(createArgs("-b", "1-2,4-6,8", getFileNames()[2]), null, expectedOutput);
+    }
+
+    @Test
+    public void toEOL() throws IOException{
+        String expectedOutput = generateLines("em ipsum", "ar sit amet", "sectetur adipiscing elit");
+        testOutput(createArgs("-b", "4-,5-", getFileNames()[2]), null, expectedOutput);
+    }
+
+    @Test
+    public void startTo() throws IOException {
+        String expectedOutput = generateLines("Lor", "dol", "con");
+        testOutput(createArgs("-b", "-2,-3", getFileNames()[2]), null, expectedOutput);
     }
 
     @Test

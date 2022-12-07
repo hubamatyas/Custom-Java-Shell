@@ -6,9 +6,7 @@ import org.junit.Before;
 import static org.junit.Assert.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class OutputTest extends ApplicationTest{
 
@@ -20,14 +18,15 @@ public abstract class OutputTest extends ApplicationTest{
     public void setUp() throws Exception {
         super.setUp();
         String fileSeparator = System.getProperty("file.separator");
-        fileNames = new String[]{"foo.txt", "foobar.txt", "lorem.txt", "testDir"+fileSeparator+"foo.txt", "testDir"+fileSeparator+"foobar.txt", "testDir"+fileSeparator+"bar.txt"};
+        fileNames = new String[]{"foo.txt", "foobar.txt", "lorem.txt", "testDir"+fileSeparator+"foo.txt", "testDir"+fileSeparator+"foobar.txt", "testDir"+fileSeparator+"bar.txt", "uniqtest"};
         contents = new String[]{
-                "foo"+lineSeparator+"bar"+lineSeparator,
-                "foobar"+lineSeparator,
-                "Lorem ipsum"+lineSeparator+"dolar sit amet,"+lineSeparator+"consectetur adipiscing elit,"+lineSeparator,
-                "fo"+lineSeparator,
-                "fb"+lineSeparator,
-                "ba"+lineSeparator
+                generateLines("foo", "bar"),
+                generateLines("foobar"),
+                generateLines("Lorem ipsum", "dolar sit amet", "consectetur adipiscing elit"),
+                generateLines("fo"),
+                generateLines("fb"),
+                generateLines("ba"),
+                generateLines("abba", "ab", "ab", "zz", "ab", "Ab", "Zz", "zz", "zz", "abbba", "abba", "Abba")
         };
         String currentDir = System.getProperty("user.dir");
         File dir = new File(currentDir+fileSeparator+"testDir");
@@ -69,6 +68,14 @@ public abstract class OutputTest extends ApplicationTest{
         FileWriter fileOut = new FileWriter(name);
         fileOut.write(content);
         fileOut.close();
+    }
+
+    protected String generateLines(String... lines) {
+        StringBuilder result = new StringBuilder();
+        for (String line : lines) {
+            result.append(line+lineSeparator);
+        }
+        return result.toString();
     }
 
 }

@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import uk.ac.ucl.shell.Directory;
 import uk.ac.ucl.shell.Exceptions.MissingArgumentsException;
 import uk.ac.ucl.shell.Exceptions.TooManyArgumentsException;
 
@@ -18,6 +19,7 @@ public abstract class ApplicationTest {
     private ByteArrayOutputStream out;
     private OutputStreamWriter writer;
     private String appName;
+    private String currentDir;
 
     @Before
     public void setUp() throws Exception {
@@ -25,11 +27,13 @@ public abstract class ApplicationTest {
         lineSeparator = System.getProperty("line.separator");
         out = new ByteArrayOutputStream();
         writer = new OutputStreamWriter(out);
+        currentDir = System.getProperty("user.dir");
     }
 
     @After
     public void tearDown() throws Exception {
         writer.close();
+        Directory.getInstance().setCurrentDirectory(currentDir);
     }
 
     public abstract String setAppName();

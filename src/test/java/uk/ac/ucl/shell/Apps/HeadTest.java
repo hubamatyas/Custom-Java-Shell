@@ -18,6 +18,7 @@ public class HeadTest extends OutputTest{
         return "head";
     }
 
+    // Functionality
     @Test
     public void fileArg() throws IOException{
         testOutput(createArgs(getFileNames()[0]), null, getContents()[0]);

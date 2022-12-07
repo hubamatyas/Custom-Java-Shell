@@ -13,21 +13,4 @@ public class ExitTest extends ApplicationTest{
         return "exit";
     }
 
-    @Test
-    public void pass() {
-        assertTrue(true);
-    }
-
-    //    @Test
-//    public void exitSuccess() throws IOException {
-//        execApp(createArgs(), null);
-//        fail("Failed to exit");
-//    }
-//
-//    @Test
-//    public void ignoreInput() throws IOException {
-//        execApp(createArgs(), "ignoreMe");
-//        fail("Failed to exit");
-//    }
-
 }

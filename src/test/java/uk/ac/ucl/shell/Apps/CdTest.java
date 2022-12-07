@@ -25,7 +25,7 @@ public class CdTest extends ApplicationTest{
                 break;
             }
         }
-        return dir.substring(0, i);
+        return dir.substring(0, i+1);
     }
 
     @Override
@@ -38,18 +38,11 @@ public class CdTest extends ApplicationTest{
     }
 
     @Override
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        dir.setCurrentDirectory(currentDir);
-    }
-
-    @Override
     public String setAppName() {
         return "cd";
     }
 
-    // Test functionality
+    // Functionality
     @Test
     public void cdEmpty() throws IOException {
         execApp(createArgs(""), null);
@@ -72,13 +65,6 @@ public class CdTest extends ApplicationTest{
     public void cdChildDir() throws IOException {
         execApp(createArgs("src"), null);
         assertEquals(currentDir+fileSeparator+"src", dir.getCurrentDirectory());
-    }
-
-    @Test
-    public void cdParentThenChild() throws IOException {
-        execApp(createArgs(".."), null);
-        execApp(createArgs("java-shell-j3"), null);
-        assertEquals(currentDir, dir.getCurrentDirectory());
     }
 
     // Exceptions

@@ -14,6 +14,7 @@ public class GrepTest extends OutputTest{
         return "grep";
     }
 
+    // Functionality
     @Test
     public void currentDirFile() throws IOException {
         testOutput(createArgs("fo", getFileNames()[0]), null, "foo"+lineSeparator);
@@ -21,7 +22,7 @@ public class GrepTest extends OutputTest{
 
     @Test
     public void currentDirsFile() throws IOException {
-        testOutput(createArgs("fo", getFileNames()[0], getFileNames()[1]), null, "foo.txt: foo"+lineSeparator+"foobar.txt: foobar"+lineSeparator);
+        testOutput(createArgs("fo", getFileNames()[0], getFileNames()[1]), null, "foo.txt:foo"+lineSeparator+"foobar.txt:foobar"+lineSeparator);
     }
 
     @Test

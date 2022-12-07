@@ -14,7 +14,7 @@ public class CatTest extends OutputTest {
         return "cat";
     }
 
-    // Testing
+    // Functionality
     @Test
     public void singleFile() throws IOException {
         testOutput(createArgs(getFileNames()[0]), null, getContents()[0]);
