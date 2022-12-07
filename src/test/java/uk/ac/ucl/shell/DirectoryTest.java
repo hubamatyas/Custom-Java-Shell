@@ -118,7 +118,7 @@ public class DirectoryTest {
 
     // getSubDirectories
     @Test
-    public void getNestedSubDirContent() {
+    public void getNestedSubDirs() {
         assertEquals(2, dir.getSubDirectories("find", "src").size());
     }
 
@@ -134,13 +134,8 @@ public class DirectoryTest {
 
     // getFiles
     @Test
-    public void getCurrentFiles() {
-        assertEquals(7, dir.getFiles("find", "").size());
-    }
-
-    @Test
-    public void getNestedFiles() {
-        assertEquals(1, dir.getFiles("find", "system_test").size());
+    public void getFiles() {
+        assertEquals(3, dir.getFiles("find", "test/dir1").size());
     }
 
     @Test(expected = RuntimeException.class)

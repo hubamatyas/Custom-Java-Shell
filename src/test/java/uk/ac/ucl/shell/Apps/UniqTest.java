@@ -22,10 +22,10 @@ public class UniqTest extends OutputTest{
         testOutput(createArgs(getFileNames()[6]), null, generateLines("abba", "ab", "zz", "ab", "Ab", "Zz", "zz", "abbba", "abba", "Abba"));
     }
 
-//    @Test
-//    public void fileArgOptions() throws IOException{
-//        testOutput(createArgs("-i", getFileNames()[6]), null, generateLines("abba", "ab", "zz", "ab", "Zz", "abbba", "abba"));
-//    }
+    @Test
+    public void fileArgOptions() throws IOException{
+        testOutput(createArgs("-i", getFileNames()[6]), null, generateLines("abba", "ab", "zz", "ab", "Zz", "abbba", "abba"));
+    }
 
     @Test
     public void pipeNoArg() throws IOException{
